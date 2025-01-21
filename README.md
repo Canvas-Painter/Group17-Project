@@ -2,7 +2,7 @@
 
 # Instructions for using extension
 1. Switch to this branch and pull chnages (if not already)
-2. go to [Chrome extensions](chrome://extensions/)
+2. go to Chrome extensions: `chrome://extensions`
 3. Turn on the Developer mode in the upper right corner
 4. Select "Load unpacked" button
 5. Choose the "test extension" folder
