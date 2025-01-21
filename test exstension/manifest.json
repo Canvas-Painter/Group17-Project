@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "wikipedia Iframe on Canvas",
+    "version": "1.0",
+    "description": "Inject an iframe of Wikipedia onto Canvas.",
+    "permissions": ["activeTab"],
+    "content_scripts": [
+      {
+        "matches": ["*://canvas.oregonstate.edu/*"],
+        "js": ["content.js"],
+        "css": ["styles.css"]
+      }
+    ]
+  }
+  
