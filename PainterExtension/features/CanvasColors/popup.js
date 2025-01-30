@@ -34,10 +34,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function toggleTheme(enabled, theme) {
         if (enabled) {
-            document.body.className = theme;
+            document.body.classList.add(theme);
             localStorage.setItem('theme', theme);
         } else {
-            document.body.className="";
+            document.body.classList.remove(theme);
             localStorage.setItem('theme', null);
         }
     }
