@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "Canvas Colors",
+    "version": "1.0",
+    "description": "Change Canvas color layout",
+    "permissions": [
+        "scripting",
+        "activeTab", 
+        "storage"
+    ],
+    "host_permissions": [
+        "*://canvas.oregonstate.edu/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+        "matches": ["*://canvas.oregonstate.edu/*"],
+        "js": ["content.js"],
+        "css": ["custom.css"]
+        }
+    ]
+}
