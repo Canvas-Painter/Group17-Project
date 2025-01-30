@@ -1,5 +1,7 @@
 // popup/rewards_display.js
 
+// This allows the user to see the rewards earned by gamify calendar here.
+
 import { getUserBadges } from "../features/gamification_rewards.js";
 
 export async function displayEarnedRewards() {
