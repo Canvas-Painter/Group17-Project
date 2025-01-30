@@ -1,5 +1,7 @@
 // features/side_menu.js
 
+// This feature only requires a js file since it is sufficient enough to not have a css or html for this function.
+
 export function initializeSideMenu() {
     console.log("Canvas Side Menu Feature Loaded");
     
