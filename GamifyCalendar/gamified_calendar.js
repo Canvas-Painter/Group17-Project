@@ -3,6 +3,10 @@
 import { updatePoints, getUserPoints } from "./gamification_points.js";
 import { applyRewards } from "./gamification_rewards.js";
 
+/**
+ * Initializes the gamified calendar feature.
+ * Sets up the calendar enhancements and displays upcoming assignments.
+ */
 export function initializeGamifiedCalendar() {
     console.log("Gamified Calendar Feature Loaded");
     
@@ -12,11 +16,18 @@ export function initializeGamifiedCalendar() {
     });
 }
 
+/**
+ * Sets up gamification elements for the Canvas calendar.
+ * Enhances UI and updates points display in the sidebar.
+ */
 function setupGamification() {
     enhanceCanvasCalendar();
     updateSidebarPoints();
 }
 
+/**
+ * Enhances the Canvas calendar by adding a gamification banner.
+ */
 function enhanceCanvasCalendar() {
     let calendar = document.querySelector("#calendar-container");
     if (!calendar) return;
@@ -32,6 +43,9 @@ function enhanceCanvasCalendar() {
     calendar.prepend(gamificationBanner);
 }
 
+/**
+ * Displays a list of upcoming assignments in the sidebar.
+ */
 function displayUpcomingAssignments() {
     let sideMenu = document.getElementById("canvas-enhancer-side-menu");
     if (!sideMenu) return;
@@ -45,6 +59,9 @@ function displayUpcomingAssignments() {
     fetchAssignments();
 }
 
+/**
+ * Fetches upcoming assignments from the Canvas API.
+ */
 async function fetchAssignments() {
     try {
         const response = await fetch("https://canvas.instructure.com/api/v1/calendar_events?type=assignment", {
@@ -62,6 +79,10 @@ async function fetchAssignments() {
     }
 }
 
+/**
+ * Updates the sidebar with a list of upcoming assignments.
+ * @param {Array} assignments - List of assignments retrieved from the Canvas API.
+ */
 function updateAssignmentList(assignments) {
     let assignmentsList = document.getElementById("assignments-list");
     assignmentsList.innerHTML = "";
@@ -75,10 +96,15 @@ function updateAssignmentList(assignments) {
     });
 }
 
+/**
+ * Marks an assignment as completed and updates the user's points.
+ * Awards bonus points for early completion.
+ * @param {Object} assignment - The completed assignment object.
+ */
 async function completeAssignment(assignment) {
     const dueDate = new Date(assignment.due_at);
     const completionDate = new Date();
-    let pointsEarned = 10;
+    let pointsEarned = 10; // Base points for completion
     
     if (completionDate < dueDate) {
         pointsEarned += 5; // Bonus for early completion
@@ -90,6 +116,9 @@ async function completeAssignment(assignment) {
     alert(`You earned ${pointsEarned} points for completing '${assignment.title}'!`);
 }
 
+/**
+ * Updates the sidebar with the user's current points.
+ */
 async function updateSidebarPoints() {
     let sideMenu = document.getElementById("canvas-enhancer-side-menu");
     if (!sideMenu) return;
