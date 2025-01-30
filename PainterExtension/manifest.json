@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Canvas Painter",
+  "version": "0.1",
+  "description": "Changes to improve Canvas",
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["*://canvas.oregonstate.edu/*"],
+      "js": [ "features/sayHello.js", "content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_start"
+    }
+  ]
+}
