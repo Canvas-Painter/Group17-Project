@@ -7,6 +7,7 @@ const BADGE_STORAGE_KEY = "canvas_user_badges";
 export async function applyRewards(assignment) {
     let userBadges = await getUserBadges();
     let classId = assignment.context_id; // Unique class identifier from Canvas
+    let className = assignment.context_name || "Unknown Class"; // Ensure class name is retrieved
     
     if (!userBadges[classId]) {
         userBadges[classId] = {};
@@ -15,14 +16,14 @@ export async function applyRewards(assignment) {
     if (!userBadges[classId].firstAssignmentCompleted) {
         userBadges[classId].firstAssignmentCompleted = true;
         await saveUserBadges(userBadges);
-        displayBadge("First Assignment Completed! 🎖️");
+        displayBadge(`First Assignment Completed in ${className}! 🎖️`);
     }
     
     if (await isLastAssignment(assignment)) {
         if (!userBadges[classId].lastAssignmentCompleted) {
             userBadges[classId].lastAssignmentCompleted = true;
             await saveUserBadges(userBadges);
-            displayBadge("Final Assignment Completed! 🏆");
+            displayBadge(`Final Assignment Completed in ${className}! 🏆`);
         }
     }
 }
