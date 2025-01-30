@@ -8,7 +8,7 @@ waitForNavMenu();
 import { initializeTASchedule } from './features/ta_schedule.js';
 import { initializeGradeCalculator } from './features/grade_calculator.js';
 import { initializeThemeCustomizer } from './features/theme_customizer.js';
-import { initializeSyllabusParser } from './features/syllabus_parser.js';
+import { initializeSyllabusParser } from './features/pdf_syllabus_scraper.js';
 
 // Call initialization functions for all features
 function initializeCanvasEnhancer() {
