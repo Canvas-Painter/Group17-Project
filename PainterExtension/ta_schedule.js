@@ -14,8 +14,40 @@ export function initializeTASchedule() {
     scheduleContainer.innerHTML = `<h3>TA Office Hours</h3><p>Loading...</p>`;
     dashboard.appendChild(scheduleContainer); // Append the container to the dashboard
     
-    // Fetch and display TA hours (Placeholder logic; needs to extract from the syllabus page dynamically)
-    setTimeout(() => {
-        scheduleContainer.innerHTML = `<h3>TA Office Hours</h3><p>Mon-Fri: 10 AM - 4 PM</p>`;
-    }, 2000); // Simulated delay to mimic data fetching
+    // Fetch and display TA hours from the syllabus page
+    fetchTASchedule(scheduleContainer);
+}
+
+async function fetchTASchedule(container) {
+    try {
+        // Navigate to the syllabus page and extract TA hours
+        let syllabusPage = await fetch(window.location.origin + "/courses/" + getCourseId() + "/assignments/syllabus");
+        let text = await syllabusPage.text();
+        
+        // Create a temporary DOM parser to extract content
+        let parser = new DOMParser();
+        let doc = parser.parseFromString(text, "text/html");
+        
+        // Attempt to find relevant TA office hours information
+        let syllabusContent = doc.querySelector("#syllabusContainer");
+        let taHoursText = extractTASchedule(syllabusContent.innerText);
+        
+        // Update the container with extracted TA hours
+        container.innerHTML = `<h3>TA Office Hours</h3><p>${taHoursText || "TA Hours Not Found"}</p>`;
+    } catch (error) {
+        console.error("Error fetching TA schedule:", error);
+        container.innerHTML = `<h3>TA Office Hours</h3><p>Error fetching data</p>`;
+    }
+}
+
+// Extracts TA schedule information from the syllabus content
+function extractTASchedule(text) {
+    let match = text.match(/TA Office Hours:([\s\S]*?)(?=\n\n|$)/i);
+    return match ? match[1].trim() : null;
+}
+
+// Retrieves the course ID from the URL
+function getCourseId() {
+    let match = window.location.pathname.match(/courses\/(\d+)/);
+    return match ? match[1] : null;
 }
