@@ -43,7 +43,7 @@ async function fetchAssignments() {
     try {
         const response = await fetch("https://canvas.instructure.com/api/v1/calendar_events?type=assignment", {
             headers: {
-                "Authorization": "Bearer YOUR_ACCESS_TOKEN"
+                "Authorization": `Bearer ${await getAccessToken()}`
             }
         });
         
@@ -65,4 +65,15 @@ function updateAssignmentList(assignments) {
         li.innerText = `${assignment.title} - Due: ${new Date(assignment.due_at).toLocaleDateString()}`;
         assignmentsList.appendChild(li);
     });
+}
+
+/**
+ * Optional OAuth 2.0 Authentication Function
+ * This function can be used to retrieve an access token for Canvas API
+ */
+async function getAccessToken() {
+    // Placeholder function - Implement OAuth 2.0 flow here if needed
+    // This could involve redirecting to an authentication page, retrieving a token, etc.
+    console.log("OAuth 2.0 Authentication not implemented. Using placeholder token.");
+    return "YOUR_ACCESS_TOKEN"; // Replace with actual token retrieval logic
 }
