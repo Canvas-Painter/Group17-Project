@@ -1,20 +1,26 @@
 // features/gamified_calendar.js
 
+import { updatePoints, getUserPoints } from "./gamification_points.js";
+import { applyRewards } from "./gamification_rewards.js";
+
 export function initializeGamifiedCalendar() {
     console.log("Gamified Calendar Feature Loaded");
     
-    // Wait for the page to fully load before injecting calendar enhancements
-    document.addEventListener("DOMContentLoaded", () => {
-        enhanceCanvasCalendar();
+    document.addEventListener("DOMContentLoaded", async () => {
+        setupGamification();
         displayUpcomingAssignments();
     });
+}
+
+function setupGamification() {
+    enhanceCanvasCalendar();
+    updateSidebarPoints();
 }
 
 function enhanceCanvasCalendar() {
     let calendar = document.querySelector("#calendar-container");
     if (!calendar) return;
     
-    // Add gamification elements (points, streaks, badges)
     let gamificationBanner = document.createElement("div");
     gamificationBanner.id = "gamification-banner";
     gamificationBanner.style.padding = "10px";
@@ -63,17 +69,38 @@ function updateAssignmentList(assignments) {
     assignments.forEach(assignment => {
         let li = document.createElement("li");
         li.innerText = `${assignment.title} - Due: ${new Date(assignment.due_at).toLocaleDateString()}`;
+        li.dataset.dueDate = assignment.due_at;
+        li.addEventListener("click", () => completeAssignment(assignment));
         assignmentsList.appendChild(li);
     });
 }
 
-/**
- * Optional OAuth 2.0 Authentication Function
- * This function can be used to retrieve an access token for Canvas API
- */
-async function getAccessToken() {
-    // Placeholder function - Implement OAuth 2.0 flow here if needed
-    // This could involve redirecting to an authentication page, retrieving a token, etc.
-    console.log("OAuth 2.0 Authentication not implemented. Using placeholder token.");
-    return "YOUR_ACCESS_TOKEN"; // Replace with actual token retrieval logic
+async function completeAssignment(assignment) {
+    const dueDate = new Date(assignment.due_at);
+    const completionDate = new Date();
+    let pointsEarned = 10;
+    
+    if (completionDate < dueDate) {
+        pointsEarned += 5; // Bonus for early completion
+    }
+    
+    await updatePoints(pointsEarned);
+    applyRewards();
+    updateSidebarPoints();
+    alert(`You earned ${pointsEarned} points for completing '${assignment.title}'!`);
+}
+
+async function updateSidebarPoints() {
+    let sideMenu = document.getElementById("canvas-enhancer-side-menu");
+    if (!sideMenu) return;
+    
+    let pointsDisplay = document.getElementById("user-points-display");
+    if (!pointsDisplay) {
+        pointsDisplay = document.createElement("div");
+        pointsDisplay.id = "user-points-display";
+        sideMenu.prepend(pointsDisplay);
+    }
+    
+    const userPoints = await getUserPoints();
+    pointsDisplay.innerHTML = `<strong>Points:</strong> ${userPoints}`;
 }
