@@ -1,22 +1,20 @@
-<!--- is this going to be the main popup for all of the extension or is this just the popup for themes? if its just for themes this is likely going to be a nested popup --->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Extension</title>
+  <title>Popup</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <h1>Extension</h1>
+  <h1>Canvas Painter Settings</h1>
 
   <div>
-    <label for="darkmode">Canvas Dark Mode</label>
     <label class="switch">
-        <input id="darkmode-btn" type="checkbox">
+        <input type="checkbox" id="darkmode-btn">
         <span class="slider round"></span>
       </label>
+      <span>Dark Mode</span>
   </div>
 
   <script src="popup.js"></script>

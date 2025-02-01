@@ -27,10 +27,10 @@ body{
 
 } */
 
-.darkmode h1, h2, h3, div, body {
+.darkmode body {
 
     color: var(--text-0);
-    background-color: var(--bg-0);
+    background-color: var(--bg-0) !important;
 }
 
 
@@ -42,20 +42,20 @@ body{
 
 /* Tables */
 .darkmode table {
-    background-color: var(--bg) !important;
+    background-color: var(--bg);
 }
 
 .darkmode tr {
-    background-color: var(--bg) !important;
+    background-color: var(--bg);
 }
-/* 
+
 .darkmode h1 {
-    background-color: var(--bg) !important;
+    background-color: var(--bg);
 }
 
 .darkmode div {
-    background-color: var(--bg) !important;
-} */
+    background-color: black;
+}
 
 
 /* Mobile/shrinked */ 

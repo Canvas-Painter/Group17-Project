@@ -1,0 +1,34 @@
+{
+    "manifest_version": 3,
+    "name": "Canvas Painter",
+    "version": "0.1",
+    "description": "Changes to improve Canvas LMS accessibility and efficeny",
+    "permissions": ["storage", "activeTab", "scripting"],
+    "host_permissions": ["*://canvas.oregonstate.edu/*"],
+    "content_scripts": [
+      {
+        "matches": ["*://canvas.oregonstate.edu/*"],
+        "js": [
+          "SideMenu/standardizedSyllabus.js", 
+          "CanvasColors/colorCanvas.js",
+          "sayHello.js",
+          "SpeedBoost/speed_boost.js",
+          "content.js"
+        ],
+        "css": [
+          "styles.css", 
+          "SideMenu/standardizedSyllabus.css",
+          "CanvasColors/custom.css"
+        ],
+        "run_at": "document_start"
+      }
+    ],
+    "web_accessible_resources": [{
+      "resources": ["CanvasColors/custom.css"],
+      "matches": ["*://canvas.oregonstate.edu/*"]
+    }],
+    "action": {
+      "default_popup": "addressbarPopup/popup.html"
+    },
+    "options_page": "options.html"
+  }
