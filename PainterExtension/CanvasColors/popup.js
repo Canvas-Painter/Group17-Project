@@ -18,6 +18,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     const darkmodeButton = document.getElementById("darkmode-btn");
+
+    // Add error handling for button selection
+    if (!darkmodeButton) {
+        console.error("Dark mode button not found in the document");
+        return;
+    }
+
     darkmodeButton.addEventListener("click", function () {  
         const isChecked = darkmodeButton.checked;
         console.log('listener: '.concat(isChecked));

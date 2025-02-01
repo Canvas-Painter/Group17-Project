@@ -12,13 +12,13 @@
   "content_scripts": [
     {
       "matches": ["*://canvas.oregonstate.edu/*"],
-      "js": [ "features/sayHello.js", "content.js", "features/CanvasColors/popup.js"],
-      "css": ["styles.css", "features/CanvasColors/popup.css", "features/CanvasColors/custom.css"],
+      "js": ["SideMenu/standardizedSyllabus.js", "sayHello.js", "content.js", "CanvasColors/popup.js"],
+      "css": ["styles.css", "SideMenu/standardizedSyllabus.css"],
       "run_at": "document_start"
     }
   ],
   "action":{
-    "default_popup": "features/CanvasColors/popup.html"
+    "default_popup": "CanvasColors/popup.html"
   },
   "options_page": "options.html"
 }
