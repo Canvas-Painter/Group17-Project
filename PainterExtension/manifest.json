@@ -12,6 +12,7 @@
         "SideMenu/standardizedSyllabus.js", 
         "CanvasColors/colorCanvas.js",
         "sayHello.js",
+        "SpeedBoost/speed_boost.js",
         "content.js"
       ],
       "css": [
