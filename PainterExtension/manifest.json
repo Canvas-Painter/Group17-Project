@@ -12,7 +12,7 @@
   "content_scripts": [
     {
       "matches": ["*://canvas.oregonstate.edu/*"],
-      "js": ["SideMenu/standardizedSyllabus.js", "sayHello.js", "content.js", "CanvasColors/popup.js"],
+      "js": ["SideMenu/standardizedSyllabus.js", "sayHello.js", "content.js", "SpeedBoost/speed_boost.js", "CanvasColors/popup.js"],
       "css": ["styles.css", "SideMenu/standardizedSyllabus.css"],
       "run_at": "document_start"
     }
