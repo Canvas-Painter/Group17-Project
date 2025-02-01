@@ -1,0 +1,95 @@
+:root{
+    --bg-0: #7c7c7c;
+    --bg-1: transparent;
+    --bg-2: transparent;
+    --text-0: #f5f5f5;
+    --text-1: #f5f5f5;
+    --text-2: #f5f5f5;
+    --borders: #f5f5f5;
+    --sidebar: #f5f5f5;
+    --sidebar-icons: #f5f5f5;
+    --links: #f5f5f5;
+}
+
+
+/* *{
+
+
+}
+
+html{
+
+
+}
+
+body{
+    
+
+} */
+
+.darkmode h1, h2, h3, div, body {
+
+    color: var(--text-0);
+    background-color: var(--bg-0);
+}
+
+
+/* Links */
+.darkmode a {
+    color: var(--links);
+}
+
+
+/* Tables */
+.darkmode table {
+    background-color: var(--bg) !important;
+}
+
+.darkmode tr {
+    background-color: var(--bg) !important;
+}
+/* 
+.darkmode h1 {
+    background-color: var(--bg) !important;
+}
+
+.darkmode div {
+    background-color: var(--bg) !important;
+} */
+
+
+/* Mobile/shrinked */ 
+/* .darkmode #mobile-header {
+
+}
+
+.darkmode #wrapper {
+ 
+} */
+
+/* Top of Page */
+/* .darkmode #breadcrumbs {
+    background-color: transparent !important;
+}
+
+.darkmode #main {
+
+} */
+
+/* Left Side Links */
+/* .darkmode #left-side {
+
+}
+
+.darkmode #section-tabs {
+    background-color: transparent !important;
+} */
+
+/* Right Side */
+/* .darkmode #content {
+    background-color: transparent !important;
+}
+
+.darkmode #right-side-wrapper { 
+    background-color: transparent !important;
+} */

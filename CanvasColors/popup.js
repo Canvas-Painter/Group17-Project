@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     injectCSS();
 
     let theme = localStorage.getItem('theme');
-    if (theme != null) toggleTheme(true, theme); // not working
+    if (theme != null) toggleTheme(true, theme); // not working..?
 
 
     const darkmodeButton = document.getElementById("darkmode-btn");
