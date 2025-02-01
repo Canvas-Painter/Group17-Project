@@ -31,6 +31,7 @@ function enableDarkMode() {
         document.head.appendChild(darkModeStylesheet);
     }
     document.body.classList.add('darkmode');
+    
 }
 
 // Remove dark mode CSS
