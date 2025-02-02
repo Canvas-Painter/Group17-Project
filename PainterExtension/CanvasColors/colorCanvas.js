@@ -32,6 +32,33 @@ function enableDarkMode() {
     }
     document.body.classList.add('darkmode');
     
+    var mini_calendars = document.querySelectorAll('.day_wrapper');
+    mini_calendars.forEach(element => {
+        element.classList.add('darkmode');
+    });
+
+    var mini_calendars = document.querySelectorAll('#content_wrapper');
+    mini_calendars.forEach(element => {
+        element.classList.add('darkmode');
+    });
+
+    var role_link = document.querySelectorAll('#breadcrumbs');
+    role_link.forEach(element => {
+        element.style.backgroundColor = 'transparent';
+    });
+
+    var header_bar = document.querySelectorAll('.header-bar');
+    header_bar.forEach(element => {
+        element.style.backgroundColor = 'transparent';
+    });
+
+    var tr = document.querySelector('#syllabusTableBody').querySelectorAll("tr");
+    tr.forEach(element => {
+        var td = element.querySelectorAll("td");
+        td.forEach(element => {
+            element.style.backgroundColor = 'transparent';
+        });
+    });
 }
 
 // Remove dark mode CSS
@@ -41,4 +68,21 @@ function disableDarkMode() {
         darkModeStylesheet = null;
     }
     document.body.classList.remove('darkmode');
+    var mini_calendars = document.querySelectorAll('.day_wrapper');
+    mini_calendars.forEach(element => {
+        element.classList.remove('darkmode');
+    });
+
+    var mini_calendars = document.querySelectorAll('#content_wrapper');
+    mini_calendars.forEach(element => {
+        element.classList.remove('darkmode');
+    });
+
+    var tr = document.querySelector('#syllabusTableBody').querySelectorAll("tr");
+    tr.forEach(element => {
+        var td = element.querySelectorAll("td");
+        td.forEach(element => {
+            element.style.backgroundColor = '';
+        });
+    });
 }
