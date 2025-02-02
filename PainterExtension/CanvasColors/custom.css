@@ -11,9 +11,18 @@
     --links: #ffac3f;
 }
 
+i.icon-hamburger::before {
+    color: black;
+}
+
+.darkmode i.icon-hamburger::before {
+    color: var(--text-0);
+}
+
 
 .darkmode {
     background-color: var(--bg-0) !important;
+
 }
 
 .darkmode div, i {
@@ -24,15 +33,31 @@
     background-color: var(--bg-1) !important;
 } */
 
-body.darkmode #header {
+.darkmode #header {
     background-color: var(--bg-1) !important;
     color: var(--text-0) !important;
+}
+
+.darkmode .context_module .header{
+    color: var(--text-2);
+    background-color: var(--bg-1);
+}
+
+.darkmode .context_module .content .context_module_items .context_module_item .ig-row {
+    color: var(--text-2);
+    background-color: var(--bg-1);
 }
 
 
 /* Links */
 .darkmode a, b { /* not updating */
     color: var(--links) !important;
+}
+
+.darkmode #context_modules_sortable_container, .ig-header {
+
+    background-color: var(--bg-2);
+    border: var(--bg-2);
 }
 
 
@@ -45,6 +70,11 @@ body.darkmode #header {
     color: var(--text-2);
     background-color: var(--bg-2) !important;
 }
+
+/* .darkmode ul, li {
+    color: var(--text-2);
+    background-color: var(--bg-1);      DO NOT EDIT THESE...
+} */
 
 .darkmode h1, h2, h3 {
     color: var(--text-2) !important;
