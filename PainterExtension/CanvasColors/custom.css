@@ -9,25 +9,38 @@
     --sidebar: #f5f5f5;
     --sidebar-icons: #f5f5f5;
     --links: #ffac3f;
+    --hamburger: #ffffff;
 }
 
 i.icon-hamburger::before {
     color: black;
 }
 
-.darkmode i.icon-hamburger::before {
-    color: var(--text-0);
+.darkmode .icon-hamburger::before {
+    color: var(--hamburger);
 }
 
+/* .darkmode #breadcrumbs>ul>li+li:before {
+    color: var(--text-0);
+} */
 
 .darkmode {
     background-color: var(--bg-0);
 
 }
 
-.darkmode div, i {
+.darkmode div, .darkmode i {
     color: var(--text-0);
 }
+
+.darkmode .mini_calendar .day.has_event, .darkmode .mini_calendar .day.today {
+    background-color: var(--bg-1);
+}
+
+.darkmode [title="Alternative formats"], .darkmode .al-trigger {
+    filter: invert(100%);
+}
+
 
 /* body.darkmode #wrapper ul {
     background-color: var(--bg-1);
@@ -50,7 +63,7 @@ i.icon-hamburger::before {
 
 
 /* Links */
-.darkmode a, b { /* not updating */
+.darkmode a, .darkmode b { /* not updating */
     color: var(--links) !important;
 }
 
@@ -66,7 +79,7 @@ i.icon-hamburger::before {
 
 
 /* Tables */
-.darkmode tbody, th, tr {
+.darkmode tbody, .darkmode th, .darkmode tr {
     color: var(--text-2);
     background-color: var(--bg-2);
 }
@@ -76,7 +89,7 @@ i.icon-hamburger::before {
     background-color: var(--bg-1);      DO NOT EDIT THESE...
 } */
 
-.darkmode h1, h2, h3 {
+.darkmode h1, .darkmode h2, .darkmode h3 {
     color: var(--text-2);
 }
 

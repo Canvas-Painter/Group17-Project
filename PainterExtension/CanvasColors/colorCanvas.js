@@ -32,14 +32,14 @@ function enableDarkMode() {
     }
     document.body.classList.add('darkmode');
     
-    try {
-        var mini_calendars = document.querySelectorAll('.day_wrapper');
-        mini_calendars.forEach(element => {
-            element.classList.add('darkmode');
-        });
-    } catch {
-        console.log('no ".day_wrapper" class found...');
-    }
+    // try {
+    //     var mini_calendars = document.querySelectorAll('.day_wrapper');
+    //     mini_calendars.forEach(element => {
+    //         element.classList.add('darkmode');
+    //     });
+    // } catch {
+    //     console.log('no ".day_wrapper" class found...');
+    // }
 
     try {
         var mini_calendars = document.querySelectorAll('#content_wrapper');
@@ -125,14 +125,14 @@ function disableDarkMode() {
     }
     document.body.classList.remove('darkmode');
 
-    try {
-        var mini_calendars = document.querySelectorAll('.day_wrapper');
-        mini_calendars.forEach(element => {
-            element.classList.remove('darkmode');
-        });
-    } catch {
-        console.log('no ".day_wrapper" class found...');
-    }
+    // try {
+    //     var mini_calendars = document.querySelectorAll('.day_wrapper');
+    //     mini_calendars.forEach(element => {
+    //         element.classList.remove('darkmode');
+    //     });
+    // } catch {
+    //     console.log('no ".day_wrapper" class found...');
+    // }
 
     try {
         var mini_calendars = document.querySelectorAll('#content_wrapper');
