@@ -21,21 +21,21 @@ i.icon-hamburger::before {
 
 
 .darkmode {
-    background-color: var(--bg-0) !important;
+    background-color: var(--bg-0);
 
 }
 
 .darkmode div, i {
-    color: var(--text-0) !important;
+    color: var(--text-0);
 }
 
 /* body.darkmode #wrapper ul {
-    background-color: var(--bg-1) !important;
+    background-color: var(--bg-1);
 } */
 
 .darkmode #header {
-    background-color: var(--bg-1) !important;
-    color: var(--text-0) !important;
+    background-color: var(--bg-1);
+    color: var(--text-0);
 }
 
 .darkmode .context_module .header{
@@ -68,7 +68,7 @@ i.icon-hamburger::before {
 /* Tables */
 .darkmode tbody, th, tr {
     color: var(--text-2);
-    background-color: var(--bg-2) !important;
+    background-color: var(--bg-2);
 }
 
 /* .darkmode ul, li {
@@ -77,25 +77,25 @@ i.icon-hamburger::before {
 } */
 
 .darkmode h1, h2, h3 {
-    color: var(--text-2) !important;
+    color: var(--text-2);
 }
 
 .darkmode ul {
 
-    background-color: var(--bg-2) !important;
+    background-color: var(--bg-2);
 }
 
 .darkmode span {
-    color: var(--text-2) !important;
+    color: var(--text-2);
 }
 
 .darkmode.syllabusAssignment {
-    background-color: var(--bg-1) !important;
-    color: var(--text-2) !important;
+    background-color: var(--bg-1);
+    color: var(--text-2);
 }
 
 .darkmode#left-side {
-    color: var(--text-2) !important;
+    color: var(--text-2);
 }
 
   
@@ -112,7 +112,7 @@ i.icon-hamburger::before {
 
 /* Top of Page */
 /* .darkmode #breadcrumbs {
-    background-color: transparent !important;
+    background-color: transparent;
 }
 
 .darkmode #main {
@@ -125,14 +125,14 @@ i.icon-hamburger::before {
 }
 
 .darkmode #section-tabs {
-    background-color: transparent !important;
+    background-color: transparent;
 } */
 
 /* Right Side */
 /* .darkmode #content {
-    background-color: transparent !important;
+    background-color: transparent;
 }
 
 .darkmode #right-side-wrapper { 
-    background-color: transparent !important;
+    background-color: transparent;
 } */
