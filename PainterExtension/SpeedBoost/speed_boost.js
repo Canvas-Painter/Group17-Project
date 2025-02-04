@@ -1,3 +1,6 @@
+// This is being put on ice given the security restrictions we would have to include all canvas scripts in this extension
+// in order to use this method
+
 // Sets the innerHTML of an element 'elem' to 'html' and causes all the scripts to run
 // 'elem' the element to set the innerHTML of
 // 'html' the html to set innerHTML to
@@ -21,7 +24,6 @@ function setInnerHTMLWithJS(elm, html) {
 
         // Replaces the script causing it to run
         // This can cause the uncatchable error that the script doesn't have permission to run
-        // To fix it the scripts hash must be included in the manifest
         oldScriptEl.parentNode.replaceChild(newScriptEl, oldScriptEl)
     })
 }
