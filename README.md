@@ -5,6 +5,7 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 
 Repository Layout:
     /reports : Weekly reports, YYYYMMDD.md
+    /PainterExtension: Chrome Extension, features in sub-directories
 
 ## Links
 - [Project Proposal](https://docs.google.com/document/d/1Sg_moN46KJ2fcR-Hak0WlZDEZvt-L2gO4nh3mJlo9x4/edit?tab=t.0#heading=h.phhvohkmjdjl)
