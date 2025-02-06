@@ -24,7 +24,12 @@
     }
   ],
   "web_accessible_resources": [{
-    "resources": ["CanvasColors/custom.css"],
+    "resources": [
+      "CanvasColors/custom.css",
+      "SideMenu/standard_syllabus.html",
+      "SideMenu/standard_syllabus_page.css",
+      "SideMenu/standard_syllabus_page.js"
+    ],
     "matches": ["*://canvas.oregonstate.edu/*"]
   }],
   "action": {
