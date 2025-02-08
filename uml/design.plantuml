@@ -3,7 +3,6 @@
 package Canvas {
     [GradebookPage]
     [CalendarPage]
-    [OtherPages]
 }
 
 package Browser {
@@ -12,20 +11,29 @@ package Browser {
         portin addListener
         portin updateCSS
     }
+
+    portout URL
 }
 
 package Extension {
     [GradebookFeature]
     [GamificationFeature]
-    [GamificationFeature]
+    [Manifest]
 }
 
-Extension ---> readHTML
-Extension ---> addListener
-Extension ---> updateCSS
+URL ---> Manifest
+Manifest ---> GradebookFeature
+Manifest ---> GamificationFeature
+
+GradebookFeature ---> readHTML
+GradebookFeature ---> addListener
+GradebookFeature ---> updateCSS
+
+GamificationFeature ---> readHTML
+GamificationFeature ---> addListener
+GamificationFeature ---> updateCSS
 
 DOM ---> GradebookPage
 DOM ---> CalendarPage
-DOM ---> OtherPages
 
 @enduml
