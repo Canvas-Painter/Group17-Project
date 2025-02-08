@@ -1,6 +1,6 @@
 :root{
     --bg-0: #474747;
-    --bg-1: #535353;
+    --bg-1: #616161;
     --bg-2: transparent;
     --text-0: #eeeeee;
     --text-1: #f8bc80;
@@ -51,15 +51,12 @@ aside#right-side[role="complementary"] li.event a.recent_feedback_icon div.event
     background-color: var(--sidebar);
 }
 
-/* .darkmode #breadcrumbs>ul>li+li:before {
-    color: var(--text-0);
-} */
 
 .darkmode {
     background-color: var(--bg-0);
 }
 
-.darkmode div{
+.darkmode div.user_content, .darkmode span.ic-section-tooltip, .darkmode span#section-tabs-header-subtitle {
     color: var(--text-0);
 }
 
@@ -93,10 +90,12 @@ aside#right-side[role="complementary"] li.event a.recent_feedback_icon div.event
 
 
 /* Links */
-.darkmode ul#section-tabs a, .darkmode div.user_content a, .darkmode ul.group_list a, .darkmode a.jump_to_today_link, .darkmode #syllabusTableBody tr.detail_list td a, .darkmode div#sidebar_content div.content a, .darkmode #planner-todosidebar-item-list a, .darkmode b {
+.darkmode ul#section-tabs a, .darkmode div.user_content a, .darkmode ul.group_list a, .darkmode a.jump_to_today_link, .darkmode #syllabusTableBody tr.detail_list td a, .darkmode div#sidebar_content div.content a, .darkmode #planner-todosidebar-item-list a, .darkmode button#external_feed, .darkmode b {
     color: var(--links);
     text-decoration-color: var(--links);
 }
+
+
 
 .darkmode #context_modules_sortable_container, .ig-header {
 
@@ -104,6 +103,11 @@ aside#right-side[role="complementary"] li.event a.recent_feedback_icon div.event
     border: var(--bg-2);
 }
 
+/* BG2 */
+.darkmode b.nav-badge {
+    background: var(--bg-1);
+}
+/* !!! BG2 !!! */
 
 .darkmode #breadcrumbs[role="navigation"], .darkmode .header-bar {
 
@@ -160,7 +164,7 @@ aside#right-side[role="complementary"] li.event a.recent_feedback_icon div.event
     background-color: var(--bg-1);
 }
 
-.darkmode h1, .darkmode div.page-heading h1.course-title, .darkmode h2, .darkmode h3 {
+.darkmode h1, .darkmode div.page-heading h1.course-title, .darkmode div.ic-item-row__meta-col p, .darkmode h2, .darkmode h3 {
     color: var(--text-2);
 }
 
@@ -169,18 +173,28 @@ aside#right-side[role="complementary"] li.event a.recent_feedback_icon div.event
     color: var(--text-2);
 }
 
+/* Calendar */
+.darkmode div.mini-cal-header, .darkmode td.mini_calendar_day.day {
+    color: var(--text-0)
+}
+
 .darkmode#left-side {
     color: var(--text-2);
 }
 
+.darkmode div#syllabusContainer thead {
+    color: var(--text-2)
+}
+
 /* Icons */
 
-.darkmode div.ToDoSidebarItem__Close {
+.darkmode div.ToDoSidebarItem__Close, .darkmode span.css-1fzata2-view--block, .darkmode i.icon-arrow-open-left, .darkmode i.icon-arrow-open-right, .darkmode li::before {
     filter: invert(100%);
 }
 
-.darkmode i.icon-arrow-open-left, .darkmode i.icon-arrow-open-right {
-    filter: invert(100%);
+.darkmode a.active {
+    border-left-color: var(--links);
 }
+
 
 /* !!! Icons !!! */
