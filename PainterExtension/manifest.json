@@ -9,14 +9,15 @@
     {
       "matches": ["*://canvas.oregonstate.edu/*"],
       "js": [
-        "SideMenu/standardizedSyllabus.js", 
+        "SideMenu/standardizedSyllabus.js",
         "CanvasColors/colorCanvas.js",
         "sayHello.js",
         "SpeedBoost/speed_boost.js",
+        "GradeBook/grade_book.js",
         "content.js"
       ],
       "css": [
-        "styles.css", 
+        "styles.css",
         "SideMenu/standardizedSyllabus.css",
         "CanvasColors/custom.css"
       ],
