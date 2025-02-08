@@ -1,0 +1,31 @@
+@startuml
+
+package Canvas {
+    [GradebookPage]
+    [CalendarPage]
+    [OtherPages]
+}
+
+package Browser {
+    component DOM {
+        portin readHTML
+        portin addListener
+        portin updateCSS
+    }
+}
+
+package Extension {
+    [GradebookFeature]
+    [GamificationFeature]
+    [GamificationFeature]
+}
+
+Extension ---> readHTML
+Extension ---> addListener
+Extension ---> updateCSS
+
+DOM ---> GradebookPage
+DOM ---> CalendarPage
+DOM ---> OtherPages
+
+@enduml
