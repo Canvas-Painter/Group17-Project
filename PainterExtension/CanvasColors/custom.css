@@ -2,22 +2,53 @@
     --bg-0: #474747;
     --bg-1: #535353;
     --bg-2: transparent;
-    --text-0: #ffffff;
-    --text-1: #f49f4a;
-    --text-2: #ff8f1e;
+    --text-0: #eeeeee;
+    --text-1: #f8bc80;
+    --text-2: #f8a451;
     --borders: #f5f5f5;
-    --sidebar: #f5f5f5;
+    --sidebar: #D73F09;
     --sidebar-icons: #f5f5f5;
-    --links: #ffac3f;
+    --links: #ff9100;
     --hamburger: #ffffff;
+
+    /* --bg-0: #222121;
+    --bg-1: #444444;
+    --bg-2: transparent;
+    --text-0: #eaeaea;
+    --text-1: #FFB500;
+    --text-2: #D73F09;
+    --borders: #f5f5f5;
+    --sidebar: #D73F09;
+    --sidebar-icons: #eaeaea;
+    --links: #ff7700;
+    --hamburger: #eaeaea; */
 }
+
+/* Gen Adjustments */
 
 i.icon-hamburger::before {
     color: black;
 }
 
+body ::after {
+    background-color: transparent !important;
+}
+
+aside#right-side[role="complementary"] li.event a.recent_feedback_icon div.event-details::after {
+
+    background: transparent;
+}
+
+/* !!! Gen Adjustments !!! */
+
+
+
 .darkmode .icon-hamburger::before {
     color: var(--hamburger);
+}
+
+.darkmode .ic-app-header__main-navigation {
+    background-color: var(--sidebar);
 }
 
 /* .darkmode #breadcrumbs>ul>li+li:before {
@@ -26,10 +57,9 @@ i.icon-hamburger::before {
 
 .darkmode {
     background-color: var(--bg-0);
-
 }
 
-.darkmode div, .darkmode i {
+.darkmode div{
     color: var(--text-0);
 }
 
@@ -63,8 +93,9 @@ i.icon-hamburger::before {
 
 
 /* Links */
-.darkmode a, .darkmode b { /* not updating */
-    color: var(--links) !important;
+.darkmode ul#section-tabs a, .darkmode div.user_content a, .darkmode ul.group_list a, .darkmode a.jump_to_today_link, .darkmode #syllabusTableBody tr.detail_list td a, .darkmode div#sidebar_content div.content a, .darkmode #planner-todosidebar-item-list a, .darkmode b {
+    color: var(--links);
+    text-decoration-color: var(--links);
 }
 
 .darkmode #context_modules_sortable_container, .ig-header {
@@ -74,31 +105,62 @@ i.icon-hamburger::before {
 }
 
 
+.darkmode #breadcrumbs[role="navigation"], .darkmode .header-bar {
 
+    background-color: var(--bg-2);
+}
 
+.darkmode #breadcrumbs[role="navigation"] a {
+
+    color: var(--links);
+}
+
+.darkmode #breadcrumbs[role="navigation"] {
+    color: var(--text-0);
+}
+
+.darkmode div#sidebar_content div.header {
+
+    color: var(--text-0);
+}
+
+.darkmode .context_modules .context_module .ig-header {
+
+    background-color: var(--bg-2);
+}
+
+.darkmode div.module-sequence-footer-content {
+
+    background-color: var(--bg-2);
+}
+
+.darkmode #planner-todosidebar-item-list ul li {
+
+    color: var(--text-0);
+}
+
+.darkmode #planner-todosidebar-item-list span.css-tpuo6v-text {
+    color: var(--text-2);
+}
+
+.darkmode aside#right-side[role="complementary"] li.event a.recent_feedback_icon div.event-details p {
+
+    color: var(--text-0);
+}
+
+.darkmode aside#right-side[role="complementary"] li.event a.recent_feedback_icon {
+
+    text-decoration-color: var(--links);
+}
 
 
 /* Tables */
-.darkmode tbody, .darkmode th, .darkmode tr {
+.darkmode #syllabusTableBody tbody, .darkmode #syllabusTableBody th, .darkmode #syllabusTableBody tr.detail_list td {
     color: var(--text-2);
-    background-color: var(--bg-2);
+    background-color: var(--bg-1);
 }
 
-/* .darkmode ul, li {
-    color: var(--text-2);
-    background-color: var(--bg-1);      DO NOT EDIT THESE...
-} */
-
-.darkmode h1, .darkmode h2, .darkmode h3 {
-    color: var(--text-2);
-}
-
-.darkmode ul {
-
-    background-color: var(--bg-2);
-}
-
-.darkmode span {
+.darkmode h1, .darkmode div.page-heading h1.course-title, .darkmode h2, .darkmode h3 {
     color: var(--text-2);
 }
 
@@ -111,41 +173,14 @@ i.icon-hamburger::before {
     color: var(--text-2);
 }
 
-  
+/* Icons */
 
-
-/* Mobile/shrinked */ 
-/* .darkmode #mobile-header {
-
+.darkmode div.ToDoSidebarItem__Close {
+    filter: invert(100%);
 }
 
-.darkmode #wrapper {
- 
-} */
-
-/* Top of Page */
-/* .darkmode #breadcrumbs {
-    background-color: transparent;
+.darkmode i.icon-arrow-open-left, .darkmode i.icon-arrow-open-right {
+    filter: invert(100%);
 }
 
-.darkmode #main {
-
-} */
-
-/* Left Side Links */
-/* .darkmode #left-side {
-
-}
-
-.darkmode #section-tabs {
-    background-color: transparent;
-} */
-
-/* Right Side */
-/* .darkmode #content {
-    background-color: transparent;
-}
-
-.darkmode #right-side-wrapper { 
-    background-color: transparent;
-} */
+/* !!! Icons !!! */
