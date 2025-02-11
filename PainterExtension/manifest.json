@@ -9,16 +9,17 @@
     {
       "matches": ["*://canvas.oregonstate.edu/*"],
       "js": [
-        "SideMenu/standardizedSyllabus.js",
+        "SideMenu/standardized_syllabus.js",
         "CanvasColors/colorCanvas.js",
         "sayHello.js",
         "SpeedBoost/speed_boost.js",
+        "GradeBook/math.js",
         "GradeBook/grade_book.js",
         "content.js"
       ],
       "css": [
         "styles.css",
-        "SideMenu/standardizedSyllabus.css",
+        "SideMenu/standardized_syllabus.css",
         "CanvasColors/custom.css"
       ],
       "run_at": "document_start"
@@ -28,7 +29,8 @@
     {
       "resources": [
         "CanvasColors/custom.css",
-        "HelpInfo/help.html"
+        "HelpInfo/help.html",
+        "GradeBook/grades.html"
       ],
       "matches": ["*://canvas.oregonstate.edu/*"]
     }
