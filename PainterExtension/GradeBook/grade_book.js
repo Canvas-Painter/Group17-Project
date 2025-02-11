@@ -30,6 +30,7 @@ class Assignment {
     }
 }
 
+// Doesn't modify the window opened, but everything else appears correct
 function popOpen(assignments) {
     const categories = new Map()
     assignments.forEach(assignment => {
