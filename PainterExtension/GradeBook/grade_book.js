@@ -30,15 +30,19 @@ class Assignment {
     }
 }
 
+// Intented to open window with info currently adds info to the sidebar
 function popOpen(assignments) {
+    // Creates a category map by grouping up the assignments
     const categories = new Map()
     assignments.forEach(assignment => {
         const category = assignment.type
 
+        // If no group made then make one
         if (!categories.has(category)) {
             categories.set(category, [])
         }
 
+        // Add the assignment
         categories.get(category).push(assignment)
     })
 
@@ -48,24 +52,26 @@ function popOpen(assignments) {
     // Temporary side document
     const doc = document.getElementById("student-grades-right-content")
 
+    // Creates the elements to add to the window
     const elements = []
     categories.forEach((value, key) => {
         const scores = []
+        // Maps each group to a set of data points that stats can be calculated from
         value.forEach(assignment => {
             if (assignment.max != 0 && assignment.grade != null) {
                 scores.push(assignment.grade / assignment.max)
             }
         })
 
-        console.log(value)
+        // Creates the element
         const elem = /*doc*/document.createElement('div')
         elem.textContent = `${key}: Mean: ${mean(scores)}, StdDev: ${stdDev(scores)}`
-        console.log(elem.textContent)
         elements.push(elem)
     })
 
     console.log(elements)
 
+    // Addes the elements
     elements.forEach(value =>
         doc/*.body*/.appendChild(value)
     )
