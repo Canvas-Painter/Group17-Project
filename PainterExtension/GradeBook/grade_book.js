@@ -57,6 +57,7 @@ function popOpen(assignments) {
         console.log(value)
         const elem = doc.createElement('div')
         elem.textContent = `${key}: Mean: ${mean(scores)}, StdDev: ${stdDev(scores)}`
+        console.log(elem.textContent)
         elements.push(elem)
     })
 
