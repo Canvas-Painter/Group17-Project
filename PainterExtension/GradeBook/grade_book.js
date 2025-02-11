@@ -30,7 +30,6 @@ class Assignment {
     }
 }
 
-// Doesn't modify the window opened, but everything else appears correct
 function popOpen(assignments) {
     const categories = new Map()
     assignments.forEach(assignment => {
@@ -43,7 +42,11 @@ function popOpen(assignments) {
         categories.get(category).push(assignment)
     })
 
-    const doc = window.open(chrome.runtime.getURL('GradeBook/grades.html'), 'Gradebook', 'width=800, height=600, menubar=no, toolbar=no, location=no, status=no').document
+    // Doesn't modify the window opened, but everything else appears correct
+    // window.open(chrome.runtime.getURL('GradeBook/grades.html'), 'Gradebook', 'width=800, height=600, menubar=no, toolbar=no, location=no, status=no').document
+
+    // Temporary side document
+    const doc = document.getElementById("student-grades-right-content")
 
     const elements = []
     categories.forEach((value, key) => {
@@ -55,7 +58,7 @@ function popOpen(assignments) {
         })
 
         console.log(value)
-        const elem = doc.createElement('div')
+        const elem = /*doc*/document.createElement('div')
         elem.textContent = `${key}: Mean: ${mean(scores)}, StdDev: ${stdDev(scores)}`
         console.log(elem.textContent)
         elements.push(elem)
@@ -64,7 +67,7 @@ function popOpen(assignments) {
     console.log(elements)
 
     elements.forEach(value =>
-        doc.body.appendChild(value)
+        doc/*.body*/.appendChild(value)
     )
 }
 
