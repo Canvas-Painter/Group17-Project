@@ -13,6 +13,7 @@
         "CanvasColors/colorCanvas.js",
         "sayHello.js",
         "SpeedBoost/speed_boost.js",
+        "GradeBook/math.js",
         "GradeBook/grade_book.js",
         "content.js"
       ],

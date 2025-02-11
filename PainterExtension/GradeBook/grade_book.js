@@ -30,28 +30,62 @@ class Assignment {
     }
 }
 
-function popOpen() {
-    window.open(chrome.runtime.getURL('GradeBook/grades.html'), 'Gradebook', 'width=800, height=600, menubar=no, toolbar=no, location=no, status=no')
-}
+function popOpen(assignments) {
+    const categories = new Map()
+    assignments.forEach(assignment => {
+        const category = assignment.type
 
-// Holds the found assignments
-const assignments = []
+        if (!categories.has(category)) {
+            categories.set(category, [])
+        }
+
+        categories.get(category).push(assignment)
+    })
+
+    const doc = window.open(chrome.runtime.getURL('GradeBook/grades.html'), 'Gradebook', 'width=800, height=600, menubar=no, toolbar=no, location=no, status=no').document
+
+    console.log(categories)
+
+    const elements = []
+    categories.forEach((value, key) => {
+        const scores = []
+        value.forEach(assignment => {
+            if (assignment.max != 0 && assignment.grade != null) {
+                scores.push(assignment.grade / assignment.max)
+            }
+        })
+
+        console.log(value)
+        const elem = doc.createElement('div')
+        elem.textContent = `${key}: Mean: ${mean(scores)}, StdDev: ${stdDev(scores)}`
+        elements.push(elem)
+    })
+
+    console.log(elements)
+
+    elements.forEach(value =>
+        doc.body.appendChild(value)
+    )
+}
 
 // Sets up the code code by loading all the assignments
 function setup() {
+    // Holds the found assignments
+    const assignments = []
+
     // Checks that the page had a valid gradebook
     console.log("Checking for gradebook")
     const grade_div = document.getElementById("grade-summary-content")
     // If not the script shoudln't run
     if (!grade_div) {
-        return
+        return null
     }
 
     // Checks the sidebar is there
     const sidebar = document.getElementById("student-grades-right-content")
     // If not the script shoudln't run
     if (!sidebar) {
-        return
+        return null
     }
 
     console.log("Found gradebook")
@@ -62,7 +96,7 @@ function setup() {
         // If a class is hard coded it is not a valid assignment it
         //  it is something like the table bar or to the totals
         if (assignment.classList.contains("hard_coded")) {
-            continue;
+            continue
         }
 
         // Adds the assignment
@@ -70,9 +104,13 @@ function setup() {
     }
 
     console.log("Read data")
+
+    return assignments
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    setup()
-    popOpen();
+    const assignments = setup()
+    if (assignments) {
+        popOpen(assignments)
+    }
 })
