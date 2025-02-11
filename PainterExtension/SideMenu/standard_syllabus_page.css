@@ -1,23 +1,46 @@
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
 .syllabus-content {
     max-width: 800px;
     margin: 2rem auto;
     padding: 0 1rem;
     font-family: Arial, sans-serif;
     line-height: 1.6;
+    margin-top: 4rem; /* Add space for edit controls */
 }
 
+/* Edit Mode Controls */
+.edit-mode-controls {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    margin-bottom: 2rem;
+    padding: 10px;
+    background: white; /* Add background to ensure visibility */
+    border-radius: 4px;
+}
+
+.edit-mode-controls button {
+    margin-left: 0.5rem;
+}
+
+/* Category Styles */
 section {
     background: white;
-    border-radius: 8px;
+    border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 1.5rem;
-    margin-bottom: 2rem;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
     position: relative;
+    transition: transform 0.2s;
+    user-select: none;
+}
+
+.category-header {
+    cursor: move;
+    padding: 10px;
+    margin: -10px;
+    user-select: none;
 }
 
 h2 {
@@ -29,13 +52,20 @@ h2 {
 
 .section-content {
     margin-top: 1rem;
+    padding: 10px;
+    margin-right: 40px; /* Make room for controls */
 }
 
+/* Item Styles */
 .info-row {
     display: flex;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid #eee;
     position: relative;
+    margin: 0;
+    padding: 5px 10px;
+    border-bottom: 1px solid #eee;
+    transition: transform 0.2s;
+    user-select: none;
+    align-items: center;
 }
 
 .info-row:last-child {
@@ -47,53 +77,194 @@ h2 {
     width: 150px;
     color: #555;
     cursor: pointer;
+    padding-right: 10px;
+    position: relative;
 }
 
 .value {
     flex: 1;
+    min-width: 0;
+    word-wrap: break-word;
+    position: relative;
+    padding-right: 10px;
 }
 
-.info-row[data-field="Course ID"] .value {
-    font-family: monospace;
-    background: #f5f5f5;
-    padding: 2px 6px;
-    border-radius: 3px;
+/* Edit Mode Adjustments */
+.edit-mode .value {
+    padding-right: 90px; /* Increased space for buttons */
+}
+
+.edit-mode .editable-text {
     display: inline-block;
+    max-width: 100%;
 }
 
-.edit-btn {
-    opacity: 0;
-    transition: opacity 0.2s;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
+.edit-mode .editable-text:hover {
+    background: #e8e8e8;
+    cursor: text;
+    border-radius: 3px;
+    /* Limit hover effect to text area */
+    width: fit-content;
+    max-width: calc(100% - 85px); /* Account for buttons and padding */
+}
+
+/* Button Styles - Base */
+.standard-button {
     padding: 4px 8px;
-    color: #666;
-    position: absolute;
-    right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    color: #333;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-.info-row:hover .edit-btn {
-    opacity: 1;
+.standard-button:hover {
+    background: #f5f5f5;
+    border-color: #999;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Button Variations */
+.cancel-btn {
+    background: #fff5f5;
+    border-color: #ffcdd2;
+    color: #d32f2f;
+}
+
+.cancel-btn:hover {
+    background: #ffe8e8;
+    border-color: #ef9a9a;
+}
+
+.done-btn {
+    background: #f5fff5;
+    border-color: #c8e6c9;
+    color: #2e7d32;
+}
+
+.done-btn:hover {
+    background: #e8ffe8;
+    border-color: #a5d6a7;
+}
+
+.drag-btn {
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: move !important;
+    padding: 4px 6px;
+}
+
+.add-category-btn {
+    margin: 1rem auto;
+    display: block;
+    padding: 6px 12px;
+}
+
+/* Controls Positioning */
+.category-controls,
+.item-controls {
+    position: absolute;
+    right: 0;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding-right: 10px;
+    background: white;
+}
+
+.category-controls {
+    top: 1rem;
+}
+
+.item-controls {
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2; /* Ensure controls stay above text */
+}
+
+/* Edit Mode States */
+.edit-mode .item-controls,
+.edit-mode .category-controls {
+    display: block !important;
+}
+
+.edit-mode .editable-text:hover {
+    background: #e8e8e8;  /* Darker gray for text editing */
+    cursor: text;
+    border-radius: 3px;
+}
+
+.edit-mode h2:hover {
+    background: #e8e8e8;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.edit-mode section {
+    transition: background-color 0.2s;
+}
+
+.edit-mode section:hover {
+    cursor: move;
+    background: transparent;
+}
+
+.edit-mode .info-row {
+    transition: background-color 0.2s;
+}
+
+.edit-mode .info-row:hover {
+    cursor: move;
+    background: transparent;
+}
+
+.edit-mode .info-row:hover .editable-text:hover {
+    background: #e8e8e8;  /* Darker gray maintains visibility over the light gray row */
+    z-index: 1;
+    position: relative;
+}
+
+/* Drag and Drop */
+.dragging {
+    opacity: 0.7;
+    background: #f8f8f8 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    cursor: move !important;
+}
+
+.dragging * {
+    pointer-events: none;
+}
+
+section.dragging {
+    background: #fff;
+}
+
+/* Editable Elements */
+.editable-text {
+    min-height: 1em;
+    min-width: 2em;
+    padding: 2px;
+    display: block; /* Change to block for full width */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .edit-input {
-    width: 100%;
+    width: calc(100% - 80px); /* Account for control buttons */
+    box-sizing: border-box;
     padding: 4px 8px;
     border: 1px solid #ddd;
     border-radius: 3px;
     font-family: inherit;
     font-size: inherit;
+    margin: -2px;
 }
 
-.save-indicator {
-    color: #666;
-    font-size: 0.8em;
-    margin-left: 0.5em;
-    font-style: italic;
-}
-
+/* Loading State */
 body > div:first-child {
     text-align: center;
     padding: 2rem;
@@ -101,60 +272,7 @@ body > div:first-child {
     animation: fadeIn 0.3s ease-in;
 }
 
-.category-controls {
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-    display: flex;
-    gap: 0.5rem;
-}
-
-.category-edit-btn,
-.category-delete-btn,
-.add-item-btn,
-.add-category-btn {
-    padding: 4px 8px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    background: white;
-    cursor: pointer;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-}
-
-.category-controls button:hover,
-.add-category-btn:hover {
-    opacity: 1;
-}
-
-.add-category-btn {
-    display: block;
-    margin: 1rem auto;
-    padding: 8px 16px;
-    font-size: 1rem;
-}
-
-.item-controls {
-    position: absolute;
-    right: 10px;
-    display: flex;
-    gap: 0.5rem;
-}
-
-.delete-btn {
-    opacity: 0;
-    transition: opacity 0.2s;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #ff4444;
-    padding: 4px 8px;
-}
-
-.info-row:hover .delete-btn {
-    opacity: 1;
-}
-
+/* Responsive Design */
 @media (max-width: 600px) {
     .info-row {
         flex-direction: column;
@@ -164,4 +282,37 @@ body > div:first-child {
         width: 100%;
         margin-bottom: 0.25rem;
     }
+}
+
+/* Remove old drag handle styles */
+.category-drag-handle,
+.item-drag-handle {
+    display: none;
+}
+
+/* Category Content */
+.category-content {
+    padding: 10px;
+    margin: -10px;
+}
+
+/* Item Drag Zones */
+.item-drag-handle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    cursor: move;
+    background: #f8f8f8;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.edit-mode .info-row:hover .item-drag-handle {
+    opacity: 1;
+}
+
+.dragging .editable-text {
+    pointer-events: none;
 }

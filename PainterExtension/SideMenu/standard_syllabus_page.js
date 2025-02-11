@@ -7,7 +7,7 @@ function loadCourseData(courseId) {
             console.log('Loaded data:', key, data);
             
             // Check version and reset if not current
-            if (!data || data.version !== '0.1') {
+            if (!data || data.version !== '0.1.1') {
                 const defaultData = getDefaultStructure();
                 saveCourseData(courseId, defaultData);
                 resolve(defaultData);
@@ -38,12 +38,11 @@ function saveCourseData(courseId, data) {
 
 function getDefaultStructure() {
     return {
-        version: '0.1',
+        version: '0.1.1',
         categories: [
             {
                 name: "Course Information",
                 items: [
-                    { type: "Course ID", text: "", editable: false },
                     { type: "Course Title", text: "", editable: true },
                     { type: "Professor", text: "", editable: true },
                     { type: "Email", text: "", editable: true },
@@ -70,13 +69,6 @@ function getDefaultStructure() {
     };
 }
 
-// Debug function - you can remove this later
-function debugStorage() {
-    chrome.storage.local.get(null, (result) => {
-        console.log('All storage data:', result);
-    });
-}
-
 // Add after storage functions
 let isEditMode = false;
 let backupData = null;
@@ -87,16 +79,16 @@ function createEditControls() {
     
     const editBtn = document.createElement('button');
     editBtn.textContent = 'Edit';
-    editBtn.className = 'edit-mode-btn';
+    editBtn.className = 'edit-mode-btn standard-button';
     
     const cancelBtn = document.createElement('button');
     cancelBtn.textContent = 'Cancel';
-    cancelBtn.className = 'cancel-btn';
+    cancelBtn.className = 'cancel-btn standard-button';
     cancelBtn.style.display = 'none';
     
     const doneBtn = document.createElement('button');
     doneBtn.textContent = 'Done';
-    doneBtn.className = 'done-btn';
+    doneBtn.className = 'done-btn standard-button';
     doneBtn.style.display = 'none';
     
     controls.append(editBtn, cancelBtn, doneBtn);
@@ -107,20 +99,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const courseId = urlParams.get('courseId') || 'unknown';
     
-    // Show loading state
-    const loadingMsg = document.createElement('div');
-    loadingMsg.textContent = 'Loading syllabus data...';
-    document.body.appendChild(loadingMsg);
-    
-    // Debug current storage
-    debugStorage();
-    
     // Load saved data
     const data = await loadCourseData(courseId);
     console.log('Loaded data structure:', data);
-
-    // Remove loading message
-    loadingMsg.remove();
 
     const main = document.createElement('main');
     main.className = 'syllabus-content';
@@ -136,13 +117,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         cancelBtn.style.display = 'inline';
         doneBtn.style.display = 'inline';
         document.body.classList.add('edit-mode');
+        main.querySelector('.add-category-btn').style.display = 'block';
     };
 
     cancelBtn.onclick = async () => {
-        if (confirm('Are you sure you want to cancel? All changes will be lost.')) {
-            await saveCourseData(courseId, backupData);
-            window.location.reload();
-        }
+        await saveCourseData(courseId, backupData);
+        window.location.reload();
     };
 
     doneBtn.onclick = () => {
@@ -152,15 +132,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         cancelBtn.style.display = 'none';
         doneBtn.style.display = 'none';
         document.body.classList.remove('edit-mode');
+        main.querySelector('.add-category-btn').style.display = 'none';
     };
 
     // Dynamically create sections from categories
     data.categories.forEach(category => {
         const items = category.items.map(item => {
-            // Special handling for Course ID
-            if (item.type === 'Course ID') {
-                return [item.type, courseId, item.editable];
-            }
             return [item.type, item.text, item.editable];
         });
         
@@ -169,6 +146,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     addNewCategoryButton(main, data);
+    enableDragDrop(main, data);
     document.body.appendChild(main);
 });
 
@@ -178,17 +156,21 @@ function createSection(title, items, category, data) {
     const heading = document.createElement('h2');
     heading.textContent = title;
     heading.onclick = () => isEditMode && editCategoryName(heading, category, data);
+    heading.className = 'category-header';
     
     const controls = createCategoryControls(section, category, data);
-    controls.style.display = 'none';
     
     const content = document.createElement('div');
-    content.className = 'section-content';
+    content.className = 'category-content';
+    
+    const itemsContainer = document.createElement('div');
+    itemsContainer.className = 'section-content';
     
     items.forEach(item => {
-        content.appendChild(createItemRow(item, category, data));
+        itemsContainer.appendChild(createItemRow(item, category, data));
     });
     
+    content.appendChild(itemsContainer);
     section.append(heading, controls, content);
     return section;
 }
@@ -198,22 +180,22 @@ function createCategoryControls(section, category, data) {
     controls.className = 'category-controls';
     controls.style.display = 'none';
     
-    const editNameBtn = document.createElement('button');
-    editNameBtn.textContent = '✎';
-    editNameBtn.className = 'category-edit-btn';
-    editNameBtn.onclick = () => editCategoryName(section.querySelector('h2'), category, data);
+    const dragBtn = document.createElement('button');
+    dragBtn.textContent = '⋮⋮';
+    dragBtn.className = 'standard-button drag-btn';
+    dragBtn.title = 'Drag to reorder';
     
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = '╳';
-    deleteBtn.className = 'category-delete-btn';
+    deleteBtn.className = 'standard-button delete-btn';
     deleteBtn.onclick = () => deleteCategory(section, category, data);
     
     const addItemBtn = document.createElement('button');
     addItemBtn.textContent = '+ Add Item';
-    addItemBtn.className = 'add-item-btn';
+    addItemBtn.className = 'standard-button add-item-btn';
     addItemBtn.onclick = () => addNewItem(section, category, data);
     
-    controls.append(editNameBtn, deleteBtn, addItemBtn);
+    controls.append(dragBtn, deleteBtn, addItemBtn);
     return controls;
 }
 
@@ -279,30 +261,31 @@ function createItemRow([label, value, editable], category, data) {
     row.dataset.field = label;
     
     const labelElem = document.createElement('div');
-    labelElem.className = 'label';
+    labelElem.className = 'label editable-text';
     labelElem.textContent = label;
     labelElem.onclick = () => isEditMode && editItemName(labelElem, category, label, data);
     
     const valueElem = document.createElement('div');
-    valueElem.className = 'value';
+    valueElem.className = 'value editable-text';
     valueElem.textContent = value;
+    valueElem.onclick = () => isEditMode && editable && makeEditable(valueElem, label, category, data);
     
     const controls = document.createElement('div');
     controls.className = 'item-controls';
     controls.style.display = 'none';
     
     if (editable) {
-        const editBtn = document.createElement('button');
-        editBtn.className = 'edit-btn';
-        editBtn.textContent = '✎';
-        editBtn.onclick = () => isEditMode && makeEditable(valueElem, label, category, data);
+        const dragBtn = document.createElement('button');
+        dragBtn.className = 'standard-button drag-btn';
+        dragBtn.textContent = '⋮⋮';
+        dragBtn.title = 'Drag to reorder';
         
         const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'delete-btn';
+        deleteBtn.className = 'standard-button delete-btn';
         deleteBtn.textContent = '╳';
         deleteBtn.onclick = () => isEditMode && deleteItem(row, category, label, data);
         
-        controls.append(editBtn, deleteBtn);
+        controls.append(dragBtn, deleteBtn);
     }
     
     row.append(controls, labelElem, valueElem);
@@ -404,6 +387,7 @@ function addNewCategoryButton(main, data) {
     const btn = document.createElement('button');
     btn.textContent = '+ Add Category';
     btn.className = 'add-category-btn';
+    btn.style.display = 'none'; // Hide by default
     btn.onclick = async () => {
         const newCategory = {
             name: 'New Category',
@@ -419,6 +403,188 @@ function addNewCategoryButton(main, data) {
     main.appendChild(btn);
 }
 
+function enableDragDrop(main, data) {
+    let draggedItem = null;
+    let draggedCategory = null;
+    let originalCategory = null;
+
+    // Enable category dragging
+    main.querySelectorAll('section').forEach(section => {
+        const dragBtn = section.querySelector('.category-controls .drag-btn');
+        section.draggable = true;
+        
+        dragBtn.addEventListener('mousedown', (e) => {
+            if (!isEditMode) return;
+            section.draggedAsCategory = true;
+            e.stopPropagation();
+        });
+
+        section.addEventListener('dragstart', (e) => {
+            if (!isEditMode || !section.draggedAsCategory) {
+                e.preventDefault();
+                return;
+            }
+            draggedCategory = section;
+            section.classList.add('dragging');
+        });
+        
+        section.addEventListener('dragend', () => {
+            section.classList.remove('dragging');
+            section.draggedAsCategory = false;
+        });
+    });
+
+    // Enable item dragging
+    main.querySelectorAll('.info-row').forEach(row => {
+        const dragBtn = row.querySelector('.drag-btn');
+        if (!dragBtn) return;
+        
+        row.draggable = true;
+        
+        dragBtn.addEventListener('mousedown', (e) => {
+            if (!isEditMode) return;
+            row.draggedAsItem = true;
+            originalCategory = row.closest('.section-content');
+            e.stopPropagation();
+        });
+
+        row.addEventListener('dragstart', (e) => {
+            if (!isEditMode || !row.draggedAsItem) {
+                e.preventDefault();
+                return;
+            }
+            draggedItem = row;
+            requestAnimationFrame(() => {
+                row.classList.add('dragging');
+                row.style.opacity = '0.5';
+            });
+            e.stopPropagation();
+        });
+        
+        row.addEventListener('dragend', () => {
+            row.classList.remove('dragging');
+            row.style.opacity = '';
+            row.draggedAsItem = false;
+            draggedItem = null;
+            originalCategory = null;
+        });
+    });
+
+    // Handle category drops
+    main.addEventListener('dragover', (e) => {
+        if (!isEditMode || !draggedCategory) return;
+        e.preventDefault();
+        const afterElement = getDragAfterElement(main, e.clientY, 'section', draggedCategory);
+        if (afterElement) {
+            main.insertBefore(draggedCategory, afterElement);
+        } else {
+            main.insertBefore(draggedCategory, main.querySelector('.add-category-btn'));
+        }
+        updateCategoryOrder(data);
+    });
+
+    // Handle item drops within sections
+    main.querySelectorAll('.section-content').forEach(content => {
+        content.addEventListener('dragover', (e) => {
+            if (!isEditMode || !draggedItem) return;
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Only allow drops within the same category as original
+            if (content !== originalCategory) return;
+            
+            const afterElement = getDragAfterElement(content, e.clientY, '.info-row', draggedItem);
+            
+            if (draggedItem !== afterElement) {
+                if (afterElement) {
+                    content.insertBefore(draggedItem, afterElement);
+                } else {
+                    content.appendChild(draggedItem);
+                }
+            }
+        });
+
+        content.addEventListener('drop', async (e) => {
+            if (!isEditMode || !draggedItem) return;
+            e.preventDefault();
+            
+            // Only handle drops within the same category
+            if (content !== originalCategory) return;
+            
+            // Update the data structure and save
+            await updateItemOrder(data);
+        });
+
+        content.addEventListener('dragenter', (e) => {
+            if (!isEditMode || !draggedItem) return;
+            e.preventDefault();
+        });
+    });
+}
+
+function getDragAfterElement(container, y, selector, draggedElement) {
+    const draggableElements = [...container.querySelectorAll(`${selector}:not(.dragging)`)]
+        .filter(element => element !== draggedElement);
+    
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+async function updateCategoryOrder(data) {
+    const sections = document.querySelectorAll('section');
+    const newOrder = [];
+    
+    sections.forEach(section => {
+        const categoryName = section.querySelector('h2').textContent;
+        const category = data.categories.find(c => c.name === categoryName);
+        if (category) {
+            newOrder.push(category);
+        }
+    });
+    
+    data.categories = newOrder;
+    await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
+}
+
+async function updateItemOrder(data) {
+    const sections = document.querySelectorAll('section');
+    let updated = false;
+    
+    sections.forEach(section => {
+        const categoryName = section.querySelector('h2').textContent;
+        const category = data.categories.find(c => c.name === categoryName);
+        if (category) {
+            const rows = section.querySelectorAll('.info-row');
+            const newItems = [];
+            
+            rows.forEach(row => {
+                const itemType = row.dataset.field;
+                const item = category.items.find(i => i.type === itemType);
+                if (item) {
+                    newItems.push(item);
+                    updated = true;
+                }
+            });
+            
+            if (newItems.length > 0) {
+                category.items = newItems;
+            }
+        }
+    });
+    
+    if (updated) {
+        await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
+    }
+}
+
 function getCurrentTerm() {
     const now = new Date();
     const month = now.getMonth();
@@ -429,26 +595,3 @@ function getCurrentTerm() {
     if (month >= 3 && month <= 5) return `Spring ${year}`;
     return `Summer ${year}`;
 }
-
-// Add CSS rules
-const style = document.createElement('style');
-style.textContent = `
-    .edit-mode-controls {
-        position: fixed;
-        top: 10px;
-        right: 10px;
-        z-index: 1000;
-    }
-    
-    .edit-mode .item-controls,
-    .edit-mode .category-controls {
-        display: block !important;
-    }
-    
-    .edit-mode .label:hover,
-    .edit-mode h2:hover {
-        background: #f0f0f0;
-        cursor: pointer;
-    }
-`;
-document.head.appendChild(style);
