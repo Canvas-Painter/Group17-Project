@@ -44,8 +44,6 @@ function popOpen(assignments) {
 
     const doc = window.open(chrome.runtime.getURL('GradeBook/grades.html'), 'Gradebook', 'width=800, height=600, menubar=no, toolbar=no, location=no, status=no').document
 
-    console.log(categories)
-
     const elements = []
     categories.forEach((value, key) => {
         const scores = []
