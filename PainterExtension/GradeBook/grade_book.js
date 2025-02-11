@@ -2,27 +2,30 @@
 //  entry on the gradebook table
 class Assignment {
     // A default contrusctor for a data class
-    constructor(title, grade, max) {
+    constructor(title, grade, max, type) {
         this.title = title
         this.grade = grade
         this.max = max
+        this.type = type
     }
 
     // Gets the relevant data from a valid table entry (not hard_coded) in the
     //  student_assignment table
     static fromHTML(elem) {
         const gradeNodes = elem.getElementsByClassName("grade")[0].childNodes
+        const title = elem.getElementsByClassName("title")[0]
 
         return new Assignment(
-            elem.getElementsByClassName("title")[0]
-                .getElementsByTagName("a")[0],
+            title.getElementsByTagName("a")[0],
 
             gradeNodes.length == 5 ?
                 parseInt(gradeNodes[4].textContent)
                 : null,
 
             parseInt(elem.getElementsByClassName("tooltip")[0].children[1]
-                .textContent.slice(1))
+                .textContent.slice(1)),
+
+            title.getElementsByClassName("context")[0].textContent
         )
     }
 }
@@ -67,4 +70,5 @@ function setup() {
 
 document.addEventListener('DOMContentLoaded', () => {
     setup()
+    popOpen();
 })
