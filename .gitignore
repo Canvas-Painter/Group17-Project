@@ -1,0 +1,27 @@
+# This file is used to ignore files which are generated
+# ----------------------------------------------------------------------------
+
+*~
+.DS_Store
+
+# xemacs temporary files
+*.flc
+
+# Vim temporary files
+.*.swp
+
+# Visual Studio & VSC generated files
+*.ib_pdb_index
+*.idb
+*.ilk
+*.pdb
+*.sln
+*.suo
+*.vcproj
+*vcproj.*.*.user
+*.ncb
+*.sdf
+*.opensdf
+*.vcxproj
+*vcxproj.*
+.vscode/
