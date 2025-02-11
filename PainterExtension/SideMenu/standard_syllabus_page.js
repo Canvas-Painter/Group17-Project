@@ -5,7 +5,16 @@ function loadCourseData(courseId) {
         chrome.storage.local.get(key, (result) => {
             const data = result[key];
             console.log('Loaded data:', key, data);
-            resolve(data || getDefaultStructure());
+            
+            // Check version and reset if not current
+            if (!data || data.version !== '0.1') {
+                const defaultData = getDefaultStructure();
+                saveCourseData(courseId, defaultData);
+                resolve(defaultData);
+                return;
+            }
+            
+            resolve(data);
         });
     });
 }
@@ -29,6 +38,7 @@ function saveCourseData(courseId, data) {
 
 function getDefaultStructure() {
     return {
+        version: '0.1',
         categories: [
             {
                 name: "Course Information",
@@ -67,6 +77,32 @@ function debugStorage() {
     });
 }
 
+// Add after storage functions
+let isEditMode = false;
+let backupData = null;
+
+function createEditControls() {
+    const controls = document.createElement('div');
+    controls.className = 'edit-mode-controls';
+    
+    const editBtn = document.createElement('button');
+    editBtn.textContent = 'Edit';
+    editBtn.className = 'edit-mode-btn';
+    
+    const cancelBtn = document.createElement('button');
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.className = 'cancel-btn';
+    cancelBtn.style.display = 'none';
+    
+    const doneBtn = document.createElement('button');
+    doneBtn.textContent = 'Done';
+    doneBtn.className = 'done-btn';
+    doneBtn.style.display = 'none';
+    
+    controls.append(editBtn, cancelBtn, doneBtn);
+    return { controls, editBtn, cancelBtn, doneBtn };
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const courseId = urlParams.get('courseId') || 'unknown';
@@ -88,6 +124,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const main = document.createElement('main');
     main.className = 'syllabus-content';
+
+    // Add edit controls
+    const { controls, editBtn, cancelBtn, doneBtn } = createEditControls();
+    main.appendChild(controls);
+
+    editBtn.onclick = () => {
+        isEditMode = true;
+        backupData = JSON.parse(JSON.stringify(data));
+        editBtn.style.display = 'none';
+        cancelBtn.style.display = 'inline';
+        doneBtn.style.display = 'inline';
+        document.body.classList.add('edit-mode');
+    };
+
+    cancelBtn.onclick = async () => {
+        if (confirm('Are you sure you want to cancel? All changes will be lost.')) {
+            await saveCourseData(courseId, backupData);
+            window.location.reload();
+        }
+    };
+
+    doneBtn.onclick = () => {
+        isEditMode = false;
+        backupData = null;
+        editBtn.style.display = 'inline';
+        cancelBtn.style.display = 'none';
+        doneBtn.style.display = 'none';
+        document.body.classList.remove('edit-mode');
+    };
 
     // Dynamically create sections from categories
     data.categories.forEach(category => {
@@ -112,9 +177,10 @@ function createSection(title, items, category, data) {
     
     const heading = document.createElement('h2');
     heading.textContent = title;
-    heading.onclick = () => editCategoryName(heading, category, data);
+    heading.onclick = () => isEditMode && editCategoryName(heading, category, data);
     
     const controls = createCategoryControls(section, category, data);
+    controls.style.display = 'none';
     
     const content = document.createElement('div');
     content.className = 'section-content';
@@ -130,6 +196,7 @@ function createSection(title, items, category, data) {
 function createCategoryControls(section, category, data) {
     const controls = document.createElement('div');
     controls.className = 'category-controls';
+    controls.style.display = 'none';
     
     const editNameBtn = document.createElement('button');
     editNameBtn.textContent = '✎';
@@ -160,14 +227,21 @@ async function editCategoryName(heading, category, data) {
         if (newName && newName !== category.name) {
             category.name = newName;
             heading.textContent = newName;
-            await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
+            const courseId = new URLSearchParams(window.location.search).get('courseId');
+            await saveCourseData(courseId, data);
         } else {
             heading.textContent = category.name;
         }
+        input.remove();
     };
     
     input.onblur = save;
-    input.onkeypress = (e) => e.key === 'Enter' && save();
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            save();
+        }
+    });
     
     heading.textContent = '';
     heading.appendChild(input);
@@ -176,12 +250,10 @@ async function editCategoryName(heading, category, data) {
 }
 
 async function deleteCategory(section, category, data) {
-    if (confirm(`Delete category "${category.name}" and all its items?`)) {
-        const index = data.categories.indexOf(category);
-        data.categories.splice(index, 1);
-        section.remove();
-        await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
-    }
+    const index = data.categories.indexOf(category);
+    data.categories.splice(index, 1);
+    section.remove();
+    await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
 }
 
 async function addNewItem(section, category, data) {
@@ -209,7 +281,7 @@ function createItemRow([label, value, editable], category, data) {
     const labelElem = document.createElement('div');
     labelElem.className = 'label';
     labelElem.textContent = label;
-    labelElem.onclick = () => editItemName(labelElem, category, label, data);
+    labelElem.onclick = () => isEditMode && editItemName(labelElem, category, label, data);
     
     const valueElem = document.createElement('div');
     valueElem.className = 'value';
@@ -217,17 +289,18 @@ function createItemRow([label, value, editable], category, data) {
     
     const controls = document.createElement('div');
     controls.className = 'item-controls';
+    controls.style.display = 'none';
     
     if (editable) {
         const editBtn = document.createElement('button');
         editBtn.className = 'edit-btn';
         editBtn.textContent = '✎';
-        editBtn.onclick = () => makeEditable(valueElem, label, category, data);
+        editBtn.onclick = () => isEditMode && makeEditable(valueElem, label, category, data);
         
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'delete-btn';
         deleteBtn.textContent = '╳';
-        deleteBtn.onclick = () => deleteItem(row, category, label, data);
+        deleteBtn.onclick = () => isEditMode && deleteItem(row, category, label, data);
         
         controls.append(editBtn, deleteBtn);
     }
@@ -237,12 +310,10 @@ function createItemRow([label, value, editable], category, data) {
 }
 
 async function deleteItem(row, category, itemType, data) {
-    if (confirm(`Delete item "${itemType}"?`)) {
-        const index = category.items.findIndex(item => item.type === itemType);
-        category.items.splice(index, 1);
-        row.remove();
-        await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
-    }
+    const index = category.items.findIndex(item => item.type === itemType);
+    category.items.splice(index, 1);
+    row.remove();
+    await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
 }
 
 async function editItemName(labelElem, category, oldType, data) {
@@ -254,17 +325,26 @@ async function editItemName(labelElem, category, oldType, data) {
         const newType = input.value.trim();
         if (newType && newType !== oldType) {
             const item = category.items.find(item => item.type === oldType);
-            item.type = newType;
-            labelElem.textContent = newType;
-            labelElem.parentElement.dataset.field = newType;
-            await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
+            if (item) {
+                item.type = newType;
+                labelElem.textContent = newType;
+                labelElem.parentElement.dataset.field = newType;
+                const courseId = new URLSearchParams(window.location.search).get('courseId');
+                await saveCourseData(courseId, data);
+            }
         } else {
             labelElem.textContent = oldType;
         }
+        input.remove();
     };
     
     input.onblur = save;
-    input.onkeypress = (e) => e.key === 'Enter' && save();
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            save();
+        }
+    });
     
     labelElem.textContent = '';
     labelElem.appendChild(input);
@@ -349,3 +429,26 @@ function getCurrentTerm() {
     if (month >= 3 && month <= 5) return `Spring ${year}`;
     return `Summer ${year}`;
 }
+
+// Add CSS rules
+const style = document.createElement('style');
+style.textContent = `
+    .edit-mode-controls {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+    }
+    
+    .edit-mode .item-controls,
+    .edit-mode .category-controls {
+        display: block !important;
+    }
+    
+    .edit-mode .label:hover,
+    .edit-mode h2:hover {
+        background: #f0f0f0;
+        cursor: pointer;
+    }
+`;
+document.head.appendChild(style);
