@@ -30,6 +30,10 @@ class Assignment {
     }
 }
 
+function popOpen() {
+    window.open(chrome.runtime.getURL('GradeBook/grades.html'), 'Gradebook', 'width=800, height=600, menubar=no, toolbar=no, location=no, status=no')
+}
+
 // Holds the found assignments
 const assignments = []
 

@@ -9,7 +9,7 @@
     {
       "matches": ["*://canvas.oregonstate.edu/*"],
       "js": [
-        "SideMenu/standardized_syllabus.js", 
+        "SideMenu/standardized_syllabus.js",
         "CanvasColors/colorCanvas.js",
         "sayHello.js",
         "SpeedBoost/speed_boost.js",
@@ -28,7 +28,8 @@
     {
       "resources": [
         "CanvasColors/custom.css",
-        "HelpInfo/help.html"
+        "HelpInfo/help.html",
+        "GradeBook/grades.html"
       ],
       "matches": ["*://canvas.oregonstate.edu/*"]
     }
