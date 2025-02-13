@@ -72,44 +72,18 @@ function getDefaultStructure() {
 // Add after storage functions
 let isEditMode = false;
 let backupData = null;
+let data;
+const main = document.getElementById('syllabus-categories');
+const urlParams = new URLSearchParams(window.location.search);
+const courseId = urlParams.get('courseId') || 'unknown';
 
-function createEditControls() {
-    const controls = document.createElement('div');
-    controls.className = 'edit-mode-controls';
+function setupEditControls() {
+    const controls = document.getElementById('edit-controls');
+    const editBtn = document.querySelector('.edit-mode-btn');
+    const cancelBtn = document.querySelector('.cancel-btn');
+    const doneBtn = document.querySelector('.done-btn');
+    const addCategoryBtn = document.querySelector('.add-category-btn');
     
-    const editBtn = document.createElement('button');
-    editBtn.textContent = 'Edit';
-    editBtn.className = 'edit-mode-btn standard-button';
-    
-    const cancelBtn = document.createElement('button');
-    cancelBtn.textContent = 'Cancel';
-    cancelBtn.className = 'cancel-btn standard-button';
-    cancelBtn.style.display = 'none';
-    
-    const doneBtn = document.createElement('button');
-    doneBtn.textContent = 'Done';
-    doneBtn.className = 'done-btn standard-button';
-    doneBtn.style.display = 'none';
-    
-    controls.append(editBtn, cancelBtn, doneBtn);
-    return { controls, editBtn, cancelBtn, doneBtn };
-}
-
-document.addEventListener('DOMContentLoaded', async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const courseId = urlParams.get('courseId') || 'unknown';
-    
-    // Load saved data
-    const data = await loadCourseData(courseId);
-    console.log('Loaded data structure:', data);
-
-    const main = document.createElement('main');
-    main.className = 'syllabus-content';
-
-    // Add edit controls
-    const { controls, editBtn, cancelBtn, doneBtn } = createEditControls();
-    main.appendChild(controls);
-
     editBtn.onclick = () => {
         isEditMode = true;
         backupData = JSON.parse(JSON.stringify(data));
@@ -117,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         cancelBtn.style.display = 'inline';
         doneBtn.style.display = 'inline';
         document.body.classList.add('edit-mode');
-        main.querySelector('.add-category-btn').style.display = 'block';
+        document.querySelector('.add-category-btn').style.display = 'block';
     };
 
     cancelBtn.onclick = async () => {
@@ -132,8 +106,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         cancelBtn.style.display = 'none';
         doneBtn.style.display = 'none';
         document.body.classList.remove('edit-mode');
-        main.querySelector('.add-category-btn').style.display = 'none';
+        document.querySelector('.add-category-btn').style.display = 'none';
     };
+
+    addCategoryBtn.onclick = async () => {
+        const newCategory = {
+            name: 'New Category',
+            items: []
+        };
+        data.categories.push(newCategory);
+        const section = createSection(newCategory.name, [], newCategory, data);
+        main.appendChild(section);
+        await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
+        // Trigger edit of the new category name
+        section.querySelector('h2').click();
+    };
+
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseId = urlParams.get('courseId') || 'unknown';
+    
+    // Load saved data
+    data = await loadCourseData(courseId);
+    console.log('Loaded data structure:', data);
+
+    // Setup edit controls
+    setupEditControls();
 
     // Dynamically create sections from categories
     data.categories.forEach(category => {
@@ -145,9 +145,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         main.appendChild(section);
     });
 
-    addNewCategoryButton(main, data);
     enableDragDrop(main, data);
-    document.body.appendChild(main);
 });
 
 function createSection(title, items, category, data) {
@@ -186,7 +184,7 @@ function createCategoryControls(section, category, data) {
     dragBtn.title = 'Drag to reorder';
     
     const deleteBtn = document.createElement('button');
-    deleteBtn.textContent = '╳';
+    deleteBtn.textContent = 'X';
     deleteBtn.className = 'standard-button delete-btn';
     deleteBtn.onclick = () => deleteCategory(section, category, data);
     
@@ -282,7 +280,7 @@ function createItemRow([label, value, editable], category, data) {
         
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'standard-button delete-btn';
-        deleteBtn.textContent = '╳';
+        deleteBtn.textContent = 'X';
         deleteBtn.onclick = () => isEditMode && deleteItem(row, category, label, data);
         
         controls.append(dragBtn, deleteBtn);
@@ -351,7 +349,6 @@ function makeEditable(element, field, category, data) {
 
         try {
             const courseId = new URLSearchParams(window.location.search).get('courseId');
-            const data = await loadCourseData(courseId);
             
             // Update the text in the nested structure
             category.items.forEach(item => {
@@ -362,7 +359,6 @@ function makeEditable(element, field, category, data) {
             
             await saveCourseData(courseId, data);
             element.textContent = newValue;
-            debugStorage();
         } catch (error) {
             console.error('Save error:', error);
             element.textContent = currentValue;
@@ -383,25 +379,6 @@ function makeEditable(element, field, category, data) {
     input.select();
 }
 
-function addNewCategoryButton(main, data) {
-    const btn = document.createElement('button');
-    btn.textContent = '+ Add Category';
-    btn.className = 'add-category-btn';
-    btn.style.display = 'none'; // Hide by default
-    btn.onclick = async () => {
-        const newCategory = {
-            name: 'New Category',
-            items: []
-        };
-        data.categories.push(newCategory);
-        const section = createSection(newCategory.name, [], newCategory, data);
-        main.insertBefore(section, btn);
-        await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
-        // Trigger edit of the new category name
-        section.querySelector('h2').click();
-    };
-    main.appendChild(btn);
-}
 
 function enableDragDrop(main, data) {
     let draggedItem = null;
