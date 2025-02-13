@@ -584,14 +584,3 @@ async function updateItemOrder(data) {
         await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
     }
 }
-
-function getCurrentTerm() {
-    const now = new Date();
-    const month = now.getMonth();
-    const year = now.getFullYear();
-    
-    if (month >= 8 && month <= 11) return `Fall ${year}`;
-    if (month >= 0 && month <= 2) return `Winter ${year}`;
-    if (month >= 3 && month <= 5) return `Spring ${year}`;
-    return `Summer ${year}`;
-}
