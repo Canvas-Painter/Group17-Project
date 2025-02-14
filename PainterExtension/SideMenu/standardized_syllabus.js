@@ -1,5 +1,3 @@
-
-// 
 function activateSideMenu() {
     const checkInterval = setInterval(() => {
         console.log("Checking for menu...");
