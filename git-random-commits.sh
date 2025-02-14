@@ -60,7 +60,15 @@ main() {
         exit 1
     }
 
-    # Pull changes
+    # check to be on main or experiemntal branch
+    branch=$(git branch --show-current)
+    if [[ "$branch" != "main" && "$branch" != "experimental" ]]; then
+        echo "Error: Not on main or experimental branch"
+        exit 1
+    fi
+
+    # Reset head and pull latest changes
+    git reset --hard
     git pull
 
     # Generate random number of iterations between 10 and 15
