@@ -39,6 +39,10 @@ aside#right-side[role="complementary"] li.event a.recent_feedback_icon div.event
     background: transparent !important;
 }
 
+.context_module .name {
+    text-shadow: none;
+}
+
 /* Hide stuff */
 img.ic-sidebar-logo__image {
 
@@ -81,8 +85,11 @@ img.ic-sidebar-logo__image {
 }
 
 .darkmode .context_module .header{
-    color: var(--text-2) !important;
     background-color: var(--bg-1) !important;
+}
+
+.darkmode .context_module .name {
+    color: var(--text-2) !important;
 }
 
 .darkmode .context_module .content .context_module_items .context_module_item .ig-row {
@@ -92,7 +99,7 @@ img.ic-sidebar-logo__image {
 
 
 /* Links */
-.darkmode ul#section-tabs a, .darkmode div.user_content a, .darkmode ul.group_list a, .darkmode a.jump_to_today_link, .darkmode #syllabusTableBody tr.detail_list td a, .darkmode div#sidebar_content div.content a, .darkmode #planner-todosidebar-item-list a, .darkmode button#external_feed, .darkmode a.more_link, .darkmode button.css-4gtntb-view-link, .darkmode div#footer-links.ic-app-footer__links a, .darkmode span.css-103zv00-view-flexItem a, .darkmode span.css-103zv00-view-flexItem button, .darkmode b {
+.darkmode ul#section-tabs a, .darkmode div.user_content a, .darkmode ul.group_list a, .darkmode a.jump_to_today_link, .darkmode #syllabusTableBody tr.detail_list td a, .darkmode div#sidebar_content div.content a, .darkmode #planner-todosidebar-item-list a, .darkmode button#external_feed, .darkmode a.more_link, .darkmode button.css-4gtntb-view-link, .darkmode div#footer-links.ic-app-footer__links a, .darkmode span.css-103zv00-view-flexItem a, .darkmode span.css-103zv00-view-flexItem button, .darkmode li.context_module_item span.item_name a, .darkmode b {
     color: var(--links) !important;
     text-decoration-color: var(--links) !important;
 }
@@ -102,7 +109,7 @@ img.ic-sidebar-logo__image {
 .darkmode #context_modules_sortable_container, .ig-header {
 
     background-color: var(--bg-2) !important;
-    border: var(--bg-2) !important;
+    
 }
 
 /* BG1 */
@@ -167,6 +174,10 @@ img.ic-sidebar-logo__image {
     background-color: var(--bg-1) !important;
 }
 
+.darkmode ul.student-assignment-overview, .darkmode div#sidebar_content {
+    color: var(--text-1)
+}
+
 .darkmode h1, .darkmode div.page-heading h1.course-title, .darkmode div.ic-item-row__meta-col p, .darkmode h2, .darkmode h3 {
     color: var(--text-2) !important;
     
@@ -192,7 +203,7 @@ img.ic-sidebar-logo__image {
 
 /* Icons */
 
-.darkmode div.ToDoSidebarItem__Close, .darkmode span.css-1fzata2-view--block, .darkmode i.icon-arrow-open-left, .darkmode i.icon-arrow-open-right, .darkmode li::before, .darkmode div#DashboardOptionsMenu_Container, .darkmode svg.ToDoSidebarItem__Icon, .darkmode button.css-z9k86c-view--inlineBlock-baseButton, .darkmode button.css-1d9pnn7-view--inlineBlock-baseButton, .darkmode button.css-1g92ec9-view--inlineBlock-baseButton, .darkmode button.css-1g92ec9-view--inlineBlock-baseButton {
+.darkmode div.ToDoSidebarItem__Close, .darkmode span.css-1fzata2-view--block, .darkmode i.icon-arrow-open-left, .darkmode i.icon-arrow-open-right, .darkmode li::before, .darkmode div#DashboardOptionsMenu_Container, .darkmode svg.ToDoSidebarItem__Icon, .darkmode button.css-z9k86c-view--inlineBlock-baseButton, .darkmode button.css-1d9pnn7-view--inlineBlock-baseButton, .darkmode button.css-1g92ec9-view--inlineBlock-baseButton, .darkmode button.css-1g92ec9-view--inlineBlock-baseButton, .darkmode i.icon-mini-arrow-down, .darkmode span.css-btw693-closeButton {
     filter: invert(100%) !important;
 }
 
