@@ -30,3 +30,8 @@ function stdDev(data, pop=false) {
 
     return Math.sqrt(total)
 }
+
+module.exports = {
+    mean: mean,
+    stdDev: stdDev
+}
