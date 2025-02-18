@@ -17,7 +17,7 @@ function stdDev(data, pop=false) {
 
     let total = 0
     data.forEach(value => {
-        let curr = mu + value
+        let curr = value - mu
 
         total += curr * curr
     });
@@ -29,4 +29,9 @@ function stdDev(data, pop=false) {
     }
 
     return Math.sqrt(total)
+}
+
+module.exports = {
+    mean: mean,
+    stdDev: stdDev
 }
