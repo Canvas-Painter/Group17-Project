@@ -3,10 +3,13 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import atexit
 from os.path import join, dirname
-from pyvirtualdisplay import Display
+from sys import platform
+if platform == 'linux':
+    from pyvirtualdisplay import Display
 
-display = Display()
-display.start()
+if platform == 'linux':
+    display = Display()
+    display.start()
 extension_path = join(dirname(__file__), '../..')
 
 options = webdriver.ChromeOptions()
@@ -15,6 +18,8 @@ driver = webdriver.Chrome(options=options, service=Service(ChromeDriverManager()
 
 def clean():
     driver.close()
-    display.stop()
+
+    if platform == 'linux':
+        display.stop()
 
 atexit.register(clean)
