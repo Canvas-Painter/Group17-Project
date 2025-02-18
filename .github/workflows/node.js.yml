@@ -21,6 +21,7 @@ jobs:
 
     steps:
     - name: Use Node.js ${{ matrix.node-version }}
-      working-directory: ./PainterExtension
     - run: npm ci
+      working-directory: ./PainterExtension
     - run: npm test
+      working-directory: ./PainterExtension
