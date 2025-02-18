@@ -2,14 +2,17 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import atexit
+# I probably shouldn't be overriding join
 from os.path import join, dirname
+from os import environ
 from sys import platform
 # PyVirtualDisplay is linux (and maybe mac) only
 if platform == 'linux':
     from pyvirtualdisplay import Display
 
 # Enables the virtual display if needed
-if platform == 'linux':
+display = None
+if platform == 'linux' and environ.get('VISIBLE') is None:
     display = Display()
     display.start()
 
@@ -25,7 +28,7 @@ driver = webdriver.Chrome(options=options, service=Service(ChromeDriverManager()
 def clean():
     driver.close()
 
-    if platform == 'linux':
+    if display is not None:
         display.stop()
 
 # Hooks up the clean function
