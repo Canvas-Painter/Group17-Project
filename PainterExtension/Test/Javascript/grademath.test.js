@@ -1,9 +1,11 @@
 const math = require("../../GradeBook/math")
 
+// Smaple distributions to calculate stuff on
 const sample1 = [1, 2, 3]
 const sample2 = [-3, 2, 2, 5, -1, -1, -1, -4, 6, -1]
 const sample3 = [-33, 0, -46, -34, 2, 11, -32, 14, -22, -18, -16, -58, -44, -56, -41, -42, -14, 9, 25, 20, -58, -51, -36, -37, -35]
 
+// These check that the means are valid
 test('Mean Test 1', () => {
     expect(math.mean(sample1))
         .toBeCloseTo(2)
@@ -19,6 +21,7 @@ test('Mean Test 3', () => {
         .toBeCloseTo(-23.68)
 })
 
+// These check both the population and sample std. dev. of the distributions
 test('StdDev Test 1', () => {
     expect(math.stdDev(sample1, false))
         .toBeCloseTo(1)
