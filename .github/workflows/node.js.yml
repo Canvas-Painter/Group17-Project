@@ -25,8 +25,11 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+        cache-dependency-path: ./PainterExtension
         cache: 'npm'
-    - run: npm ci
+    - name: Install
+      run: npm ci
       working-directory: ./PainterExtension
-    - run: npm test
+    - name: Test
+      run: npm test
       working-directory: ./PainterExtension
