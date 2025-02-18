@@ -66,7 +66,7 @@ img.ic-sidebar-logo__image {
     background-color: var(--bg-0) !important;
 }
 
-.darkmode div.user_content, .darkmode span.ic-section-tooltip, .darkmode span#section-tabs-header-subtitle {
+.darkmode div.user_content, .darkmode span.ic-section-tooltip, .darkmode span#section-tabs-header-subtitle, .darkmode div.css-h20mns-view--flex-flex {
     color: var(--text-0) !important;
 }
 
@@ -84,7 +84,7 @@ img.ic-sidebar-logo__image {
     color: var(--text-0) !important;
 }
 
-.darkmode .context_module .header{
+.darkmode .context_module .header {
     background-color: var(--bg-1) !important;
 }
 
@@ -106,10 +106,17 @@ img.ic-sidebar-logo__image {
 
 
 
-.darkmode #context_modules_sortable_container, .ig-header {
+.darkmode #context_modules_sortable_container, .ig-header, .darkmode div.css-sg1rn7-view {
 
     background-color: var(--bg-2) !important;
-    
+}
+
+.darkmode ul[data-testid="pill-container"] li, .darkmode span[data-testid="discussion-topic-closed-for-comments"] {
+    color: var(--text-1) !important;
+}
+
+.darkmode span[data-testid="author_name"] a {
+    color: var(--links) !important;
 }
 
 /* BG1 */
