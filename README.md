@@ -6,8 +6,11 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 Repository Layout:
 1. /reports : Weekly reports, YYYYMMDD.md
 2. /PainterExtension: Chrome Extension, features in sub-directories
+3. /documents: the location of project documents including Project Proposal, Developer Documentation and User Documentation
 
 ## Links
-- [Project Proposal](https://docs.google.com/document/d/1Sg_moN46KJ2fcR-Hak0WlZDEZvt-L2gO4nh3mJlo9x4/edit?tab=t.0#heading=h.phhvohkmjdjl)
+- [Project Proposal](https://docs.google.com/document/d/1Sg_moN46KJ2fcR-Hak0WlZDEZvt-L2gO4nh3mJlo9x4)
+- [Developer Documentation](https://docs.google.com/document/d/13YbMxTzsQXYc2uVJYm61ArJ58H_LvJ6tH59HM6h7rzQ)
+- [User Documentation](https://docs.google.com/document/d/1xUaHkDol8P2Ght-Y0p4gwRxqx8HyKfweMmLJVI2JGq8)
 - [Project Ideas Notion](https://www.notion.so/CS-362-Software-Engineering-2-Project-176bd7e17f8880f7a190db13b8cf9de8)
 - [Project TODO Trello](https://trello.com/b/JSf9TgUc/cs-362-pt-team-17-project-painter)
