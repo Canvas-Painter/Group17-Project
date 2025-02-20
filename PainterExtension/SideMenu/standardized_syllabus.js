@@ -38,13 +38,15 @@ function addStandardSyllabusLink(menu) {
 }
 
 function showSyllabusPopup() {
+    // Extract course ID from current URL
+    const courseId = window.location.pathname.match(/\/courses\/(\d+)/)?.[1] || 'unknown';
+    
     const wrapper = document.createElement('div');
     wrapper.className = 'standardized-syllabus-feature popup-wrapper';
     
     const popup = document.createElement('div');
     popup.className = 'syllabus-popup';
     
-    // Close function to reuse
     const closePopup = () => wrapper.remove();
     
     const closeBtn = document.createElement('span');
@@ -52,28 +54,39 @@ function showSyllabusPopup() {
     closeBtn.textContent = 'X';
     closeBtn.onclick = closePopup;
     
-    // Handle click outside
+    const popoutBtn = document.createElement('span');
+    popoutBtn.className = 'popout-btn';
+    popoutBtn.textContent = '⤢';
+    
+    const syllabusUrl = `${chrome.runtime.getURL('SideMenu/standard_syllabus.html')}?courseId=${courseId}`;
+    
+    popoutBtn.onclick = () => {
+        const syllabusWindow = window.open(syllabusUrl, 'StandardSyllabus', 
+            'width=800,height=600,menubar=no,toolbar=no,location=no,status=no');
+        closePopup();
+    };
+    
+    const controls = document.createElement('div');
+    controls.className = 'popup-controls';
+    controls.appendChild(popoutBtn);
+    controls.appendChild(closeBtn);
+    
+    const iframe = document.createElement('iframe');
+    iframe.src = syllabusUrl;
+    iframe.className = 'syllabus-iframe';
+    
     wrapper.addEventListener('click', (e) => {
-        if (e.target === wrapper) {
-            closePopup();
-        }
+        if (e.target === wrapper) closePopup();
     });
     
-    // Handle escape key
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closePopup();
-        }
-    }, { once: true }); // Remove listener after first escape
+        if (e.key === 'Escape') closePopup();
+    }, { once: true });
     
-    const table = document.createElement('table');
-    table.innerHTML = `
-        <tr><td>Professor name:</td><td>James</td></tr>
-        <tr><td>Email:</td><td>james@gmail.com</td></tr>
-    `;
-    
-    popup.appendChild(closeBtn);
-    popup.appendChild(table);
+    popup.appendChild(controls);
+    popup.appendChild(iframe);
     wrapper.appendChild(popup);
     document.body.appendChild(wrapper);
 }
+
+activateSideMenu();

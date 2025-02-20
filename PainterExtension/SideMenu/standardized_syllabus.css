@@ -27,24 +27,34 @@ a.standard-syllabus.standardized-syllabus-feature {
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    max-width: 500px;
     width: 90%;
+    height: 90vh;
+    max-width: 1000px;
 }
 
-.standardized-syllabus-feature .close-btn {
+.popup-controls {
     position: absolute;
     right: 10px;
     top: 10px;
-    cursor: pointer;
-    font-weight: bold;
+    z-index: 1;
 }
 
-.standardized-syllabus-feature table {
-    border-collapse: collapse;
+.standardized-syllabus-feature .close-btn,
+.standardized-syllabus-feature .popout-btn {
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px;
+    background: white;
+    padding: 5px 8px;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.syllabus-iframe {
+    width: 100%;
+    height: calc(100% - 20px);
+    border: none;
     margin-top: 20px;
 }
 
-.standardized-syllabus-feature td {
-    padding: 8px;
-    border: 1px solid #ddd;
-}
+/* Remove the table styles as they're no longer needed */
