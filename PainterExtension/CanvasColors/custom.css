@@ -53,10 +53,11 @@ div.ic-announcement-row {
     padding-right: 10px;
 }
 
+
 /* !!! Gen Adjustments !!! */
 
-.darkmode tbody tr:hover {
-    background-color: var(--bg-1) !important;
+.darkmode table tbody tr:hover {
+    background-color: none !important; /* var(--bg-1) */
 }
 
 .darkmode div.calendar tbody tr:hover{
@@ -113,7 +114,7 @@ div.ic-announcement-row {
 
 
 /* Links */
-.darkmode ul#section-tabs a, .darkmode div.user_content a, .darkmode ul.group_list a, .darkmode a.jump_to_today_link, .darkmode #syllabusTableBody tr.detail_list td a, .darkmode div#sidebar_content div.content a, .darkmode #planner-todosidebar-item-list a, .darkmode button#external_feed, .darkmode a.more_link, .darkmode button.css-4gtntb-view-link, .darkmode div#footer-links.ic-app-footer__links a, .darkmode span.css-103zv00-view-flexItem a, .darkmode span.css-103zv00-view-flexItem button, .darkmode li.context_module_item span.item_name a, .darkmode table#grades_summary a, .darkmode div.css-h20mns-view--flex-flex a, .darkmode div.ic-item-row a, .darkmode ul.css-feuh9k-view--block li button, .darkmode div.navigation-tray-container ul li a, .darkmode button[aria-controls="calendar_feed_box"], .darkmode b {
+.darkmode table#my_groups_table tr a, .darkmode table#my_courses_table.course-list-table tbody tr a, .darkmode table#my_courses_table th a, .darkmode table#past_enrollments_table tbody tr a, .darkmode table#past_enrollments_table th a, .darkmode ul#section-tabs a, .darkmode div.user_content a, .darkmode ul.group_list a, .darkmode a.jump_to_today_link, .darkmode #syllabusTableBody tr.detail_list td a, .darkmode div#sidebar_content div.content a, .darkmode #planner-todosidebar-item-list a, .darkmode button#external_feed, .darkmode a.more_link, .darkmode button.css-4gtntb-view-link, .darkmode div#footer-links.ic-app-footer__links a, .darkmode span.css-103zv00-view-flexItem a, .darkmode span.css-103zv00-view-flexItem button, .darkmode li.context_module_item span.item_name a, .darkmode table#grades_summary a, .darkmode div.css-h20mns-view--flex-flex a, .darkmode div.ic-item-row a, .darkmode ul.css-feuh9k-view--block li button, .darkmode div.navigation-tray-container ul li a, .darkmode button[aria-controls="calendar_feed_box"], .darkmode b {
     color: var(--links) !important;
     text-decoration-color: var(--links) !important;
 }
@@ -124,7 +125,7 @@ div.ic-announcement-row {
     background-color: var(--bg-2) !important;
 }
 
-.darkmode ul[data-testid="pill-container"] li, .darkmode span[data-testid="discussion-topic-closed-for-comments"], .darkmode table#grades_summary tr th div.context, .darkmode div.navigation-tray-container ul li div, .darkmode table span.fc-day-number {
+.darkmode table#my_groups_table th, .darkmode ul[data-testid="pill-container"] li, .darkmode span[data-testid="discussion-topic-closed-for-comments"], .darkmode table#grades_summary tr th div.context, .darkmode div.navigation-tray-container ul li div, .darkmode table span.fc-day-number {
     color: var(--text-1) !important;
 }
 
@@ -149,7 +150,7 @@ div.ic-announcement-row {
     color: var(--links) !important;
 }
 
-.darkmode #breadcrumbs[role="navigation"] {
+.darkmode #breadcrumbs[role="navigation"], .darkmode table#my_courses_table tbody tr, .darkmode table#past_enrollments_table tbody tr {
     color: var(--text-0) !important;
 }
 
@@ -194,15 +195,19 @@ div.ic-announcement-row {
     background-color: var(--bg-1) !important;
 }
 
+.darkmode table#my_courses_table.course-list-table tbody tr.course-list-table-row:hover, .darkmode table#my_courses_table.course-list-table tbody tr.course-list-unpublished-course-row, .darkmode table#past_enrollments_table tbody tr.course-list-table-row:hover, .darkmode table#past_enrollments_table tbody tr.course-list-unpublished-course-row, .darkmode table#my_courses_table.course-list-table tbody tr.course-list-unpublished-course-row {
+    background-color: var(--bg-0);
+}
+
 .darkmode div.calendar table th.fc-day-header {
     color: var(--text-2) !important;
 }
 
-.darkmode table#grades_summary, .darkmode div#whatif-score-description {
+.darkmode table#my_groups_table tr, .darkmode table#grades_summary, .darkmode div#whatif-score-description {
     color: var(--text-0) !important;
 }
 
-.darkmode ul.student-assignment-overview, .darkmode div#sidebar_content {
+.darkmode ul.student-assignment-overview, .darkmode div#sidebar_content, .darkmode span.course-list-unpublished-course {
     color: var(--text-1) !important;
 }
 
