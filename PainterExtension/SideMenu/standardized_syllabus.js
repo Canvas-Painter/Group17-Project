@@ -88,3 +88,5 @@ function showSyllabusPopup() {
     wrapper.appendChild(popup);
     document.body.appendChild(wrapper);
 }
+
+activateSideMenu();
