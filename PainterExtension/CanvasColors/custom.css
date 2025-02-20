@@ -108,7 +108,7 @@ div.ic-announcement-row {
     background-color: var(--bg-1) !important;
 }
 
-.darkmode span.transition--slide-left-entered {
+.darkmode span.transition--slide-left-entered, .darkmode td.fc-event-container a {
     background-color: var(--bg-0) !important;
 }
 
@@ -118,8 +118,6 @@ div.ic-announcement-row {
     color: var(--links) !important;
     text-decoration-color: var(--links) !important;
 }
-
-
 
 .darkmode #context_modules_sortable_container, .ig-header, .darkmode div.css-sg1rn7-view {
     background-color: var(--bg-2) !important;
@@ -189,10 +187,45 @@ div.ic-announcement-row {
 }
 
 
+.darkmode div.event-details {
+    background-color: var(--bg-0);
+    color: var(--text-0);
+}
+
+.darkmode div.event-details-timestring {
+    color: var(--text-1);
+}
+
+.darkmode div.event-details a {
+    color: var(--links);
+}
+
+
 /* Tables */
 .darkmode #syllabusTableBody tbody, .darkmode #syllabusTableBody th, .darkmode #syllabusTableBody tr.detail_list td, .darkmode div.ic-item-row {
     color: var(--text-2) !important;
     background-color: var(--bg-1) !important;
+}
+
+.darkmode td.fc-day.fc-widget-content.fc-wed.fc-today, .darkmode td.fc-day-top.fc-wed.fc-today {
+    background-color: var(--bg-1);
+}
+
+.darkmode div#calendar-list-holder {
+    background-color: var(--bg-1);
+    color: var(--text-1);
+}
+
+.darkmode ul#undated_events_list, .darkmode ul#undated_events_list li {
+    background-color: var(--bg-1);
+}
+
+.darkmode ul#undated_events_list li a.undated_event_title {
+    color: var(--links) !important;
+}
+
+.darkmode div#calendar-list-holder li:hover {
+    background-color: var(--bg-0);
 }
 
 .darkmode table#my_courses_table.course-list-table tbody tr.course-list-table-row:hover, .darkmode table#my_courses_table.course-list-table tbody tr.course-list-unpublished-course-row, .darkmode table#past_enrollments_table tbody tr.course-list-table-row:hover, .darkmode table#past_enrollments_table tbody tr.course-list-unpublished-course-row, .darkmode table#my_courses_table.course-list-table tbody tr.course-list-unpublished-course-row {
