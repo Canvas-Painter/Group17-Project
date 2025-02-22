@@ -1,0 +1,50 @@
+/* Link styling */
+a.standard-syllabus.standardized-syllabus-feature {
+    color: orange !important;
+    text-decoration: none;
+}
+
+/* Wrapper/overlay */
+.standardized-syllabus-feature.popup-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Popup */
+.standardized-syllabus-feature .syllabus-popup {
+    position: relative;
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    max-width: 500px;
+    width: 90%;
+}
+
+.standardized-syllabus-feature .close-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.standardized-syllabus-feature table {
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.standardized-syllabus-feature td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
