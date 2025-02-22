@@ -1,0 +1,49 @@
+--- Late Policy ---
+ Homework submitted up to 24 hours late will receive a 10% penalty.
+ Homework submitted from 24 to 48 hours late will receive a 20% penalty.
+
+
+--- Grading Policy ---
+Note: Average score ranges given in interval notation
+Grade Average Score
+A [93, 100]
+A- [90, 93)
+B+ [87, 90)
+B [83, 87)
+B- [80, 83)
+C+ [77, 79)
+C [73, 77)
+C- [70, 73)
+D+ [67, 70)
+D [63, 67)
+D- [60, 63)
+F [0, 60)
+* REMINDER: A passing grade for core classes in CS is a C or above. A C-, 72 or below, is not a
+passing grade for CS majors.
+
+
+--- Grading Weights ---
+Your course grade will be based on the following:
+Homework 60%
+Quizzes 20%
+Final Exam 20%
+TOTAL ------- 100%
+Homework:
+There are seven homework assignments. Assignments will submitted to Canvas
+ Homework submitted up to 24 hours late will receive a 10% penalty.
+ Homework submitted from 24 to 48 hours late will receive a 20% penalty.
+ Any disagreement in scoring must be addressed within one week of the work being
+graded. All questions about grading must be placed in the “Assignment Comments” section
+of the Canvas submission for that assignment. If a response to your comment is not posted
+within 48 hours you can email a TA requesting that they review the comments.
+Quizzes:
+There are seven quizzes for this course, Quizzes administered in Canvas and contain multiple
+choice. True/False, matching and fill in the blank questions. Each quiz attempt has a 90 minute
+time limit and is not proctored. You will get two attempts at each quiz and your AVERAGE score is
+kept. Some quizzes contain randomly selected question so you may receive different questions on
+each attempt at the quiz. Quizzes are open book. Late quizzes are not allowed. Your low quiz score
+will be dropped.
+Final Exam:
+The cumulative final exam will be given in class during finals week at the time scheduled for this
+class, Wednesday March 19th at 9:30am
+
