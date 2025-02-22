@@ -2,14 +2,15 @@
     --bg-0: #383838;
     --bg-1: #4c4c4c;
     --bg-2: transparent;
-    --text-0: #eeeeee;
+    --text-0: #e7e7e7;
     --text-1: #f8bc80;
     --text-2: #f8a451;
-    --borders: #f5f5f5;
+    --borders: #f5f5f5; /* not used */
     --sidebar: #D73F09;
-    --sidebar-icons: #f5f5f5;
+    --sidebar-icons: #f5f5f5; /* not used */
     --links: #f58c02;
     --hamburger: #ffffff;
+    --invrt: 100%;
 
     /* --bg-0: #222121;
     --bg-1: #444444;
@@ -54,14 +55,37 @@ div.ic-announcement-row {
 }
 
 
-/* !!! Gen Adjustments !!! */
+.darkmode div.calendar tbody tr:hover{
+    filter: none;
+}
 
 .darkmode table tbody tr:hover {
     background-color: none !important; /* var(--bg-1) */
 }
 
-.darkmode div.calendar tbody tr:hover{
-    filter: none; /* do nothing... */
+
+/* !!! Gen Adjustments !!! */
+
+.darkmode p, .darkmode aside#right-side, .darkmode aside#right-side table tr p {
+    color: var(--text-0);
+}
+
+
+.darkmode label[for="show_by_date"], .darkmode label[for="show_by_type"] {
+    background-color: var(--bg-1);
+}
+
+.darkmode label[for="show_by_date"] span, .darkmode label[for="show_by_type"] span {
+    color: var(--text-0);
+}
+
+.darkmode div.assignment_group, .darkmode li.service#service_google_drive, .darkmode li.service#unregistered_service_skype a {
+    background-color: var(--bg-1);
+    color: var(--text-0);
+}
+
+.darkmode li.service#service_google_drive:hover, .darkmode li.service#unregistered_service_skype a:hover {
+    background-color: var(--bg-1);
 }
 
 .darkmode .icon-hamburger::before {
@@ -77,16 +101,12 @@ div.ic-announcement-row {
     background-color: var(--bg-0) !important;
 }
 
-.darkmode div.user_content, .darkmode span.ic-section-tooltip, .darkmode span#section-tabs-header-subtitle, .darkmode div.css-h20mns-view--flex-flex, .darkmode div.final_grade, .darkmode span.css-19c1r1n-view-flexItem, .darkmode div.userMessage {
+.darkmode div.ef-main, .darkmode header.ef-header, .darkmode p#links_empty_message, .darkmode p#biography_empty_message, .darkmode div#links, .darkmode div#biography, .darkmode div.user_content, .darkmode span.ic-section-tooltip, .darkmode span#section-tabs-header-subtitle, .darkmode div.css-h20mns-view--flex-flex, .darkmode div.final_grade, .darkmode span.css-19c1r1n-view-flexItem, .darkmode div.userMessage {
     color: var(--text-0) !important;
 }
 
 .darkmode .mini_calendar .day.has_event, .darkmode .mini_calendar .day.today, .darkmode div.pinned-discussions-v2__wrapper, .darkmode div.unpinned-discussions-v2__wrapper, .darkmode div.closed-for-comments-discussions-v2__wrapper, .darkmode div.discussions-v2__container-image, .darkmode table tbody.fc-body {
     background-color: var(--bg-1) !important;
-}
-
-.darkmode [title="Alternative formats"], .darkmode .al-trigger {
-    filter: invert(100%) !important;
 }
 
 
@@ -114,7 +134,7 @@ div.ic-announcement-row {
 
 
 /* Links */
-.darkmode table#my_groups_table tr a, .darkmode table#my_courses_table.course-list-table tbody tr a, .darkmode table#my_courses_table th a, .darkmode table#past_enrollments_table tbody tr a, .darkmode table#past_enrollments_table th a, .darkmode ul#section-tabs a, .darkmode div.user_content a, .darkmode ul.group_list a, .darkmode a.jump_to_today_link, .darkmode #syllabusTableBody tr.detail_list td a, .darkmode div#sidebar_content div.content a, .darkmode #planner-todosidebar-item-list a, .darkmode button#external_feed, .darkmode a.more_link, .darkmode button.css-4gtntb-view-link, .darkmode div#footer-links.ic-app-footer__links a, .darkmode span.css-103zv00-view-flexItem a, .darkmode span.css-103zv00-view-flexItem button, .darkmode li.context_module_item span.item_name a, .darkmode table#grades_summary a, .darkmode div.css-h20mns-view--flex-flex a, .darkmode div.ic-item-row a, .darkmode ul.css-feuh9k-view--block li button, .darkmode div.navigation-tray-container ul li a, .darkmode button[aria-controls="calendar_feed_box"], .darkmode b {
+.darkmode li div.ig-row a, .darkmode aside#right-side table tr a, .darkmode a.external, .darkmode table.profile_table, .darkmode div.ef-item-row a, .darkmode header.ef-directory-header a, .darkmode ul[role="tree"] a, .darkmode table#my_groups_table tr a, .darkmode table#my_courses_table.course-list-table tbody tr a, .darkmode table#my_courses_table th a, .darkmode table#past_enrollments_table tbody tr a, .darkmode table#past_enrollments_table th a, .darkmode ul#section-tabs a, .darkmode div.user_content a, .darkmode ul.group_list a, .darkmode a.jump_to_today_link, .darkmode #syllabusTableBody tr.detail_list td a, .darkmode div#sidebar_content div.content a, .darkmode #planner-todosidebar-item-list a, .darkmode button#external_feed, .darkmode a.more_link, .darkmode button.css-4gtntb-view-link, .darkmode div#footer-links.ic-app-footer__links a, .darkmode span.css-103zv00-view-flexItem a, .darkmode span.css-103zv00-view-flexItem button, .darkmode li.context_module_item span.item_name a, .darkmode table#grades_summary a, .darkmode div.css-h20mns-view--flex-flex a, .darkmode div.ic-item-row a, .darkmode ul.css-feuh9k-view--block li button, .darkmode div.navigation-tray-container ul li a, .darkmode button[aria-controls="calendar_feed_box"], .darkmode b {
     color: var(--links) !important;
     text-decoration-color: var(--links) !important;
 }
@@ -123,7 +143,7 @@ div.ic-announcement-row {
     background-color: var(--bg-2) !important;
 }
 
-.darkmode table#my_groups_table th, .darkmode ul[data-testid="pill-container"] li, .darkmode span[data-testid="discussion-topic-closed-for-comments"], .darkmode table#grades_summary tr th div.context, .darkmode div.navigation-tray-container ul li div, .darkmode table span.fc-day-number {
+.darkmode div.ig-header button, .darkmode table#my_groups_table th, .darkmode ul[data-testid="pill-container"] li, .darkmode span[data-testid="discussion-topic-closed-for-comments"], .darkmode table#grades_summary tr th div.context, .darkmode div.navigation-tray-container ul li div, .darkmode table span.fc-day-number {
     color: var(--text-1) !important;
 }
 
@@ -202,9 +222,18 @@ div.ic-announcement-row {
 
 
 /* Tables */
-.darkmode #syllabusTableBody tbody, .darkmode #syllabusTableBody th, .darkmode #syllabusTableBody tr.detail_list td, .darkmode div.ic-item-row {
+.darkmode li div.ig-row, .darkmode #syllabusTableBody tbody, .darkmode #syllabusTableBody th, .darkmode #syllabusTableBody tr.detail_list td, .darkmode div.ic-item-row {
     color: var(--text-2) !important;
     background-color: var(--bg-1) !important;
+}
+
+
+.darkmode table.profile_table tr {
+    color: var(--text-0);
+}
+
+.darkmode table.profile_table span.data_description {
+    color: var(--text-1);
 }
 
 .darkmode td.fc-day.fc-widget-content.fc-wed.fc-today, .darkmode td.fc-day-top.fc-wed.fc-today {
@@ -224,8 +253,12 @@ div.ic-announcement-row {
     color: var(--links) !important;
 }
 
-.darkmode div#calendar-list-holder li:hover {
+.darkmode div#calendar-list-holder li:hover, .darkmode div.item-group-container {
     background-color: var(--bg-0);
+}
+
+.darkmode div.ef-item-row:hover {
+    background-color: var(--bg-1);
 }
 
 .darkmode table#my_courses_table.course-list-table tbody tr.course-list-table-row:hover, .darkmode table#my_courses_table.course-list-table tbody tr.course-list-unpublished-course-row, .darkmode table#past_enrollments_table tbody tr.course-list-table-row:hover, .darkmode table#past_enrollments_table tbody tr.course-list-unpublished-course-row, .darkmode table#my_courses_table.course-list-table tbody tr.course-list-unpublished-course-row {
@@ -285,8 +318,8 @@ div.ic-announcement-row {
 
 /* Icons */
 
-.darkmode div.ToDoSidebarItem__Close, .darkmode span.css-1fzata2-view--block, .darkmode i.icon-arrow-open-left, .darkmode i.icon-arrow-open-right, .darkmode li::before, .darkmode div#DashboardOptionsMenu_Container, .darkmode svg.ToDoSidebarItem__Icon, .darkmode button.css-z9k86c-view--inlineBlock-baseButton, .darkmode button.css-1d9pnn7-view--inlineBlock-baseButton, .darkmode button.css-1g92ec9-view--inlineBlock-baseButton, .darkmode button.css-1g92ec9-view--inlineBlock-baseButton, .darkmode i.icon-mini-arrow-down, .darkmode span.css-btw693-closeButton, .darkmode i.icon-check-plus, .darkmode div[data-testid="ic-blue-unread-badge"], .darkmode span.fc-icon {
-    filter: invert(100%) !important;
+.darkmode [title="Alternative formats"], .darkmode .al-trigger, .darkmode i.icon-star, .darkmode i.icon-mini-arrow-right, .darkmode svg[name="IconMore"], .darkmode div.ToDoSidebarItem__Close, .darkmode span.css-1fzata2-view--block, .darkmode i.icon-arrow-open-left, .darkmode i.icon-arrow-open-right, .darkmode li::before, .darkmode div#DashboardOptionsMenu_Container, .darkmode svg.ToDoSidebarItem__Icon, .darkmode button.css-z9k86c-view--inlineBlock-baseButton, .darkmode button.css-1d9pnn7-view--inlineBlock-baseButton, .darkmode button.css-1g92ec9-view--inlineBlock-baseButton, .darkmode button.css-1g92ec9-view--inlineBlock-baseButton, .darkmode i.icon-mini-arrow-down, .darkmode span.css-btw693-closeButton, .darkmode i.icon-check-plus, .darkmode div[data-testid="ic-blue-unread-badge"], .darkmode span.fc-icon {
+    filter: invert(var(--invrt)) !important;
 }
 
 .darkmode a.active {

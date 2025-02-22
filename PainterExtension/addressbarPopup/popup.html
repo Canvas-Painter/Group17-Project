@@ -11,10 +11,48 @@
 
   <div>
     <label class="switch">
-        <input type="checkbox" id="darkmode-btn">
-        <span class="slider round"></span>
-      </label>
-      <span>Dark Mode</span>
+      <input type="checkbox" id="darkmode-btn">
+      <span class="slider round"></span>
+    </label>
+    <span>Dark Mode</span>
+  </div>
+
+  <div>
+    <label for="themeName">Theme Name:</label>
+    <input type="text" id="themeName" name="themeName">
+  </div>
+  <div>
+    <label for="--bg-1">Background-1  <input type="color" id="--bg-1" name="--bg-1"></label>
+    <label for="--bg-2">Background-2  <input type="color" id="--bg-2" name="--bg-2"></label>
+    <label for="--bg-3">Background-3  <input type="color" id="--bg-3" name="--bg-3"></label>
+
+    <label for="--text-1">Text-1  <input type="color" id="--text-1" name="--text-1"></label>    
+    <label for="--text-2">Text-2  <input type="color" id="--text-2" name="--text-2"></label>
+    <label for="--text-3">Text-3  <input type="color" id="--text-3" name="--text-3"></label>
+    
+    <label for="--sidebar">Sidebar  <input type="color" id="--sidebar" name="--sidebar"></label>
+    
+    <label for="--links">Links  <input type="color" id="--links" name="--links"></label>
+    
+    <label for="--hamburger">Hamburger  <input type="color" id="--hamburger" name="--hamburger"></label>
+
+    <label for="--invrt">Invert <input type="checkbox" id="--invrt" name="--invrt"></label>
+    
+  </div>
+  <button id="saveTheme">Save Theme</button>
+
+  <div>
+    <label for="existingThemes">Select Existing Theme:</label>
+    <select id="existingThemes">
+      <option value="">Select a theme</option>
+    </select>
+    <label class="switch">
+      <input type="checkbox" id="applyTheme-btn">
+      <span class="slider round"></span>
+    </label>
+    <span>Apply Theme</span>
+    <button id="deleteTheme">Delete Theme</button>
+    <button id="editTheme">Edit Theme</button>
   </div>
 
   <script src="popup.js"></script>
