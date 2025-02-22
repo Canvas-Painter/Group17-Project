@@ -1,14 +1,15 @@
 let customStylesheet = null;
-const darkmode = {'--bg-0': '#383838',
-                  '--bg-1': '#4c4c4c',
-                  '--bg-2': '#transparent',
-                  '--text-0': '#e7e7e7',
-                  '--text-1': '#f8bc80',
-                  '--text-2': '#f8a451',
-                  '--sidebar': '#D73F09',
-                  '--links': '#f58c02',
-                  '--hamburger': '#f58c02',
-                  '--invrt': '1',
+const darkmode = {  name: 'darkmode',
+                    '--bg-0': '#383838',
+                    '--bg-1': '#4c4c4c',
+                    '--bg-2': '#transparent',
+                    '--text-0': '#e7e7e7',
+                    '--text-1': '#f8bc80',
+                    '--text-2': '#f8a451',
+                    '--sidebar': '#D73F09',
+                    '--links': '#f58c02',
+                    '--hamburger': '#f58c02',
+                    '--invrt': '1'
 };
 
 // Function to check if darkmode is already in storage
