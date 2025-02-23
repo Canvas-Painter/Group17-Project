@@ -40,5 +40,6 @@
   "action": {
     "default_popup": "addressbarPopup/popup.html"
   },
-  "options_page": "options.html"
+  "options_page": "options.html",
+  "key": "test"
 }

@@ -3,3 +3,5 @@ selenium==4.26.0
 bs4==0.0.2
 webdriver-manager==4.0.2
 PyVirtualDisplay==3.0
+pillow==11.1.0
+numpy==2.2.3
