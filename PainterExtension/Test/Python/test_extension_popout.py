@@ -60,9 +60,7 @@ class TestExtensionPopout(unittest.TestCase):
             EC.presence_of_element_located((By.ID, "darkmode-btn"))
         )
 
-        # ------------------------------------------------
         # 2) Click link/button to open popout
-        # ------------------------------------------------
         # Let's assume you have a link with id="open-popout" that opens the page in a new window.
         open_popout_link = self.driver.find_element(By.ID, "open-popout")
         open_popout_link.click()
@@ -80,9 +78,7 @@ class TestExtensionPopout(unittest.TestCase):
         # Switch to it
         self.driver.switch_to.window(new_window_handle)
 
-        # ------------------------------------------------
         # 3) Verify the new window is displaying the correct page
-        # ------------------------------------------------
         # If the popout is the same popup.html, or if it’s a different URL, check accordingly:
         current_url = self.driver.current_url
         self.assertIn("popup.html", current_url,
