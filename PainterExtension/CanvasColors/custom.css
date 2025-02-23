@@ -47,9 +47,10 @@ div.ic-announcement-row {
     filter: none;
 }
 
-.theme table tbody tr:hover {
-    background-color: none !important; /* var(--bg-1) */
+.theme table tbody tr.student_assignment:hover {
+    background-color: var(--bg-1) !important;
 }
+
 
 
 /* !!! Gen Adjustments !!! */
@@ -85,7 +86,7 @@ div.ic-announcement-row {
 }
 
 
-.theme {
+.theme, .theme div.roster-tab, .theme span[data-id="submissions-comments-tray"], .theme span[data-id="submissions-comments-tray"] div div div div div {
     background-color: var(--bg-0) !important;
 }
 
@@ -93,7 +94,7 @@ div.ic-announcement-row {
     color: var(--text-0) !important;
 }
 
-.theme .mini_calendar .day.has_event, .theme .mini_calendar .day.today, .theme div.pinned-discussions-v2__wrapper, .theme div.unpinned-discussions-v2__wrapper, .theme div.closed-for-comments-discussions-v2__wrapper, .theme div.discussions-v2__container-image, .theme table tbody.fc-body {
+.theme table.roster tbody tr:nth-child(odd), .theme .mini_calendar .day.has_event, .theme .mini_calendar .day.today, .theme div.pinned-discussions-v2__wrapper, .theme div.unpinned-discussions-v2__wrapper, .theme div.closed-for-comments-discussions-v2__wrapper, .theme div.discussions-v2__container-image, .theme table tbody.fc-body {
     background-color: var(--bg-1) !important;
 }
 
@@ -122,7 +123,7 @@ div.ic-announcement-row {
 
 
 /* Links */
-.theme li div.ig-row a, .theme aside#right-side table tr a, .theme a.external, .theme table.profile_table, .theme div.ef-item-row a, .theme header.ef-directory-header a, .theme ul[role="tree"] a, .theme table#my_groups_table tr a, .theme table#my_courses_table.course-list-table tbody tr a, .theme table#my_courses_table th a, .theme table#past_enrollments_table tbody tr a, .theme table#past_enrollments_table th a, .theme ul#section-tabs a, .theme div.user_content a, .theme ul.group_list a, .theme a.jump_to_today_link, .theme #syllabusTableBody tr.detail_list td a, .theme div#sidebar_content div.content a, .theme #planner-todosidebar-item-list a, .theme button#external_feed, .theme a.more_link, .theme button.css-4gtntb-view-link, .theme div#footer-links.ic-app-footer__links a, .theme span.css-103zv00-view-flexItem a, .theme span.css-103zv00-view-flexItem button, .theme li.context_module_item span.item_name a, .theme table#grades_summary a, .theme div.css-h20mns-view--flex-flex a, .theme div.ic-item-row a, .theme ul.css-feuh9k-view--block li button, .theme div.navigation-tray-container ul li a, .theme button[aria-controls="calendar_feed_box"], .theme b {
+.theme div.profileContent__Block a, .theme ul[role="tablist"] a, .theme div.roster-tab a, .theme li div.ig-row a, .theme aside#right-side table tr a, .theme a.external, .theme table.profile_table, .theme div.ef-item-row a, .theme header.ef-directory-header a, .theme ul[role="tree"] a, .theme table#my_groups_table tr a, .theme table#my_courses_table.course-list-table tbody tr a, .theme table#my_courses_table th a, .theme table#past_enrollments_table tbody tr a, .theme table#past_enrollments_table th a, .theme ul#section-tabs a, .theme div.user_content a, .theme ul.group_list a, .theme a.jump_to_today_link, .theme #syllabusTableBody tr.detail_list td a, .theme div#sidebar_content div.content a, .theme #planner-todosidebar-item-list a, .theme button#external_feed, .theme a.more_link, .theme button.css-4gtntb-view-link, .theme div#footer-links.ic-app-footer__links a, .theme span.css-103zv00-view-flexItem a, .theme span.css-103zv00-view-flexItem button, .theme li.context_module_item span.item_name a, .theme table#grades_summary a, .theme div.css-h20mns-view--flex-flex a, .theme div.ic-item-row a, .theme ul.css-feuh9k-view--block li button, .theme div.navigation-tray-container ul li a, .theme button[aria-controls="calendar_feed_box"], .theme b {
     color: var(--links) !important;
     text-decoration-color: var(--links) !important;
 }
@@ -131,7 +132,7 @@ div.ic-announcement-row {
     background-color: var(--bg-2) !important;
 }
 
-.theme div.ig-header button, .theme table#my_groups_table th, .theme ul[data-testid="pill-container"] li, .theme span[data-testid="discussion-topic-closed-for-comments"], .theme table#grades_summary tr th div.context, .theme div.navigation-tray-container ul li div, .theme table span.fc-day-number {
+.theme div.v-gutter, .theme [data-testid="submission-comment-attempt"], .theme div.ig-header button, .theme table#my_groups_table th, .theme ul[data-testid="pill-container"] li, .theme span[data-testid="discussion-topic-closed-for-comments"], .theme table#grades_summary tr th div.context, .theme div.navigation-tray-container ul li div, .theme table span.fc-day-number {
     color: var(--text-1) !important;
 }
 
@@ -156,7 +157,7 @@ div.ic-announcement-row {
     color: var(--links) !important;
 }
 
-.theme #breadcrumbs[role="navigation"], .theme table#my_courses_table tbody tr, .theme table#past_enrollments_table tbody tr {
+.theme div li.profileEnrollment__Items, .theme div.v-gutter tbody, .theme #breadcrumbs[role="navigation"], .theme table#my_courses_table tbody tr, .theme table#past_enrollments_table tbody tr {
     color: var(--text-0) !important;
 }
 
@@ -224,7 +225,7 @@ div.ic-announcement-row {
     color: var(--text-1);
 }
 
-.theme td.fc-day.fc-widget-content.fc-wed.fc-today, .theme td.fc-day-top.fc-wed.fc-today {
+.theme div.comment_list, .theme div#add_comment_form, .theme td.fc-day.fc-widget-content.fc-wed.fc-today, .theme td.fc-day-top.fc-wed.fc-today {
     background-color: var(--bg-1);
 }
 
@@ -257,7 +258,7 @@ div.ic-announcement-row {
     color: var(--text-2) !important;
 }
 
-.theme table#my_groups_table tr, .theme table#grades_summary, .theme div#whatif-score-description {
+.theme table.grade-values, .theme table#my_groups_table tr, .theme table#grades_summary, .theme div#whatif-score-description {
     color: var(--text-0) !important;
 }
 
@@ -306,7 +307,7 @@ div.ic-announcement-row {
 
 /* Icons */
 
-.theme [title="Alternative formats"], .theme .al-trigger, .theme i.icon-star, .theme i.icon-mini-arrow-right, .theme svg[name="IconMore"], .theme div.ToDoSidebarItem__Close, .theme span.css-1fzata2-view--block, .theme i.icon-arrow-open-left, .theme i.icon-arrow-open-right, .theme li::before, .theme div#DashboardOptionsMenu_Container, .theme svg.ToDoSidebarItem__Icon, .theme button.css-z9k86c-view--inlineBlock-baseButton, .theme button.css-1d9pnn7-view--inlineBlock-baseButton, .theme button.css-1g92ec9-view--inlineBlock-baseButton, .theme button.css-1g92ec9-view--inlineBlock-baseButton, .theme i.icon-mini-arrow-down, .theme span.css-btw693-closeButton, .theme i.icon-check-plus, .theme div[data-testid="ic-blue-unread-badge"], .theme span.fc-icon {
+.theme svg[name="IconX"], .theme [title="Alternative formats"], .theme .al-trigger, .theme i.icon-star, .theme i.icon-mini-arrow-right, .theme svg[name="IconMore"], .theme div.ToDoSidebarItem__Close, .theme span.css-1fzata2-view--block, .theme i.icon-arrow-open-left, .theme i.icon-arrow-open-right, .theme li::before, .theme div#DashboardOptionsMenu_Container, .theme svg.ToDoSidebarItem__Icon, .theme button.css-z9k86c-view--inlineBlock-baseButton, .theme button.css-1d9pnn7-view--inlineBlock-baseButton, .theme button.css-1g92ec9-view--inlineBlock-baseButton, .theme button.css-1g92ec9-view--inlineBlock-baseButton, .theme i.icon-mini-arrow-down, .theme span.css-btw693-closeButton, .theme i.icon-check-plus, .theme div[data-testid="ic-blue-unread-badge"], .theme span.fc-icon {
     filter: invert(var(--invrt)) !important;
 }
 

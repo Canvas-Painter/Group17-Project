@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
     chrome.storage.sync.get('current_theme', function(result) {
         if (!result.current_theme || typeof result.current_theme !== "object") {
             chrome.storage.sync.set({ current_theme : null }, function() {
-                console.log("Empty 'current_theme' obj created");
+                // console.log("Empty 'current_theme' obj created");
             });
         }
         chrome.storage.sync.get('current_theme', function(result) {
@@ -59,13 +59,14 @@ document.addEventListener("DOMContentLoaded", function () {
     chrome.storage.sync.get('custom_themes', function(result) {
         if (!result.custom_themes || typeof result.custom_themes !== "object") {
             chrome.storage.sync.set({ custom_themes: [] }, function() {
-                console.log("Empty 'custom_themes' obj created");
+                // console.log("Empty 'custom_themes' obj created");
+                updateDropdown();
             });
         }
     });
 
     function updateDropdown() {
-        console.log('updateDropdown');
+        // console.log('updateDropdown');
         chrome.storage.sync.get('custom_themes', function(result) {
             themeDropdown.innerHTML = ""; // clear dropdown
             const arr = result.custom_themes; // get themes array
@@ -80,14 +81,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateDropdown();
 
+    // Update current_theme in storage
     function updateCurrentTheme(enabled, theme) {
         if (enabled) {
             chrome.storage.sync.set({current_theme : theme}, function() {
-                console.log('updated current_theme:', theme);
+                // console.log('updated current_theme:', theme);
             });
         } else {
             chrome.storage.sync.set({current_theme : null}, function() {
-                console.log('updated current_theme:', null);
+                // console.log('updated current_theme:', null);
             });
         }
     }
@@ -95,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Darkmode toggle
     darkmodeButton.addEventListener('change', function() {    
         const isEnabled = darkmodeButton.checked;
-        console.log('darkmodeButton clicked');
+        // console.log('darkmodeButton clicked');
 
         // themeButton on/off
         themeButton.disabled = isEnabled;
@@ -116,36 +118,39 @@ document.addEventListener("DOMContentLoaded", function () {
     // Theme toggle
     themeButton.addEventListener('change', function() {
         const isEnabled = themeButton.checked;
-        console.log('themeButton clicked');
+        // console.log('themeButton clicked');
 
-        // darkmodeButton on/off
-        darkmodeButton.disabled = isEnabled;
+        if (themeDropdown.value !== undefined) {
 
-        chrome.storage.sync.get('custom_themes', function(result) {
-            const arr = result.custom_themes;
-            // get selected theme from dropdown 
-            const theme = arr.find(theme => theme.name === themeDropdown.value);
-            console.log('selected theme:', theme);
-            if (theme != undefined) {
-                // Send message to colorCanvas.js
-                chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-                    chrome.tabs.sendMessage(tabs[0].id, {
-                        action: 'toggleTheme',
-                        enabled: isEnabled,
-                        theme: theme
+            // darkmodeButton on/off
+            darkmodeButton.disabled = isEnabled;
+
+            chrome.storage.sync.get('custom_themes', function(result) {
+                const arr = result.custom_themes;
+                // get selected theme from dropdown 
+                const theme = arr.find(theme => theme.name === themeDropdown.value);
+                // console.log('selected theme:', theme);
+                if (theme != undefined) {
+                    // Send message to colorCanvas.js
+                    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+                        chrome.tabs.sendMessage(tabs[0].id, {
+                            action: 'toggleTheme',
+                            enabled: isEnabled,
+                            theme: theme
+                        });
                     });
-                });
-            }
+                }
 
-           // update current_theme
-           updateCurrentTheme(isEnabled, theme);
-        });
+                // update current_theme
+                updateCurrentTheme(isEnabled, theme);
+            });
+        }
     });
 
 
     // Save new theme from popup inputs as the "current" theme
     saveButton.addEventListener('click', function() {
-        console.log('saveButton clicked');
+        // console.log('saveButton clicked');
         // Retrieve values from input fields
         const themeName = themeNameInput.value.trim();
         const newTheme = {
@@ -160,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 '--sidebar': sidebarInput.value.trim(),
                 '--links': linksInput.value.trim(),
                 '--hamburger': hamburgerInput.value.trim(),
-                '--invrt': invrtInput.value.trim()
+                '--invrt': invrtInput.checked
             }
         };
 
@@ -169,7 +174,8 @@ document.addEventListener("DOMContentLoaded", function () {
             let arr = result.custom_themes;
             arr.push(newTheme);
             chrome.storage.sync.set({ custom_themes: arr }, function() {
-                console.log("Custom themes saved:", newTheme, '\n', arr);
+                // console.log("Custom themes saved:", newTheme, '\n', arr);
+                updateDropdown();
             });
             // Set newly saved theme automatically...
             chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -187,19 +193,23 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // darkmodeButton off
             darkmodeButton.disabled = themeButton.checked;
+
+            // update dropdown
+            // themeDropdown.value = themeName;
         });
     });
 
     // Delete a custom theme
     deleteButton.addEventListener('click', function() {
-        console.log('deleteButton clicked');
-        const to_delete = editButton.value;
+        // console.log('deleteButton clicked');
+        const to_delete = themeDropdown.value;
+        // console.log('deleting:', to_delete);
         chrome.storage.sync.get('custom_themes', function(result) {
             let arr = result.custom_themes; // get themes array
 
             chrome.storage.sync.get('current_theme', function(result) {
                 let current = result.current_theme; // get current theme
-                if (current.name === to_delete) {
+                if (current !== null && current.name === to_delete) {
 
                     // alert colorCanvas.js to update the theme
                     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -211,12 +221,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
 
                     // set current_theme to null
-                    updateCurrentTheme(isEnabled, null);
+                    updateCurrentTheme(false, null);
                 }
                 let index = arr.findIndex(theme => theme.name === to_delete);
+                if (index === -1) return; // theme not found
                 arr.splice(index, 1);
                 chrome.storage.sync.set({ custom_themes: arr }, function() {
-                    console.log("Custom themes deleted:", to_delete, '\n', arr);
+                    // console.log("Custom themes deleted:", to_delete, '\n', arr);
+                    updateDropdown();
                 });
             });
         });
@@ -224,13 +236,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Edit a custom theme
     editButton.addEventListener('click', function() {
-        console.log('editButton clicked');
-        const to_edit = editButton.value;
+        // console.log('editButton clicked');
+        // get selected theme from dropdown 
+        const to_edit = themeDropdown.value;
         chrome.storage.sync.get('custom_themes', function(result) {
             let arr = result.custom_themes; // get themes array
             let index = arr.findIndex(theme => theme.name === to_edit);
+            if (index === -1) return; // theme not found
             let theme = arr[index];
-            console.log('editing:', theme);
+            // console.log('editing:', theme);
 
             // Set input fields to theme values
             const newTheme = {
@@ -245,7 +259,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     '--sidebar': sidebarInput.value.trim(),
                     '--links': linksInput.value.trim(),
                     '--hamburger': hamburgerInput.value.trim(),
-                    '--invrt': invrtInput.value.trim()
+                    '--invrt': invrtInput.checked
                 }
             };
 
@@ -264,14 +278,26 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             // update current_theme
-            updateCurrentTheme(isEnabled, newTheme);
+            updateCurrentTheme(true, newTheme);
             
             // darkmodeButton on/off
-            darkmodeButton.disabled = isEnabled;
+            darkmodeButton.disabled = themeButton.checked;
         });
     });
 
-    themeDropdown.addEventListener('click', function() {
-        updateDropdown();
-    });
+    // themeDropdown.addEventListener('change', function(event) {
+    //     if (themeButton.checked) {
+    //         updateCurrentTheme(true, themeDropdown.value);
+    //         chrome.storage.sync.get('current_theme', function(result) {
+    //             // console.log('current_theme:', result.current_theme);
+    //             chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    //                 chrome.tabs.sendMessage(tabs[0].id, {
+    //                     action: 'toggleTheme',
+    //                     enabled: themeButton.checked,
+    //                     theme: result.current_theme
+    //                 });
+    //             });
+    //         });
+    //     }
+    // });
 });

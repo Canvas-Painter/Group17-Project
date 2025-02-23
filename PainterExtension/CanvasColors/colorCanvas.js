@@ -2,7 +2,7 @@ let customStylesheet = null;
 
 // Check stored state on load
 chrome.storage.sync.get(['current_theme'], function(result) {
-    console.log('theme:', result.current_theme);
+    // console.log('theme:', result.current_theme);
     // update theme if current_theme is stored
     if (result.current_theme !== null) {
         updateTheme(true, result.current_theme);
@@ -13,7 +13,6 @@ chrome.storage.sync.get(['current_theme'], function(result) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.action === 'toggleTheme') {
         updateTheme(request.enabled, request.theme)
-        //console.log('ColorCanvas: DarkMode is now:', request.enabled ? 'enabled' : 'disabled');
         sendResponse({response: 'Theme updated', status: 'success'});
     }
 });
@@ -52,4 +51,31 @@ function updateTheme(active, theme) {
         document.body.classList.remove('theme');
     }
 }
+
+// Instead of applying theme immediately, wait for DOMContentLoaded
+document.addEventListener("DOMContentLoaded", function() {
+    chrome.storage.sync.get(['current_theme'], function(result) {
+        // console.log('theme on load:', result.current_theme);
+        if (result.current_theme !== null) {
+            updateTheme(true, result.current_theme);
+        }
+    });
+});
+
+// Listen for storage changes to update the theme in real time (e.g., when new tabs load)
+chrome.storage.onChanged.addListener(function(changes, areaName) {
+    if (areaName === "sync" && changes.current_theme) {
+        const theme = changes.current_theme.newValue;
+        // console.log("Current theme updated to:", theme);
+        // Make sure DOM is ready before updating the theme
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", function() {
+                updateTheme(theme !== null, theme);
+            });
+        }
+        else {
+            updateTheme(theme !== null, theme);
+        }
+    }
+});
 
