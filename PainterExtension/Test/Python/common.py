@@ -23,7 +23,7 @@ if platform == 'linux' and environ.get('VISIBLE') is None:
 extension_path = join(dirname(__file__), '../..')
 
 # The url of the extension
-extension_url = 'chrome-extension://monfcehlkbfolhhmpfofloakhnjnmeef/'
+extension_url = 'chrome-extension://ggbhkkiikhcoglfcgliimlmonkdiikhl/'
 
 # Opens chrome with the extension loaded
 options = webdriver.ChromeOptions()
