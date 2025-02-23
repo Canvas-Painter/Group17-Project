@@ -3,7 +3,7 @@
   "name": "Canvas Painter",
   "version": "0.1",
   "description": "Changes to improve Canvas LMS accessibility and efficiency",
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
   "host_permissions": ["*://canvas.oregonstate.edu/*", "file://*"],
   "content_scripts": [
     {

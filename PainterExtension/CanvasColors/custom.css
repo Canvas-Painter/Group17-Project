@@ -282,7 +282,7 @@ div.ic-announcement-row {
     background-color: var(--bg-1);
 }
 
-.theme.syllabusAssignment {
+.theme .syllabusAssignment {
     background-color: var(--bg-1) !important;
     color: var(--text-2) !important;
 }
@@ -292,7 +292,7 @@ div.ic-announcement-row {
     color: var(--text-0);
 }
 
-.theme#left-side {
+.theme #left-side {
     color: var(--text-2) !important;
 }
 
