@@ -287,19 +287,21 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // themeDropdown.addEventListener('change', function(event) {
-    //     if (themeButton.checked) {
-    //         updateCurrentTheme(true, themeDropdown.value);
-    //         chrome.storage.sync.get('current_theme', function(result) {
-    //             // console.log('current_theme:', result.current_theme);
-    //             chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-    //                 chrome.tabs.sendMessage(tabs[0].id, {
-    //                     action: 'toggleTheme',
-    //                     enabled: themeButton.checked,
-    //                     theme: result.current_theme
-    //                 });
-    //             });
-    //         });
-    //     }
-    // });
+    themeDropdown.addEventListener('click', function(event) {
+        // update input colors with selected theme's values
+        chrome.storage.sync.get('custom_themes', function(result) {
+            
+            const theme = result.custom_themes.find(theme => theme.name === themeDropdown.value);
+            bg0Input.value = theme.cssVars['--bg-0'];
+            bg1Input.value = theme.cssVars['--bg-1'];
+            bg2Input.value = theme.cssVars['--bg-2'];
+            text0Input.value = theme.cssVars['--text-0'];
+            text1Input.value = theme.cssVars['--text-1'];
+            text2Input.value = theme.cssVars['--text-2'];
+            sidebarInput.value = theme.cssVars['--sidebar'];
+            linksInput.value = theme.cssVars['--links'];
+            hamburgerInput.value = theme.cssVars['--hamburger'];
+            invrtInput.checked = theme.cssVars['--inv'];
+        });
+    });
 });
