@@ -54,12 +54,11 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-// Listen for storage changes to update the theme in real time (e.g., when new tabs load)
+// Listen for storage changes to update the theme in real time (when new tabs load)
 chrome.storage.onChanged.addListener(function(changes, areaName) {
     if (areaName === "sync" && changes.current_theme) {
         const theme = changes.current_theme.newValue;
         // console.log("Current theme updated to:", theme);
-        // Make sure DOM is ready before updating the theme
         if (document.readyState === "loading") {
             document.addEventListener("DOMContentLoaded", function() {
                 updateTheme(theme !== null, theme);
