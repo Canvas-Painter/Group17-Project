@@ -9,14 +9,49 @@
 <body>
   <h1>Canvas Painter Settings</h1>
 
-  <div>
-    <label class="switch">
+  <div class="themes">
+    <div>
+      <label class="switch">
         <input type="checkbox" id="darkmode-btn">
         <span class="slider round"></span>
       </label>
       <span>Dark Mode</span>
-  </div>
+    </div>
 
+    <div>
+      <label for="themeName">Theme Name:</label>
+      <input type="text" id="themeName" name="themeName">
+    </div>
+    <div>
+      <label for="color-input">Background-1  <input type="color" id="--bg-0" name="--bg-0"></label>
+      <label for="color-input">Background-2  <input type="color" id="--bg-1" name="--bg-1"></label>
+      <label for="color-input">Background-3  <input type="color" id="--bg-2" name="--bg-2"></label>
+
+      <label for="color-input">Text-1  <input type="color" id="--text-0" name="--text-0"></label>    
+      <label for="color-input">Text-2  <input type="color" id="--text-1" name="--text-1"></label>
+      <label for="color-input">Text-3  <input type="color" id="--text-2" name="--text-2"></label>
+      
+      <label for="color-input">Sidebar  <input type="color" id="--sidebar" name="--sidebar"></label>
+      <label for="color-input">Links  <input type="color" id="--links" name="--links"></label>
+      <label for="color-input">Hamburger  <input type="color" id="--hamburger" name="--hamburger"></label>
+      <label for="color-input">Invert Icons <input type="checkbox" id="--invrt" name="--invrt"></label>
+      
+      <button id="saveTheme-btn">Save Theme</button>
+    </div>
+
+
+    <div>
+      <label for="existingThemes">Select Existing Theme:</label>
+      <select id="existingThemes" aria-placeholder="Select a custom theme..."></select>
+      <label class="switch">
+        <input type="checkbox" id="applyTheme-btn">
+        <span class="slider round"></span>
+      </label>
+      <span>Apply Theme</span>
+      <button id="editTheme-btn">Edit Theme</button>
+      <button id="deleteTheme-btn">Delete Theme</button>
+    </div>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>
