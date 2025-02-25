@@ -11,20 +11,17 @@ class Assignment {
 
     // Gets the relevant data from a valid table entry (not hard_coded) in the
     //  student_assignment table
+    // TODO add support for check/x marks
     static fromHTML(elem) {
-        const gradeNodes = elem.getElementsByClassName("grade")[0].childNodes
         const title = elem.getElementsByClassName("title")[0]
+        const gradeHolder = elem.getElementsByClassName("score_holder")[0].lastElementChild
+        const maxHolder = elem.getElementsByClassName("tooltip")[0].children[1]
 
         return new Assignment(
             title.getElementsByTagName("a")[0],
-
-            gradeNodes.length == 5 ?
-                parseInt(gradeNodes[4].textContent)
-                : null,
-
-            parseInt(elem.getElementsByClassName("tooltip")[0].children[1]
-                .textContent.slice(1)),
-
+            parseFloat(gradeHolder.getElementsByClassName("original_score")[0].textContent),
+            // Slice will remove the slash at the front
+            maxHolder ? parseFloat(maxHolder.textContent.slice(1)) : NaN,
             title.getElementsByClassName("context")[0].textContent
         )
     }
@@ -46,9 +43,6 @@ function popOpen(assignments) {
         categories.get(category).push(assignment)
     })
 
-    // Doesn't modify the window opened, but everything else appears correct
-    // window.open(chrome.runtime.getURL('GradeBook/grades.html'), 'Gradebook', 'width=800, height=600, menubar=no, toolbar=no, location=no, status=no').document
-
     // Temporary side document
     const doc = document.getElementById("student-grades-right-content")
 
@@ -58,18 +52,18 @@ function popOpen(assignments) {
         const scores = []
         // Maps each group to a set of data points that stats can be calculated from
         value.forEach(assignment => {
-            if (assignment.max != 0 && assignment.grade != null) {
+            console.log(assignment)
+            if (assignment.max != 0 && !isNaN(assignment.max) && !isNaN(assignment.grade)) {
                 scores.push(assignment.grade / assignment.max)
             }
         })
 
         // Creates the element
+        console.log(scores)
         const elem = /*doc*/document.createElement('div')
         elem.textContent = `${key}: Mean: ${mean(scores)}, StdDev: ${stdDev(scores)}`
         elements.push(elem)
     })
-
-    console.log(elements)
 
     // Addes the elements
     elements.forEach(value =>
@@ -117,6 +111,7 @@ function setup() {
     return assignments
 }
 
+// Sets up and runs if set up
 document.addEventListener('DOMContentLoaded', () => {
     const assignments = setup()
     if (assignments) {
