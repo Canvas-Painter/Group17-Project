@@ -139,10 +139,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             theme: theme
                         });
                     });
-                }
 
-                // update current_theme
-                updateCurrentTheme(isEnabled, theme);
+                    // update current_theme
+                    updateCurrentTheme(isEnabled, theme);
+                }
             });
         }
     });
@@ -153,50 +153,52 @@ document.addEventListener("DOMContentLoaded", function () {
         // console.log('saveButton clicked');
         // Retrieve values from input fields
         const themeName = themeNameInput.value.trim();
-        const newTheme = {
-            name: themeName,
-            cssVars: {
-                '--bg-0': bg0Input.value.trim(),
-                '--bg-1': bg1Input.value.trim(),
-                '--bg-2': bg2Input.value.trim(),
-                '--text-0': text0Input.value.trim(),
-                '--text-1': text1Input.value.trim(),
-                '--text-2': text2Input.value.trim(),
-                '--sidebar': sidebarInput.value.trim(),
-                '--links': linksInput.value.trim(),
-                '--hamburger': hamburgerInput.value.trim(),
-                '--invrt': invrtInput.checked
-            }
-        };
+        if (themeName !== "") {
+            const newTheme = {
+                name: themeName,
+                cssVars: {
+                    '--bg-0': bg0Input.value.trim(),
+                    '--bg-1': bg1Input.value.trim(),
+                    '--bg-2': bg2Input.value.trim(),
+                    '--text-0': text0Input.value.trim(),
+                    '--text-1': text1Input.value.trim(),
+                    '--text-2': text2Input.value.trim(),
+                    '--sidebar': sidebarInput.value.trim(),
+                    '--links': linksInput.value.trim(),
+                    '--hamburger': hamburgerInput.value.trim(),
+                    '--invrt': invrtInput.checked
+                }
+            };
 
-        // Save the new theme as the current theme in storage
-        chrome.storage.sync.get('custom_themes', function(result) {
-            let arr = result.custom_themes;
-            arr.push(newTheme);
-            chrome.storage.sync.set({ custom_themes: arr }, function() {
-                // console.log("Custom themes saved:", newTheme, '\n', arr);
-                updateDropdown();
-            });
-            // Set newly saved theme automatically...
-            chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-                themeButton.checked = true;
-                darkmodeButton.checked = false;
-                chrome.tabs.sendMessage(tabs[0].id, {
-                    action: 'toggleTheme',
-                    enabled: themeButton.checked,
-                    theme: newTheme
+            // Save the new theme as the current theme in storage
+            chrome.storage.sync.get('custom_themes', function(result) {
+                let arr = result.custom_themes;
+                arr.push(newTheme);
+                chrome.storage.sync.set({ custom_themes: arr }, function() {
+                    // console.log("Custom themes saved:", newTheme, '\n', arr);
+                    updateDropdown();
                 });
+                // Set newly saved theme automatically...
+                chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+                    themeButton.checked = true;
+                    darkmodeButton.checked = false;
+                    chrome.tabs.sendMessage(tabs[0].id, {
+                        action: 'toggleTheme',
+                        enabled: themeButton.checked,
+                        theme: newTheme
+                    });
+                });
+
+                // update current_theme
+                updateCurrentTheme(true, newTheme);
+
+                // darkmodeButton off
+                darkmodeButton.disabled = themeButton.checked;
+
+                // update dropdown
+                // themeDropdown.value = themeName;
             });
-
-            // update current_theme
-            updateCurrentTheme(true, newTheme);
-
-            // darkmodeButton off
-            darkmodeButton.disabled = themeButton.checked;
-
-            // update dropdown
-            // themeDropdown.value = themeName;
-        });
+        }
     });
 
     // Delete a custom theme

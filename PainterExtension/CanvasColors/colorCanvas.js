@@ -1,16 +1,8 @@
 let customStylesheet = null;
 
-// Check stored state on load
-chrome.storage.sync.get(['current_theme'], function(result) {
-    // console.log('theme:', result.current_theme);
-    // update theme if current_theme is stored
-    if (result.current_theme !== null) {
-        updateTheme(true, result.current_theme);
-    }
-});
-
 // Listen for messages from address bar popup
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log('Message received:', request);
     if (request.action === 'toggleTheme') {
         updateTheme(request.enabled, request.theme)
         sendResponse({response: 'Theme updated', status: 'success'});
@@ -41,7 +33,7 @@ function updateTheme(active, theme) {
         root.style.setProperty('--sidebar', theme.cssVars['--sidebar']);
         root.style.setProperty('--links', theme.cssVars['--links']);
         root.style.setProperty('--hamburger', theme.cssVars['--hamburger']);
-        root.style.setProperty('--invrt', theme.cssVars['--invrt']);
+        root.style.setProperty('--invrt', Number(theme.cssVars['--invrt']));
         
         // add class
         document.body.classList.add('theme');
@@ -54,7 +46,7 @@ function updateTheme(active, theme) {
 
 // Instead of applying theme immediately, wait for DOMContentLoaded
 document.addEventListener("DOMContentLoaded", function() {
-    chrome.storage.sync.get(['current_theme'], function(result) {
+    chrome.storage.sync.get('current_theme', function(result) {
         // console.log('theme on load:', result.current_theme);
         if (result.current_theme !== null) {
             updateTheme(true, result.current_theme);
