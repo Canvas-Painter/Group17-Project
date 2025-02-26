@@ -11,6 +11,12 @@ def get_screen(driver):
     return np.asarray(Image.open(io.BytesIO(driver.get_screenshot_as_png())))
 
 
+# https://stackoverflow.com/questions/12201577/how-can-i-convert-an-rgb-image-into-grayscale-in-python
+# I don't want to add opencv to the required libraries
+def rgb2gray(rgb):
+    return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
+
+
 def test_darkmmode():
     driver.get(extension_url + 'addressbarPopup/popup.html')
     # Enable dark mode
@@ -18,6 +24,6 @@ def test_darkmmode():
 
     # Check average pixel color
     driver.get('file://' + join(extension_path, 'Test/Python/samples/grades1.html'))
-    assert np.average(get_screen(driver)) < 90
+    assert np.median(rgb2gray(get_screen(driver))) < 70
     driver.get('file://' + join(extension_path, 'Test/Python/samples/grades2.html'))
-    assert np.average(get_screen(driver)) < 90
+    assert np.median(rgb2gray(get_screen(driver))) < 70
