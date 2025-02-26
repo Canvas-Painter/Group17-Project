@@ -1,4 +1,6 @@
-// multi_pdf_parser.js
+// pdf_parser.js
+
+// Please keep in mind this only works locally for now, I will be imrpoving it throughout the day making sure it works with the side menu functions
 
 import fs from 'fs';
 import path from 'path';
