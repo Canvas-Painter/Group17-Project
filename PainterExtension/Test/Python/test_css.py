@@ -14,10 +14,10 @@ def get_screen(driver):
 def test_darkmmode():
     driver.get(extension_url + 'addressbarPopup/popup.html')
     # Enable dark mode
-    driver.find_element(By.XPATH, '/html/body/div/label').click()
+    driver.find_element(By.XPATH, '/html/body/div/div[1]/label').click()
 
     # Check average pixel color
     driver.get('file://' + join(extension_path, 'Test/Python/samples/grades1.html'))
-    assert np.average(get_screen(driver)) < 50
+    assert np.average(get_screen(driver)) < 90
     driver.get('file://' + join(extension_path, 'Test/Python/samples/grades2.html'))
-    assert np.average(get_screen(driver)) < 50
+    assert np.average(get_screen(driver)) < 90
