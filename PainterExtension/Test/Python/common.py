@@ -10,18 +10,25 @@ from sys import platform
 if platform == 'linux':
     from pyvirtualdisplay import Display
 
+window_size = (1280, 960)
+
 # Enables the virtual display if needed
 display = None
 if platform == 'linux' and environ.get('VISIBLE') is None:
-    display = Display()
+    # Add 240 pixels for padding for window decorations
+    display = Display(size=(window_size[0] + 240, window_size[1] + 240))
     display.start()
 
 # Gets the root of the extension
 extension_path = join(dirname(__file__), '../..')
 
+# The url of the extension
+extension_url = 'chrome-extension://ggbhkkiikhcoglfcgliimlmonkdiikhl/'
+
 # Opens chrome with the extension loaded
 options = webdriver.ChromeOptions()
 options.add_argument(f'--load-extension={extension_path}')
+options.add_argument(f'--window-size={window_size[0]},{window_size[1]}')
 driver = webdriver.Chrome(options=options, service=Service(ChromeDriverManager().install()))
 
 # Closes the window and display
