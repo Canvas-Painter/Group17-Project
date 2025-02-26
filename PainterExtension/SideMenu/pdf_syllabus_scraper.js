@@ -14,8 +14,13 @@ const syllabusFiles = [
 
 /**
  * Extracts the full text from a PDF using pdf.js.
+ *
  * @param {Uint8Array|ArrayBuffer} data - The PDF file data.
- * @returns {Promise<string>} - A promise resolving to the full extracted text.
+ * @returns {Promise<string>} A promise that resolves to the full extracted text from the PDF.
+ * 
+ * This function loads the PDF document from the input data, then iterates through each page,
+ * extracts the text content, concatenates text from each block into a single string, and returns
+ * the complete text from all pages.
  */
 async function pdfToText(data) {
   const loadingTask = getDocument(data);
@@ -50,9 +55,13 @@ async function pdfToText(data) {
 }
 
 /**
- * Extracts TA office hours from the text by looking for "Office Hours:" or "TA Info:".
- * @param {string} text - The full extracted text.
- * @returns {string} - The extracted TA office hours or a message if not found.
+ * Extracts TA office hours from the given text.
+ *
+ * @param {string} text - The full extracted text from the PDF.
+ * @returns {string} The extracted TA office hours if found, otherwise a message "TA office hours not found."
+ * 
+ * This function searches for the marker "Office Hours:" in the text. If not found, it attempts to find "TA Info:".
+ * Once a marker is found, it extracts and returns the text on the same line following the marker.
  */
 function extractTAOfficeHours(text) {
   const marker = "Office Hours:";
@@ -74,12 +83,16 @@ function extractTAOfficeHours(text) {
 }
 
 /**
- * Extracts the grading policy information from the text.
- * First, it checks for a "Grade Weighting" section.
- * Then it looks for a "grade letter" marker (case-insensitive) to locate letter grade scale lines.
- * It extracts weight lines (those with "%") and letter scale lines (e.g., "A 94") and returns them.
- * @param {string} text - The full extracted text.
- * @returns {string} - The extracted grading policy information or a message if not found.
+ * Extracts grading policy information from the given text.
+ *
+ * @param {string} text - The full extracted text from the PDF.
+ * @returns {string} The extracted grading policy information, including grade weights and letter scale,
+ *                   or a message "Grading policy not found." if not detected.
+ * 
+ * This function first checks for the "Grade Weighting" section. It then extracts a chunk of text from that marker,
+ * filtering for lines that contain "%" (assumed to be the weight lines). It also searches for a "grade letter" marker
+ * (case-insensitive) to locate letter grade scale lines using a regular expression. If no such marker is found, it tries
+ * the "Grading Scale" marker instead. The function returns a block combining both weight lines and letter scale lines.
  */
 function extractGradingPolicy(text) {
   let idx = text.indexOf("Grade Weighting");
@@ -87,13 +100,13 @@ function extractGradingPolicy(text) {
     // Extract a chunk from "Grade Weighting"
     let chunk = text.substring(idx, idx + 1000);
     
-    // Extract weighting lines (containing "%")
+    // Extract weighting lines (lines that contain "%")
     const weightingLines = chunk
       .split("\n")
       .map(line => line.trim())
       .filter(line => line.includes("%"));
     
-    // Now try to search for "grade letter" marker in the entire text (case-insensitive)
+    // Search for "grade letter" marker (case-insensitive) to locate letter grade scale lines
     let letterIdx = text.search(/grade letter/i);
     let letterScaleLines = [];
     if (letterIdx !== -1) {
@@ -149,11 +162,14 @@ function extractGradingPolicy(text) {
 }
 
 /**
- * Processes a single PDF file:
- *  - Reads the file and extracts full text,
- *  - Extracts TA office hours and grading policy,
- *  - Writes the output to a txt file named after the original PDF.
+ * Processes a single PDF syllabus file.
+ *
  * @param {string} filePath - The full path to the PDF file.
+ * @returns {Promise<void>} A promise that resolves when processing is complete.
+ * 
+ * This function reads the PDF file from the given file path, extracts its full text using pdfToText,
+ * then extracts TA office hours and grading policy information from that text using the appropriate functions.
+ * Finally, it writes the resulting output to a text file named after the original PDF.
  */
 async function processSyllabus(filePath) {
   try {
@@ -176,7 +192,12 @@ async function processSyllabus(filePath) {
 }
 
 /**
- * Processes all syllabus PDFs listed in syllabusFiles.
+ * Processes all syllabus PDF files listed in the syllabusFiles array.
+ *
+ * @returns {Promise<void>} A promise that resolves when all files have been processed.
+ * 
+ * This function iterates through each file path in the syllabusFiles array and calls processSyllabus
+ * for each one sequentially.
  */
 async function processAllSyllabi() {
   for (const filePath of syllabusFiles) {
