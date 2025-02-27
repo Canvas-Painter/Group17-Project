@@ -1,0 +1,71 @@
+{
+  "categories": [
+    {
+      "name": "Course Information",
+      "items": [
+        {
+          "type": "Course Title",
+          "text": "LINEAR ALGEBRA I MTH 341"
+        },
+        {
+          "type": "Professor",
+          "text": "Amin HASSAN ZADEH"
+        },
+        {
+          "type": "Email",
+          "text": "hassanza@oregonstate.edu"
+        },
+        {
+          "type": "Office Hours",
+          "text": "MWF 10:00–10:50 am or by appointment \u001c"
+        }
+      ]
+    },
+    {
+      "name": "Course Policies",
+      "items": [
+        {
+          "type": "Attendance",
+          "text": "Attendance policy not found."
+        },
+        {
+          "type": "Late Work",
+          "text": "Late work policy not found."
+        }
+      ]
+    },
+    {
+      "name": "Grading",
+      "items": [
+        {
+          "type": "Assignments",
+          "text": "Assignments: 4 36% Jan. 17 and 31, Feb: 14 and 28\r\nQuizzes: 3 24% Jan: 31. Feb: 7 and 21.\r\nFinal Exam 40% Cumulative\r\nGrading Scale\r\nB+ 88-90 C+ 78-80 D+ 68-70\r\nA 92+ B 82-88 C 72-78 D 62-68 F 0-59\r\nA- 90-92 B- 80-82 C- 70-72 D- 60-62\r\n2 The due dates of the group assignments are set for the Wednesdays immediately following the release\r\ndates, at 23:55.\n\nLINEAR ALGEBRA I - SUMMER 2022 OSU 3\r\nExam Policies\r\n• No calculators, notes, or outside resources are allowed.\r\n• Make-ups are available only in exceptional circumstances. Course Policies\r\n• Canvas: I use Canvas to communicate with students. Important class materials,\r\nincluding assignments, points earned, and announcements of any changes to the class schedule are made on Canvas. You are expected to check Canvas regularly and are responsible to be aware of any announcements on Canvas.\r\n• Email: Email is the best and quickest way to reach me if you have a question or\r\nneed to schedule an appointment. I check my ONID email frequently. You MUST\r\nbegin any email pertaining to the class with “341-010” in the subject line. I will try to respond within 24 hours. Due to privacy concerns, I only read and respond to\r\nemails sent from your OSU ONID email account, and grades will not be discussed via email. Students are held accountable for checking their OSU email regularly.\r\n• Policy on Incompletes: An incomplete grade is given only in accordance with the\r\nUniversity grade policy: https://registrar.oregonstate.edu/incomplete-grade-policy Technical Assistance\r\nIf you experience technical (computer-based) difficulties, need help downloading a browser\r\nor plug-in, assistance logging into the course, or if you experience any errors or problems while in your online course, contact the OSU Help Desk for assistance. You can call (541) 737-3474, email osuhelpdesk@oregonstate.edu, or visit\r\nhttps://oregonstate.teamdynamix.com/TDClient/1935/Portal/Requests/ TicketRequests/NewForm?ID=Dr9c0T7BaSI_.\r\nCollaboration, Academic Honesty, and Academic Misconduct\r\nYou are allowed, and even encouraged, to collaborate with others while doing your home-\r\nwork. The final answer, however, should be written using your own words. Work on exams must be your own work with no assistance from any other source. During\r\nan exam, any attempt to obtain information by consulting the lecture notes, communicating with other students, or accessing the internet, will be considered an academic dishonesty. Any action that misrepresents a student or group’s work, knowledge, or achievement,\r\nprovides a potential or actual inequitable advantage, or compromises the integrity of the educational process is considered academic misconduct. You are expected to be familiar with Oregon State University’s expectations for student conduct: https://beav.es/codeofconduct Reach Out for Success \r\nUniversity students encounter setbacks from time to time. If you encounter difficulties\r\nand need assistance, it is important to reach out. Consider discussing the situation with me, another instructor, or an academic advisor. Learn about resources that assist with wellness and academic success at https://counseling.oregonstate.edu/reach-out-success\r\nIf you are in immediate crisis, please contact the Crisis Text Line by texting OREGON to 741-741 or call the National Suicide Prevention Lifeline at 1-800-273-TALK (8255).\n\n4 LINEAR ALGEBRA I - SUMMER 2022 OSU Religious Accommodation\r\nOregon State University is required to provide reasonable accommodations for employee\r\nand student sincerely held religious beliefs. It is incumbent on the student making the request to make the faculty member aware of the request as soon as possible prior to the need for the accommodation. Learn more about the religious accommodation process for Students at https://eoa.oregonstate.edu/sites/eoa.oregonstate.edu/files/religious_ acccommodation_policy_for_students_1.12.2017.pdf Students With Disabilities\r\nAccommodations for students with disabilities are determined and approved by Disability\r\nAccess Services (DAS). If you, as a student, believe you are eligible for accommodations but have not obtained approval, please contact DAS immediately at 541-737-4098 or at http://ds.oregonstate.edu\r\nDAS notifies students and faculty members of approved academic accommodations and coor- dinates implementation of those accommodations. While not required, students and faculty members are encouraged to discuss details of the implementation of individual accommoda- tions."
+        },
+        {
+          "type": "Quizzes",
+          "text": "Quiz grading information not found."
+        },
+        {
+          "type": "Midterm",
+          "text": "Midterm grading information not found."
+        },
+        {
+          "type": "Final Project",
+          "text": "Final project grading information not found."
+        },
+        {
+          "type": "Final Exam",
+          "text": "Final Exam 40% Cumulative"
+        },
+        {
+          "type": "Participation",
+          "text": "Participation grading information not found."
+        },
+        {
+          "type": "Grading Policy",
+          "text": "Your grade and measurement of your progress on the course outcomes will be based on\r\ngroup written assignments 2 , quizzes and final exam.\r\nActivity Percentage Date(s)\r\nGroup Homework Assignments: 4 36% Jan. 17 and 31, Feb: 14 and 28\r\nQuizzes: 3 24% Jan: 31. Feb: 7 and 21.\r\nFinal Exam 40% Cumulative\r\nGrading Scale\r\nB+ 88-90 C+ 78-80 D+ 68-70\r\nA 92+ B 82-88 C 72-78 D 62-68 F 0-59\r\nA- 90-92 B- 80-82 C- 70-72 D- 60-62\r\n2 The due dates of the group assignments are set for the Wednesdays immediately following the release\r\ndates, at 23:55."
+        }
+      ]
+    }
+  ]
+}

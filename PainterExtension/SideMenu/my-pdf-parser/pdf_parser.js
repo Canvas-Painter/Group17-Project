@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
+import pdfjsLib from 'pdfjs-dist/legacy/build/pdf.js';
 const { getDocument } = pdfjsLib;
 
 // Array of syllabus PDF file paths
@@ -13,14 +13,13 @@ const syllabusFiles = [
 ];
 
 /**
- * Extracts the full text from a PDF using pdf.js.
- *
- * @param {Uint8Array|ArrayBuffer} data - The PDF file data.
- * @returns {Promise<string>} A promise that resolves to the full extracted text from the PDF.
- * 
- * This function loads the PDF document from the input data, then iterates through each page,
- * extracts the text content, concatenates text from each block into a single string, and returns
- * the complete text from all pages.
+ * pdfToText
+ * -----------
+ * Input: A Uint8Array or ArrayBuffer containing the PDF file data.
+ * Output: A Promise that resolves to a string with the full text extracted from the PDF.
+ * Description: Loads the PDF document using pdf.js, iterates over each page, extracts the text content from
+ *              each text block, concatenates the text (inserting newlines as appropriate), and returns the
+ *              complete text.
  */
 async function pdfToText(data) {
   const loadingTask = getDocument(data);
@@ -55,13 +54,12 @@ async function pdfToText(data) {
 }
 
 /**
- * Extracts TA office hours from the given text.
- *
- * @param {string} text - The full extracted text from the PDF.
- * @returns {string} The extracted TA office hours if found, otherwise a message "TA office hours not found."
- * 
- * This function searches for the marker "Office Hours:" in the text. If not found, it attempts to find "TA Info:".
- * Once a marker is found, it extracts and returns the text on the same line following the marker.
+ * extractTAOfficeHours
+ * ----------------------
+ * Input: A string containing the full text extracted from the PDF.
+ * Output: A string containing the extracted TA office hours if found, or a message if not found.
+ * Description: Searches the text for the marker "Office Hours:" (or "TA Info:") and returns the text
+ *              on the same line following the marker.
  */
 function extractTAOfficeHours(text) {
   const marker = "Office Hours:";
@@ -83,43 +81,34 @@ function extractTAOfficeHours(text) {
 }
 
 /**
- * Extracts grading policy information from the given text.
- *
- * @param {string} text - The full extracted text from the PDF.
- * @returns {string} The extracted grading policy information, including grade weights and letter scale,
- *                   or a message "Grading policy not found." if not detected.
- * 
- * This function first checks for the "Grade Weighting" section. It then extracts a chunk of text from that marker,
- * filtering for lines that contain "%" (assumed to be the weight lines). It also searches for a "grade letter" marker
- * (case-insensitive) to locate letter grade scale lines using a regular expression. If no such marker is found, it tries
- * the "Grading Scale" marker instead. The function returns a block combining both weight lines and letter scale lines.
+ * extractGradingPolicy
+ * ----------------------
+ * Input: A string containing the full text extracted from the PDF.
+ * Output: A string with the extracted grading policy information (grade weights and letter scale),
+ *         or a message if not found.
+ * Description: Searches for the "Grade Weighting" section, extracts a chunk of text,
+ *              filters for lines containing "%" (grade weights), then searches for a "grade letter"
+ *              or "Grading Scale" marker to extract letter-grade lines. Combines and returns the results.
  */
 function extractGradingPolicy(text) {
   let idx = text.indexOf("Grade Weighting");
   if (idx !== -1) {
-    // Extract a chunk from "Grade Weighting"
     let chunk = text.substring(idx, idx + 1000);
-    
-    // Extract weighting lines (lines that contain "%")
     const weightingLines = chunk
       .split("\n")
       .map(line => line.trim())
       .filter(line => line.includes("%"));
     
-    // Search for "grade letter" marker (case-insensitive) to locate letter grade scale lines
     let letterIdx = text.search(/grade letter/i);
     let letterScaleLines = [];
     if (letterIdx !== -1) {
-      // Take a 500-character chunk from the "grade letter" marker
       let letterChunk = text.substring(letterIdx, letterIdx + 500);
-      // Regex to match lines starting with a letter grade (A-F, optionally with '+' or '-') followed by whitespace and a number
       const scaleRegex = /^[A-F][+-]?\s+\d+/gm;
       let match;
       while ((match = scaleRegex.exec(letterChunk)) !== null) {
         letterScaleLines.push(match[0].trim());
       }
     }
-    // If no "grade letter" marker found or no matches, try to extract from a "Grading Scale" block instead.
     if (letterScaleLines.length === 0) {
       let idxScale = text.indexOf("Grading Scale", idx);
       if (idxScale !== -1) {
@@ -146,7 +135,6 @@ function extractGradingPolicy(text) {
     return output;
   }
   
-  // Fallback: try other markers if "Grade Weighting" is not found.
   const markers = ["Graded Work", "Grading Policies:", "Grading Policy:", "Grading:"];
   for (const marker of markers) {
     idx = text.indexOf(marker);
@@ -162,14 +150,227 @@ function extractGradingPolicy(text) {
 }
 
 /**
- * Processes a single PDF syllabus file.
- *
- * @param {string} filePath - The full path to the PDF file.
- * @returns {Promise<void>} A promise that resolves when processing is complete.
- * 
- * This function reads the PDF file from the given file path, extracts its full text using pdfToText,
- * then extracts TA office hours and grading policy information from that text using the appropriate functions.
- * Finally, it writes the resulting output to a text file named after the original PDF.
+ * extractQuizzes
+ * ---------------
+ * Input: A string containing the full text extracted from the PDF.
+ * Output: A string with the extracted quiz grading information if found, or a message if not found.
+ * Description: Uses a regular expression to find a line starting with "Quiz" or "Quizzes:" and returns the remainder of that line.
+ */
+function extractQuizzes(text) {
+  const regex = /^Quiz(?:es)?:\s*(.+)$/im;
+  const match = text.match(regex);
+  return match ? match[1].trim() : "Quiz grading information not found.";
+}
+
+/**
+ * extractCourseTitle
+ * ---------------------
+ * Input: A string containing the full text extracted from the PDF.
+ * Output: A string with the extracted course title if found, or "Course title not found."
+ * Description: Splits the text into lines and attempts to find a line that includes key course title keywords.
+ *              For example, for the 341 syllabus it looks for "LINEAR ALGEBRA" (case-insensitive) and returns that line.
+ */
+function extractCourseTitle(text) {
+  const lines = text.split("\n").map(line => line.trim()).filter(line => line.length > 0);
+  // Look for a line that contains "LINEAR ALGEBRA" (or other keywords as needed)
+  for (const line of lines) {
+    if (/linear algebra/i.test(line)) {
+      return line;
+    }
+  }
+  // Otherwise, return the first line that does not start with "Last updated" and does not include "Syllabus"
+  for (const line of lines) {
+    if (!line.toLowerCase().startsWith("last updated") && !line.toLowerCase().includes("syllabus")) {
+      return line;
+    }
+  }
+  return "Course title not found.";
+}
+
+/**
+ * extractProfessor
+ * -------------------
+ * Input: A string containing the full text extracted from the PDF.
+ * Output: A string with the professor's name if found, or "Professor not found."
+ * Description: Searches for the marker "Instructor:" or "Professor:" and returns the text on that line after
+ *              removing the marker. Falls back to "About the Instructor" if necessary.
+ */
+function extractProfessor(text) {
+  let idx = text.indexOf("Instructor:");
+  if (idx === -1) {
+    idx = text.indexOf("Professor:");
+    if (idx === -1) {
+      // Fallback: check for "About the Instructor"
+      idx = text.indexOf("About the Instructor");
+      if (idx === -1) return "Professor not found.";
+      else {
+        let sub = text.substring(idx);
+        const lineEnd = sub.indexOf("\n");
+        return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined)
+                  .replace(/About the Instructor/i, "").trim();
+      }
+    }
+  }
+  let sub = text.substring(idx);
+  const lineEnd = sub.indexOf("\n");
+  return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined)
+            .replace(/Instructor:|Professor:/i, "").trim();
+}
+
+/**
+ * extractEmail
+ * --------------
+ * Input: A string containing the full text extracted from the PDF.
+ * Output: A string with an email address if found, or "Email not found."
+ * Description: Uses a regular expression to search for a pattern that matches an email address in the text.
+ */
+function extractEmail(text) {
+  const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+  const match = text.match(emailRegex);
+  return match ? match[0] : "Email not found.";
+}
+
+/**
+ * extractAttendance
+ * --------------------
+ * Input: A string containing the full text extracted from the PDF.
+ * Output: A string with the attendance policy details if found, or "Attendance policy not found."
+ * Description: Searches for the marker "Attendance" and returns the text on that line.
+ */
+function extractAttendance(text) {
+  const idx = text.indexOf("Attendance");
+  if (idx === -1) return "Attendance policy not found.";
+  let sub = text.substring(idx);
+  const lineEnd = sub.indexOf("\n");
+  return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined).trim();
+}
+
+/**
+ * extractLateWork
+ * ------------------
+ * Input: A string containing the full text extracted from the PDF.
+ * Output: A string with the late work policy details if found, or "Late work policy not found."
+ * Description: First, searches for explicit markers such as "Late Policy", "Late Policies", or "Late Work".
+ *              If not found, falls back to the "Homework:" section and returns only the lines mentioning "late"
+ *              and containing a "%" (assumed to indicate penalty information).
+ */
+function extractLateWork(text) {
+  const markers = ["Late Policy", "Late Policies", "Late Work"];
+  for (const marker of markers) {
+    let idx = text.indexOf(marker);
+    if (idx !== -1) {
+      let sub = text.substring(idx);
+      let endIdx = sub.search(/\r?\n\r?\n/);
+      if (endIdx === -1) endIdx = sub.length;
+      return sub.substring(0, endIdx).trim();
+    }
+  }
+  // Fallback: check the Homework section for late penalty information
+  let homeworkIdx = text.indexOf("Homework:");
+  if (homeworkIdx !== -1) {
+    let sub = text.substring(homeworkIdx);
+    let endIdx = sub.search(/\r?\n\r?\n/);
+    if (endIdx === -1) endIdx = sub.length;
+    let lines = sub.substring(0, endIdx).split("\n");
+    let filtered = lines.filter(line => /late/i.test(line) && /%/.test(line));
+    if (filtered.length > 0) {
+      return filtered.join("\n").trim();
+    }
+  }
+  return "Late work policy not found.";
+}
+
+/**
+ * extractGradingAssignments
+ * ---------------------------
+ * Input: A string containing the full text extracted from the PDF.
+ * Output: A string with assignment grading details if found, or "Assignment grading information not found."
+ * Description: Searches for the marker "Assignments" and splits the result by a bullet character (""),
+ *              returning only the first segment which is assumed to list the assignments.
+ */
+function extractGradingAssignments(text) {
+  const idx = text.indexOf("Assignments");
+  if (idx === -1) return "Assignment grading information not found.";
+  let sub = text.substring(idx);
+  let parts = sub.split("");
+  return parts[0].trim();
+}
+
+/**
+ * extractMidterm
+ * ---------------
+ * Input: A string containing the full text extracted from the PDF.
+ * Output: A string with midterm exam grading details if found, or "Midterm grading information not found."
+ * Description: Searches for the marker "Midterm" and returns the text on that line.
+ */
+function extractMidterm(text) {
+  const idx = text.indexOf("Midterm");
+  if (idx === -1) return "Midterm grading information not found.";
+  let sub = text.substring(idx);
+  const lineEnd = sub.indexOf("\n");
+  return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined).trim();
+}
+
+/**
+ * extractFinalProject
+ * ---------------------
+ * Input: A string containing the full text extracted from the PDF.
+ * Output: A string with final project grading details if found, or "Final project grading information not found."
+ * Description: Searches for the marker "Final Project" or "Project Step 1 Final Version" and returns the text on that line.
+ */
+function extractFinalProject(text) {
+  let idx = text.indexOf("Final Project");
+  if (idx === -1) {
+    idx = text.indexOf("Project Step 1 Final Version");
+    if (idx === -1) return "Final project grading information not found.";
+  }
+  let sub = text.substring(idx);
+  const lineEnd = sub.indexOf("\n");
+  return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined).trim();
+}
+
+/**
+ * extractFinalExam
+ * ------------------
+ * Input: A string containing the full text extracted from the PDF.
+ * Output: A string with final exam grading details if found, or, if not found, the final project information.
+ * Description: Searches for the marker "Final Exam" and returns the text on that line. If not found,
+ *              falls back to extracting final project information.
+ */
+function extractFinalExam(text) {
+  let idx = text.indexOf("Final Exam");
+  if (idx !== -1) {
+    let sub = text.substring(idx);
+    const lineEnd = sub.indexOf("\n");
+    return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined).trim();
+  }
+  return extractFinalProject(text);
+}
+
+/**
+ * extractParticipation
+ * -----------------------
+ * Input: A string containing the full text extracted from the PDF.
+ * Output: A string with participation grading details if found, or "Participation grading information not found."
+ * Description: Searches for the marker "Participation" and returns the text on that line.
+ */
+function extractParticipation(text) {
+  const idx = text.indexOf("Participation");
+  if (idx === -1) return "Participation grading information not found.";
+  let sub = text.substring(idx);
+  const lineEnd = sub.indexOf("\n");
+  return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined).trim();
+}
+
+/**
+ * processSyllabus
+ * ------------------
+ * Input: A string representing the full path to a PDF file.
+ * Output: Writes a JSON file containing the extracted syllabus information.
+ * Description: Reads the PDF file from the given file path, extracts its full text using pdfToText,
+ *              then uses various extraction functions to populate a JSON object with three categories
+ *              ("Course Information", "Course Policies", "Grading") and their corresponding items.
+ *              The resulting JSON is saved to a file with a .json extension.
  */
 async function processSyllabus(filePath) {
   try {
@@ -177,14 +378,42 @@ async function processSyllabus(filePath) {
     const uint8ArrayData = new Uint8Array(dataBuffer);
     const fullText = await pdfToText(uint8ArrayData);
     
-    const taOfficeHours = extractTAOfficeHours(fullText);
-    const gradingPolicy = extractGradingPolicy(fullText);
-    
-    const output = `TA Office Hours: ${taOfficeHours}\n\nGrading Policy:\n${gradingPolicy}`;
+    const outputData = {
+      categories: [
+        {
+          name: "Course Information",
+          items: [
+            { type: "Course Title", text: extractCourseTitle(fullText) },
+            { type: "Professor", text: extractProfessor(fullText) },
+            { type: "Email", text: extractEmail(fullText) },
+            { type: "Office Hours", text: extractTAOfficeHours(fullText) }
+          ]
+        },
+        {
+          name: "Course Policies",
+          items: [
+            { type: "Attendance", text: extractAttendance(fullText) },
+            { type: "Late Work", text: extractLateWork(fullText) }
+          ]
+        },
+        {
+          name: "Grading",
+          items: [
+            { type: "Assignments", text: extractGradingAssignments(fullText) },
+            { type: "Quizzes", text: extractQuizzes(fullText) },
+            { type: "Midterm", text: extractMidterm(fullText) },
+            { type: "Final Project", text: extractFinalProject(fullText) },
+            { type: "Final Exam", text: extractFinalExam(fullText) },
+            { type: "Participation", text: extractParticipation(fullText) },
+            { type: "Grading Policy", text: extractGradingPolicy(fullText) }
+          ]
+        }
+      ]
+    };
     
     const baseName = path.basename(filePath, path.extname(filePath));
-    const outputFileName = `${baseName}_output.txt`;
-    fs.writeFileSync(outputFileName, output, "utf8");
+    const outputFileName = `${baseName}_output.json`;
+    fs.writeFileSync(outputFileName, JSON.stringify(outputData, null, 2), "utf8");
     console.log(`Output for "${baseName}" written to ${outputFileName}`);
   } catch (error) {
     console.error(`Error processing ${filePath}:`, error);
@@ -192,12 +421,12 @@ async function processSyllabus(filePath) {
 }
 
 /**
- * Processes all syllabus PDF files listed in the syllabusFiles array.
- *
- * @returns {Promise<void>} A promise that resolves when all files have been processed.
- * 
- * This function iterates through each file path in the syllabusFiles array and calls processSyllabus
- * for each one sequentially.
+ * processAllSyllabi
+ * -------------------
+ * Input: None.
+ * Output: Processes each PDF file in the syllabusFiles array and writes corresponding JSON files.
+ * Description: Iterates over each file path in the syllabusFiles array and calls processSyllabus
+ *              for each file sequentially.
  */
 async function processAllSyllabi() {
   for (const filePath of syllabusFiles) {
