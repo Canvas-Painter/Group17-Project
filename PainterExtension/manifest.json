@@ -23,6 +23,12 @@
       ],
       "run_at": "document_start"
     }
+    {
+      "matches": ["*://canvas.oregonstate.edu/calendar*"],
+      "js": ["GamifyCalendar/gamified_calendar.js"],
+      "css": ["GamifyCalendar/gamify-calendar-style.css"],
+      "run_at": "document_idle"
+    }
   ],
   "web_accessible_resources": [
     {
@@ -38,7 +44,8 @@
     }
   ],
   "action": {
-    "default_popup": "addressbarPopup/popup.html"
+    "default_popup": "addressbarPopup/popup.html",
+    "default_icon": "icons/icon.png"
   },
   "options_page": "options.html",
   "key": "test"

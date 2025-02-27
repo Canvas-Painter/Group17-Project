@@ -2,7 +2,7 @@ const imp = require('./import.js')
 
 // This is how you import
 // I don't know a better way
-eval(imp.test_import('../../GradeBook/math.js').toString())
+eval(imp.test_import('../../GradeBook/math.js'))
 
 // Smaple distributions to calculate stuff on
 const sample1 = [1, 2, 3]

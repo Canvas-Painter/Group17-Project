@@ -2,9 +2,9 @@
 
 // Please keep in mind this only works locally for now, I will be imrpoving it throughout the day making sure it works with the side menu functions
 
-import fs from 'fs';
-import path from 'path';
-import pdfjsLib from 'pdfjs-dist/legacy/build/pdf.js';
+const fs = require('fs');
+const path = require('path');
+const pdfjsLib = require('../node_modules/pdfjs-dist/legacy/build/pdf.js');
 const { getDocument } = pdfjsLib;
 
 // Array of syllabus PDF file paths
@@ -207,4 +207,4 @@ async function processAllSyllabi() {
   }
 }
 
-processAllSyllabi();
+// processAllSyllabi();
