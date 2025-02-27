@@ -24,12 +24,19 @@ extension_path = join(dirname(__file__), '../..')
 
 # The url of the extension
 extension_url = 'chrome-extension://ggbhkkiikhcoglfcgliimlmonkdiikhl/'
+def generate_url(path):
+    return 'file://' + join(extension_path, path)
 
 # Opens chrome with the extension loaded
 options = webdriver.ChromeOptions()
 options.add_argument(f'--load-extension={extension_path}')
 options.add_argument(f'--window-size={window_size[0]},{window_size[1]}')
 driver = webdriver.Chrome(options=options, service=Service(ChromeDriverManager().install()))
+
+sample_pages = [
+    generate_url('Test/Python/samples/grades1.html'),
+    generate_url('Test/Python/samples/grades2.html')
+]
 
 # Closes the window and display
 def clean():
