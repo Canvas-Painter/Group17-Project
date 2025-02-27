@@ -9,7 +9,9 @@ const { getDocument } = pdfjsLib;
 const syllabusFiles = [
   "C:\\Users\\Sam\\Downloads\\Syllabus 341 Winter 2025_Section_010_V2.pdf",
   "C:\\Users\\Sam\\Downloads\\cs381W25Syllabus.pdf",
-  "C:\\Users\\Sam\\Downloads\\Syllabus CS340 Winter 2025 (1).pdf"
+  "C:\\Users\\Sam\\Downloads\\Syllabus CS340 Winter 2025 (1).pdf",
+  "C:\\Users\\Sam\\Downloads\\Technology & Ethics_Syllabus_WN 25.pdf",
+  "C:\\Users\\Sam\\Downloads\\Syllabus.pdf"
 ];
 
 /**
@@ -86,11 +88,23 @@ function extractTAOfficeHours(text) {
  * Input: A string containing the full text extracted from the PDF.
  * Output: A string with the extracted grading policy information (grade weights and letter scale),
  *         or a message if not found.
- * Description: Searches for the "Grade Weighting" section, extracts a chunk of text,
- *              filters for lines containing "%" (grade weights), then searches for a "grade letter"
- *              or "Grading Scale" marker to extract letter-grade lines. Combines and returns the results.
+ * Description: For CS/ECE 476, if detected, extracts text starting at "Evaluation of Student Performance"
+ *              until the first double newline. Otherwise, it searches for the "Grade Weighting" section,
+ *              extracts a chunk of text, filters for lines containing "%" (grade weights) and letter-grade lines,
+ *              and returns the combined result.
  */
 function extractGradingPolicy(text) {
+  if (/CS\/ECE 476/i.test(text)) {
+    let idx = text.indexOf("Evaluation of Student Performance");
+    if (idx !== -1) {
+      let sub = text.substring(idx);
+      let endIdx = sub.indexOf("\n\n");
+      if (endIdx === -1) endIdx = sub.length;
+      return sub.substring(0, endIdx).trim();
+    }
+    return "Grading policy not found.";
+  }
+  
   let idx = text.indexOf("Grade Weighting");
   if (idx !== -1) {
     let chunk = text.substring(idx, idx + 1000);
@@ -154,9 +168,20 @@ function extractGradingPolicy(text) {
  * ---------------
  * Input: A string containing the full text extracted from the PDF.
  * Output: A string with the extracted quiz grading information if found, or a message if not found.
- * Description: Uses a regular expression to find a line starting with "Quiz" or "Quizzes:" and returns the remainder of that line.
+ * Description: For CS/ECE 476, looks for "Category Portion of Grade" and returns the line containing "Quizzes".
+ *              Otherwise, uses a regular expression to find a line starting with "Quiz" or "Quizzes:".
  */
 function extractQuizzes(text) {
+  if (/CS\/ECE 476/i.test(text)) {
+    let idx = text.indexOf("Category Portion of Grade");
+    if (idx !== -1) {
+      let sub = text.substring(idx, idx + 1000);
+      const lines = sub.split("\n").map(l => l.trim());
+      const quizLine = lines.find(line => /^Quizzes\s+\d+%/.test(line));
+      return quizLine || "Quiz grading information not found.";
+    }
+    return "Quiz grading information not found.";
+  }
   const regex = /^Quiz(?:es)?:\s*(.+)$/im;
   const match = text.match(regex);
   return match ? match[1].trim() : "Quiz grading information not found.";
@@ -167,18 +192,20 @@ function extractQuizzes(text) {
  * ---------------------
  * Input: A string containing the full text extracted from the PDF.
  * Output: A string with the extracted course title if found, or "Course title not found."
- * Description: Splits the text into lines and attempts to find a line that includes key course title keywords.
- *              For example, for the 341 syllabus it looks for "LINEAR ALGEBRA" (case-insensitive) and returns that line.
+ * Description: For CS/ECE 476, returns the second nonempty line (the course title). Otherwise, splits the text into
+ *              lines and attempts to find a line that includes key course title keywords.
  */
 function extractCourseTitle(text) {
+  if (/CS\/ECE 476/i.test(text)) {
+    const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+    return lines[1] || "Course title not found.";
+  }
   const lines = text.split("\n").map(line => line.trim()).filter(line => line.length > 0);
-  // Look for a line that contains "LINEAR ALGEBRA" (or other keywords as needed)
   for (const line of lines) {
     if (/linear algebra/i.test(line)) {
       return line;
     }
   }
-  // Otherwise, return the first line that does not start with "Last updated" and does not include "Syllabus"
   for (const line of lines) {
     if (!line.toLowerCase().startsWith("last updated") && !line.toLowerCase().includes("syllabus")) {
       return line;
@@ -192,15 +219,19 @@ function extractCourseTitle(text) {
  * -------------------
  * Input: A string containing the full text extracted from the PDF.
  * Output: A string with the professor's name if found, or "Professor not found."
- * Description: Searches for the marker "Instructor:" or "Professor:" and returns the text on that line after
- *              removing the marker. Falls back to "About the Instructor" if necessary.
+ * Description: For CS/ECE 476, returns the third nonempty line (the professor's name). Otherwise,
+ *              searches for "Instructor:" or "Professor:" and returns the text on that line (or falls back to
+ *              "About the Instructor").
  */
 function extractProfessor(text) {
+  if (/CS\/ECE 476/i.test(text)) {
+    const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
+    return lines[2] || "Professor not found.";
+  }
   let idx = text.indexOf("Instructor:");
   if (idx === -1) {
     idx = text.indexOf("Professor:");
     if (idx === -1) {
-      // Fallback: check for "About the Instructor"
       idx = text.indexOf("About the Instructor");
       if (idx === -1) return "Professor not found.";
       else {
@@ -250,13 +281,14 @@ function extractAttendance(text) {
  * ------------------
  * Input: A string containing the full text extracted from the PDF.
  * Output: A string with the late work policy details if found, or "Late work policy not found."
- * Description: First, searches for explicit markers such as "Late Policy", "Late Policies", or "Late Work".
- *              If not found, falls back to the "Homework:" section and returns only the lines mentioning "late"
- *              and containing a "%" (assumed to indicate penalty information).
+ * Description: First checks for explicit markers ("Late Policy", "Late Policies", or "Late Work").
+ *              If found, extracts the corresponding block up to the next double newline.
+ *              Otherwise, falls back to the "Homework:" section, returning only lines mentioning "late"
+ *              with a "%" penalty.
  */
 function extractLateWork(text) {
-  const markers = ["Late Policy", "Late Policies", "Late Work"];
-  for (const marker of markers) {
+  const explicitMarkers = ["Late Policy", "Late Policies", "Late Work"];
+  for (const marker of explicitMarkers) {
     let idx = text.indexOf(marker);
     if (idx !== -1) {
       let sub = text.substring(idx);
@@ -265,7 +297,7 @@ function extractLateWork(text) {
       return sub.substring(0, endIdx).trim();
     }
   }
-  // Fallback: check the Homework section for late penalty information
+  // Fallback: check the Homework section for late penalty details.
   let homeworkIdx = text.indexOf("Homework:");
   if (homeworkIdx !== -1) {
     let sub = text.substring(homeworkIdx);
@@ -285,10 +317,22 @@ function extractLateWork(text) {
  * ---------------------------
  * Input: A string containing the full text extracted from the PDF.
  * Output: A string with assignment grading details if found, or "Assignment grading information not found."
- * Description: Searches for the marker "Assignments" and splits the result by a bullet character (""),
- *              returning only the first segment which is assumed to list the assignments.
+ * Description: For CS/ECE 476, if "Category Portion of Grade" is found, extracts that block and returns only lines
+ *              with a "%" that do not start with a letter grade (A–F). Otherwise, searches for the marker "Assignments"
+ *              and splits the result by a bullet (""), returning only the first segment.
  */
 function extractGradingAssignments(text) {
+  if (/CS\/ECE 476/i.test(text)) {
+    let idx = text.indexOf("Category Portion of Grade");
+    if (idx !== -1) {
+      let sub = text.substring(idx, idx + 1000);
+      const lines = sub.split("\n").map(l => l.trim()).filter(l => {
+        return /\d+%/.test(l) && !/^[A-F]/i.test(l);
+      });
+      return lines.join("\n");
+    }
+    return "Assignment grading information not found.";
+  }
   const idx = text.indexOf("Assignments");
   if (idx === -1) return "Assignment grading information not found.";
   let sub = text.substring(idx);
@@ -301,9 +345,11 @@ function extractGradingAssignments(text) {
  * ---------------
  * Input: A string containing the full text extracted from the PDF.
  * Output: A string with midterm exam grading details if found, or "Midterm grading information not found."
- * Description: Searches for the marker "Midterm" and returns the text on that line.
+ * Description: For CS/ECE 476, returns "Midterm grading information not found." Otherwise, searches for "Midterm"
+ *              and returns the text on that line.
  */
 function extractMidterm(text) {
+  if (/CS\/ECE 476/i.test(text)) return "Midterm grading information not found.";
   const idx = text.indexOf("Midterm");
   if (idx === -1) return "Midterm grading information not found.";
   let sub = text.substring(idx);
@@ -316,9 +362,11 @@ function extractMidterm(text) {
  * ---------------------
  * Input: A string containing the full text extracted from the PDF.
  * Output: A string with final project grading details if found, or "Final project grading information not found."
- * Description: Searches for the marker "Final Project" or "Project Step 1 Final Version" and returns the text on that line.
+ * Description: For CS/ECE 476, returns "Final project grading information not found." Otherwise, searches for "Final Project"
+ *              or "Project Step 1 Final Version" and returns the text on that line.
  */
 function extractFinalProject(text) {
+  if (/CS\/ECE 476/i.test(text)) return "Final project grading information not found.";
   let idx = text.indexOf("Final Project");
   if (idx === -1) {
     idx = text.indexOf("Project Step 1 Final Version");
@@ -334,10 +382,11 @@ function extractFinalProject(text) {
  * ------------------
  * Input: A string containing the full text extracted from the PDF.
  * Output: A string with final exam grading details if found, or, if not found, the final project information.
- * Description: Searches for the marker "Final Exam" and returns the text on that line. If not found,
- *              falls back to extracting final project information.
+ * Description: For CS/ECE 476, returns "Final exam grading information not found." Otherwise, searches for "Final Exam"
+ *              and returns the text on that line. If not found, falls back to extracting final project information.
  */
 function extractFinalExam(text) {
+  if (/CS\/ECE 476/i.test(text)) return "Final exam grading information not found.";
   let idx = text.indexOf("Final Exam");
   if (idx !== -1) {
     let sub = text.substring(idx);
@@ -352,9 +401,11 @@ function extractFinalExam(text) {
  * -----------------------
  * Input: A string containing the full text extracted from the PDF.
  * Output: A string with participation grading details if found, or "Participation grading information not found."
- * Description: Searches for the marker "Participation" and returns the text on that line.
+ * Description: For CS/ECE 476, returns "Participation grading information not found." Otherwise, searches for "Participation"
+ *              and returns the text on that line.
  */
 function extractParticipation(text) {
+  if (/CS\/ECE 476/i.test(text)) return "Participation grading information not found.";
   const idx = text.indexOf("Participation");
   if (idx === -1) return "Participation grading information not found.";
   let sub = text.substring(idx);

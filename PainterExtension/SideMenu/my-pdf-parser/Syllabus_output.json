@@ -1,0 +1,71 @@
+{
+  "categories": [
+    {
+      "name": "Course Information",
+      "items": [
+        {
+          "type": "Course Title",
+          "text": "CS/ECE 476 – ADVANCED COMPUTER NETWORKING Ryan Gambord Winter 2025"
+        },
+        {
+          "type": "Professor",
+          "text": "Overview Course Name Advance Computer Networking"
+        },
+        {
+          "type": "Email",
+          "text": "Email not found."
+        },
+        {
+          "type": "Office Hours",
+          "text": "TA office hours not found."
+        }
+      ]
+    },
+    {
+      "name": "Course Policies",
+      "items": [
+        {
+          "type": "Attendance",
+          "text": "Attendance policy not found."
+        },
+        {
+          "type": "Late Work",
+          "text": "Late work policy not found."
+        }
+      ]
+    },
+    {
+      "name": "Grading",
+      "items": [
+        {
+          "type": "Assignments",
+          "text": "Homework and Lab Assignments 30%\nQuizzes 20%\nProgramming Project 20%\nProject Presentation 15%\nTopic Survey Presentation 15%"
+        },
+        {
+          "type": "Quizzes",
+          "text": "Quizzes 20%"
+        },
+        {
+          "type": "Midterm",
+          "text": "Midterm grading information not found."
+        },
+        {
+          "type": "Final Project",
+          "text": "Final project grading information not found."
+        },
+        {
+          "type": "Final Exam",
+          "text": "Final exam grading information not found."
+        },
+        {
+          "type": "Participation",
+          "text": "Participation grading information not found."
+        },
+        {
+          "type": "Grading Policy",
+          "text": "Evaluation of Student Performance Category Portion of Grade\r\nHomework and Lab Assignments 30%\r\nQuizzes 20%\r\nProgramming Project 20%\r\nProject Presentation 15%\r\nTopic Survey Presentation 15%\r\nSubject to change in order to support desired learning and assessment outcomes. Letter Grade Performance Description\r\nA 90 –100% “Exceptional”\r\nB 80 – 90% “Superior”\r\nC 70 – 80% “Average”\r\nD 60 – 70% “Inferior”\r\nF 0 - 60% “Failure”\r\nWhere applicable, ± letter grades are applied to the upper and lower third of each listed range.\r\nLearning Resources 1. J. F. Kurose and K. W. Ross, Computer Networking: A Top-Down Approach, 7th ed. Pearson, 2017. (optional)\r\n2. Analysis of Computer and Communication Networks, by Fayez Gebali, Springer (optional) 3. Computer Communication Networks, by N. F. Mir, Prentice Hall (optional)\r\nAcademic Calendar All students are subject to the registration and refund deadlines as stated in the Academic Calendar: https://registrar.oregonstate.edu/osu-academic-calendar 2"
+        }
+      ]
+    }
+  ]
+}
