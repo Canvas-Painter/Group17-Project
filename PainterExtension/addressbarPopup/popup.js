@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const deleteButton = document.getElementById("deleteTheme-btn");
     const editButton = document.getElementById("editTheme-btn");
     const themeDropdown = document.getElementById("existingThemes");
+    const helpButton = document.getElementById("help-btn");
 
     // Input fields for new theme values
     const themeNameInput = document.getElementById("themeName");
@@ -318,5 +319,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateCurrentTheme(true, theme);
             }
         });
+    });
+
+    helpButton.addEventListener('click', function() {
+        chrome.tabs.create({url: 'help.html'});
     });
 });
