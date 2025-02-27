@@ -16,12 +16,24 @@
         </div>
 
         <div id="syllabus-categories">
-
+            <!-- Your existing categories and content go here. -->
         </div>
-        
+
         <!-- Add Category Button -->
         <button class="add-category-btn standard-button" style="display: none;">+ Add New Category</button>
+        
+        <!--  New Upload Syllabus Button & Hidden File Input -->
+        <button class="standard-button" id="uploadSyllabusBtn" style="display: none;">
+            Upload Syllabus
+        </button>
+        <input
+            type="file"
+            id="syllabusFileInput"
+            style="display: none;"
+            accept=".pdf,.doc,.docx"
+        />
     </main>
+
     <script src="standard_syllabus_page.js"></script>
 </body>
 </html>

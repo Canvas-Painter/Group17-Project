@@ -1,5 +1,6 @@
 // pdf_parser.js
 
+<<<<<<< Updated upstream
 // Please keep in mind this only works locally for now, I will be imrpoving it throughout the day making sure it works with the side menu functions
 
 const fs = require('fs');
@@ -50,6 +51,46 @@ async function pdfToText(data) {
       }
       pageText += block.str;
       lastBlock = block;
+=======
+// Import helper function to get an access token for Canvas API authentication.
+import { getAccessToken } from "./auth.js";
+// Import pdf.js function to load and work with PDF documents.
+import { getDocument } from "pdfjs-dist";
+
+/**
+ * Main function that retrieves the syllabus PDF from the Canvas API,
+ * extracts its text content, and parses key details such as TA hours and grading policy.
+ *
+ * @param {string} courseId - The Canvas course ID.
+ * @returns {object|undefined} - Returns an object containing extracted TA hours and grading policy,
+ *                               or undefined if no syllabus PDF is found.
+ */
+export async function fetchAndParseSyllabus(courseId) {
+    try {
+        // Retrieve the URL of the syllabus PDF using the course ID.
+        const pdfUrl = await getSyllabusPDF(courseId);
+        if (!pdfUrl) {
+            console.log("No syllabus PDF found.");
+            return;
+        }
+
+        // Extract all text from the retrieved PDF.
+        const syllabusText = await extractTextFromPDF(pdfUrl);
+        // Use regex to extract TA office hours from the text.
+        const taHours = extractTAHours(syllabusText);
+        // Use regex to extract the grading policy from the text.
+        const gradingPolicy = extractGradingPolicy(syllabusText);
+
+        // Log the extracted details for debugging or further processing.
+        console.log("Extracted TA Hours:", taHours);
+        console.log("Extracted Grading Policy:", gradingPolicy);
+
+        // Return an object containing the key extracted details.
+        return { taHours, gradingPolicy };
+    } catch (error) {
+        // Log any error encountered during the process.
+        console.error("Error processing syllabus:", error);
+>>>>>>> Stashed changes
     }
     fullText += pageText + "\n\n";
   }
@@ -57,6 +98,7 @@ async function pdfToText(data) {
 }
 
 /**
+<<<<<<< Updated upstream
  * Extracts TA office hours from the given text.
  *
  * @param {string} text - The full extracted text from the PDF.
@@ -77,6 +119,34 @@ function extractTAOfficeHours(text) {
       let sub = text.substring(idx + altMarker.length);
       const lineEnd = sub.indexOf("\n");
       return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined).trim();
+=======
+ * Queries the Canvas API to locate the syllabus PDF file for a given course.
+ *
+ * @param {string} courseId - The Canvas course ID.
+ * @returns {string|null} - Returns the URL of the syllabus PDF if found, otherwise null.
+ */
+async function getSyllabusPDF(courseId) {
+    try {
+        // Construct the API endpoint URL and fetch course files.
+        const response = await fetch(`https://canvas.instructure.com/api/v1/courses/${courseId}/files`, {
+            headers: { "Authorization": `Bearer ${await getAccessToken()}` }
+        });
+
+        // If the response is not successful, throw an error.
+        if (!response.ok) throw new Error("Failed to fetch course files");
+        
+        // Parse the JSON response which contains a list of file objects.
+        const files = await response.json();
+        // Find the file with "syllabus" in its name and of PDF type.
+        const syllabusFile = files.find(file => file.display_name.toLowerCase().includes("syllabus") && file.mime_class === "pdf");
+        
+        // Return the URL of the syllabus file if found; otherwise, return null.
+        return syllabusFile ? syllabusFile.url : null;
+    } catch (error) {
+        // Log errors related to fetching the syllabus PDF.
+        console.error("Error retrieving syllabus PDF:", error);
+        return null;
+>>>>>>> Stashed changes
     }
   }
   let sub = text.substring(idx + marker.length);
@@ -85,6 +155,7 @@ function extractTAOfficeHours(text) {
 }
 
 /**
+<<<<<<< Updated upstream
  * Extracts grading policy information from the given text.
  *
  * @param {string} text - The full extracted text from the PDF.
@@ -161,6 +232,60 @@ function extractGradingPolicy(text) {
     }
   }
   return "Grading policy not found.";
+=======
+ * Extracts the entire text content from a PDF document using pdf.js.
+ *
+ * @param {string} pdfUrl - The URL of the PDF document.
+ * @returns {string} - The concatenated text extracted from all pages of the PDF.
+ */
+async function extractTextFromPDF(pdfUrl) {
+    try {
+        // Load the PDF document asynchronously.
+        const pdf = await getDocument(pdfUrl).promise;
+        let extractedText = "";
+
+        // Iterate over each page in the PDF.
+        for (let i = 1; i <= pdf.numPages; i++) {
+            // Get the current page.
+            const page = await pdf.getPage(i);
+            // Extract text content from the page.
+            const textContent = await page.getTextContent();
+            // Append each text item to the overall extracted text.
+            textContent.items.forEach(item => extractedText += item.str + " ");
+        }
+
+        // Return the complete extracted text.
+        return extractedText;
+    } catch (error) {
+        // Log any error encountered during text extraction.
+        console.error("Error extracting text from PDF:", error);
+        return "";
+    }
+}
+
+/**
+ * Uses a regular expression to extract TA office hours information from the syllabus text.
+ *
+ * @param {string} text - The complete text extracted from the syllabus PDF.
+ * @returns {string} - The extracted TA office hours or a default message if not found.
+ */
+function extractTAHours(text) {
+    // Regex looks for "TA Office Hours:" followed by any characters until a double newline or the end.
+    let match = text.match(/TA Office Hours:([\s\S]*?)(?=\n\n|$)/i);
+    return match ? match[1].trim() : "TA hours not found.";
+}
+
+/**
+ * Uses a regular expression to extract grading policy information from the syllabus text.
+ *
+ * @param {string} text - The complete text extracted from the syllabus PDF.
+ * @returns {string} - The extracted grading policy or a default message if not found.
+ */
+function extractGradingPolicy(text) {
+    // Regex looks for "Grading Policy:" followed by any characters until a double newline or the end.
+    let match = text.match(/Grading Policy:([\s\S]*?)(?=\n\n|$)/i);
+    return match ? match[1].trim() : "Grading policy not found.";
+>>>>>>> Stashed changes
 }
 
 /**

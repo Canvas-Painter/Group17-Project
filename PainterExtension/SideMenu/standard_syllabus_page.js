@@ -1,23 +1,48 @@
-// Storage management functions
-function loadCourseData(courseId) {
-    return new Promise((resolve) => {
-        const key = `syllabus_${courseId}`;
-        chrome.storage.local.get(key, (result) => {
-            const data = result[key];
-            console.log('Loaded data:', key, data);
+
+const uploadBtn = document.getElementById("uploadSyllabusBtn");
+const fileInput = document.getElementById("syllabusFileInput");
+
+// Only attach the listeners if the elements exist
+if (uploadBtn && fileInput) {
+    // Clicking the upload button triggers the file dialog
+    uploadBtn.addEventListener("click", () => {
+        fileInput.click();
+    });
+
+    // When a file is selected, handle it here
+    fileInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            console.log("Selected file:", file.name);
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // The file’s content is in e.target.result
+                console.log("File content:", e.target.result);
+                
+                // You can now parse, display, or send it somewhere.
+                // If it’s a text-based file, you can display it or store it in a variable.
+            };
             
-            // Check version and reset if not current
-            if (!data || data.version !== '0.1.1') {
-                const defaultData = getDefaultStructure();
-                saveCourseData(courseId, defaultData);
-                resolve(defaultData);
-                return;
-            }
-            
-            resolve(data);
-        });
+            reader.readAsText(file);
+        }
     });
 }
+
+// Show the Upload button in edit mode
+document.querySelector('.edit-mode-btn').addEventListener('click', () => {
+    uploadBtn.style.display = 'inline-block';
+});
+document.querySelector('.done-btn').addEventListener('click', () => {
+    uploadBtn.style.display = 'none';
+});
+
+// Only attach the listeners if the elements exist
+if (uploadBtn && fileInput) {
+    // Clicking the upload button triggers the file dialog
+    uploadBtn.addEventListener("click", () => {
+        fileInput.click();
+    });
 
 function saveCourseData(courseId, data) {
     return new Promise((resolve, reject) => {
