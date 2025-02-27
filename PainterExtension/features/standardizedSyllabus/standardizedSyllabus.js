@@ -1,4 +1,4 @@
-function waitForNavMenu() {
+function activateSideMenu() {
     const checkInterval = setInterval(() => {
         console.log("Checking for menu...");
         const menu = document.getElementById('section-tabs');

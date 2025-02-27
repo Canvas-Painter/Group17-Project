@@ -1,0 +1,60 @@
+/* Link styling */
+a.standard-syllabus.standardized-syllabus-feature {
+    color: orange !important;
+    text-decoration: none;
+}
+
+/* Wrapper/overlay */
+.standardized-syllabus-feature.popup-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Popup */
+.standardized-syllabus-feature .syllabus-popup {
+    position: relative;
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    width: 90%;
+    height: 90vh;
+    max-width: 1000px;
+}
+
+.popup-controls {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 1;
+}
+
+.standardized-syllabus-feature .close-btn,
+.standardized-syllabus-feature .popout-btn {
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px;
+    background: white;
+    padding: 5px 8px;
+    border-radius: 3px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.syllabus-iframe {
+    width: 100%;
+    height: calc(100% - 20px);
+    border: none;
+    margin-top: 20px;
+}
+
+/* Remove the table styles as they're no longer needed */

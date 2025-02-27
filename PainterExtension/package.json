@@ -1,0 +1,11 @@
+{
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^4.10.38"
+  }
+}
