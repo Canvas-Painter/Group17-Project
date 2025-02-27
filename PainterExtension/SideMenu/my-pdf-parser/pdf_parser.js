@@ -319,7 +319,7 @@ function extractLateWork(text) {
  * Output: A string with assignment grading details if found, or "Assignment grading information not found."
  * Description: For CS/ECE 476, if "Category Portion of Grade" is found, extracts that block and returns only lines
  *              with a "%" that do not start with a letter grade (A–F). Otherwise, searches for the marker "Assignments"
- *              and splits the result by a bullet (""), returning only the first segment.
+ *              and splits the result by a bullet character (""), returning only the first segment.
  */
 function extractGradingAssignments(text) {
   if (/CS\/ECE 476/i.test(text)) {
@@ -417,11 +417,12 @@ function extractParticipation(text) {
  * processSyllabus
  * ------------------
  * Input: A string representing the full path to a PDF file.
- * Output: Writes a JSON file containing the extracted syllabus information.
+ * Output: Writes a JSON file (or saves to Chrome local storage if available) containing the extracted syllabus information.
  * Description: Reads the PDF file from the given file path, extracts its full text using pdfToText,
  *              then uses various extraction functions to populate a JSON object with three categories
  *              ("Course Information", "Course Policies", "Grading") and their corresponding items.
- *              The resulting JSON is saved to a file with a .json extension.
+ *              If running as a Chrome extension (or in an environment with chrome.storage.local available),
+ *              saves the JSON using chrome.storage.local.set. Otherwise, writes to a file with a .json extension.
  */
 async function processSyllabus(filePath) {
   try {
@@ -463,9 +464,17 @@ async function processSyllabus(filePath) {
     };
     
     const baseName = path.basename(filePath, path.extname(filePath));
-    const outputFileName = `${baseName}_output.json`;
-    fs.writeFileSync(outputFileName, JSON.stringify(outputData, null, 2), "utf8");
-    console.log(`Output for "${baseName}" written to ${outputFileName}`);
+    
+    // If running in a Chrome extension environment, use chrome.storage.local to save the JSON.
+    if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
+      chrome.storage.local.set({ [baseName]: outputData }, () => {
+        console.log(`Output for "${baseName}" saved to chrome.storage.local`);
+      });
+    } else {
+      const outputFileName = `${baseName}_output.json`;
+      fs.writeFileSync(outputFileName, JSON.stringify(outputData, null, 2), "utf8");
+      console.log(`Output for "${baseName}" written to ${outputFileName}`);
+    }
   } catch (error) {
     console.error(`Error processing ${filePath}:`, error);
   }
@@ -475,7 +484,7 @@ async function processSyllabus(filePath) {
  * processAllSyllabi
  * -------------------
  * Input: None.
- * Output: Processes each PDF file in the syllabusFiles array and writes corresponding JSON files.
+ * Output: Processes each PDF file in the syllabusFiles array and writes corresponding JSON outputs.
  * Description: Iterates over each file path in the syllabusFiles array and calls processSyllabus
  *              for each file sequentially.
  */
