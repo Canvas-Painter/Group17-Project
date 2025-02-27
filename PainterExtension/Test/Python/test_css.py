@@ -60,8 +60,10 @@ def load_color(name):
 
 # Uses the colors red
 def test_custom_colors_and_load():
+    # TODO fix why one my system the maxes have to be like 60s and 90s for colors that should be zeros
+    #  one the CI it works
     red_checks = [220, 0, 0], [256, 60, 60]
-    green_checks = [0, 220, 60], [130, 256, 90]
+    green_checks = [0, 220, 0], [130, 256, 90]
 
     # Tries to make the colors red
     make_color('red', '#FF0000')
