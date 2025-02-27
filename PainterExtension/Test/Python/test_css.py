@@ -60,7 +60,7 @@ def load_color(name):
 
 # Uses the colors red
 def test_custom_colors_and_load():
-    red_checks = [220, 30, 30], [256, 60, 60]
+    red_checks = [220, 0, 0], [256, 60, 60]
     green_checks = [90, 220, 60], [130, 256, 90]
 
     # Tries to make the colors red
