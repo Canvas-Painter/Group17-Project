@@ -22,7 +22,7 @@
         "CanvasColors/custom.css"
       ],
       "run_at": "document_start"
-    }
+    },
     {
       "matches": ["*://canvas.oregonstate.edu/calendar*"],
       "js": ["GamifyCalendar/gamified_calendar.js"],
