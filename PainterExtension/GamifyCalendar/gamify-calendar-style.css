@@ -1,0 +1,20 @@
+#gamified-banner {
+    background-color: #f4f1ff;
+    border: 2px solid #7c4dff;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    text-align: center;
+}
+.gamified-container h3 {
+    color: #7c4dff;
+    font-weight: bold;
+}
+.gamified-container ul {
+    list-style: none;
+    padding: 0;
+}
+.gamified-container li {
+    padding: 5px;
+    font-size: 14px;
+}
