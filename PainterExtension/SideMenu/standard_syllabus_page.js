@@ -165,18 +165,41 @@ document.addEventListener('DOMContentLoaded', async () => {
             fileInput.click();
         });
 
-        fileInput.addEventListener("change", (event) => {
+        fileInput.addEventListener("change", async (event) => {
             const file = event.target.files[0];
-            if (file) {
-                console.log("Selected file:", file.name);
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    console.log("File content:", e.target.result);
-                    // Handle the file data (e.g., parse, upload, display, etc.)
-                };
-                reader.readAsText(file);
-            }
+            if (!file) return;
+            
+            console.log("Selected file:", file.name);
+            
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    // Parse the file content as JSON
+                    const importedData = JSON.parse(e.target.result);
+        
+                    // Now you have an object that presumably matches
+                    // the structure of your existing `data`:
+                    // e.g., { version: "0.1.1", categories: [ ... ] }
+        
+                    // 1) Replace (or merge) the categories in your existing data
+                    data.categories = importedData.categories;
+                    // If the entire file is your new data, you could just do:
+                    // data = importedData; 
+                    // but be mindful of versioning or other fields.
+        
+                    // 2) Save to Chrome storage
+                    await saveCourseData(courseId, data);
+        
+                    // 3) Re-render or refresh to see changes
+                    window.location.reload();
+                } catch (err) {
+                    console.error("Error parsing file as JSON:", err);
+                    alert("The file is not valid JSON or has an incompatible structure.");
+                }
+            };
+            reader.readAsText(file);
         });
+        
     }
 });
 
