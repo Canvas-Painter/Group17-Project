@@ -105,15 +105,16 @@ function setup() {
     }
 
     console.log("Reading weights")
-    const weights = new Map();
-    const entries = sidebar.getElementsByClassName("summary")[0].getElementsByTagName("tr")
-    // The the first is the labels and last is the total so can be ignored
-    for (let i = 1; i < entries.length - 1; i++) {
-        const text = entries[i].textContent.split('\n')
-        weights.set(text[1].trim(), parseInt(text[2].trim()))
-    }
-
-    if (weights.size == 0) {
+    let weights = new Map();
+    const summary = sidebar.getElementsByClassName("summary")[0]
+    if (summary) {
+        const entries = summary.getElementsByTagName("tr");
+        // The the first is the labels and last is the total so can be ignored
+        for (let i = 1; i < entries.length - 1; i++) {
+            const text = entries[i].textContent.split('\n')
+            weights.set(text[1].trim(), parseInt(text[2].trim()))
+        }
+    } else {
         weights = null
         console.log("No weights")
     }
