@@ -8,6 +8,7 @@ eval(imp.test_import('../../GradeBook/math.js').toString())
 const sample1 = [1, 2, 3]
 const sample2 = [-3, 2, 2, 5, -1, -1, -1, -4, 6, -1]
 const sample3 = [-33, 0, -46, -34, 2, 11, -32, 14, -22, -18, -16, -58, -44, -56, -41, -42, -14, 9, 25, 20, -58, -51, -36, -37, -35]
+const sample4 = []
 
 // These check that the means are valid
 test('Mean Test 1', () => {
@@ -23,6 +24,11 @@ test('Mean Test 2', () => {
 test('Mean Test 3', () => {
     expect(mean(sample3))
         .toBeCloseTo(-23.68)
+})
+
+test('Mean Test 4', () => {
+    expect(mean(sample4))
+        .toBeNaN()
 })
 
 // These check both the population and sample std. dev. of the distributions
@@ -45,5 +51,10 @@ test('StdDev Test 3', () => {
         .toBeCloseTo(25.64943144269154)
     expect(stdDev(sample3, true))
         .toBeCloseTo(25.131207690837304)
+})
+
+test('StdDev Test 4', () => {
+    expect(mean(sample4))
+        .toBeNaN()
 })
 

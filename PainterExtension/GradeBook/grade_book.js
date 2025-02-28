@@ -28,7 +28,7 @@ class Assignment {
 }
 
 // Intented to open window with info currently adds info to the sidebar
-function popOpen(assignments) {
+function popOpen(assignments, weights) {
     // Creates a category map by grouping up the assignments
     const categories = new Map()
     assignments.forEach(assignment => {
@@ -52,16 +52,14 @@ function popOpen(assignments) {
         const scores = []
         // Maps each group to a set of data points that stats can be calculated from
         value.forEach(assignment => {
-            console.log(assignment)
             if (assignment.max != 0 && !isNaN(assignment.max) && !isNaN(assignment.grade)) {
                 scores.push(assignment.grade / assignment.max)
             }
         })
 
         // Creates the element
-        console.log(scores)
         const elem = /*doc*/document.createElement('div')
-        elem.textContent = `${key}: Mean: ${mean(scores)}, StdDev: ${stdDev(scores)}`
+        elem.textContent = `${key}: Mean: ${mean(scores).toFixed(2)}, StdDev: ${stdDev(scores).toFixed(2)}`
         elements.push(elem)
     })
 
@@ -93,7 +91,7 @@ function setup() {
 
     console.log("Found gradebook")
 
-    console.log("Reading data")
+    console.log("Reading grades")
     // Goes through the table looking for the assignments
     for (const assignment of grade_div.getElementsByClassName("student_assignment")) {
         // If a class is hard coded it is not a valid assignment it
@@ -106,15 +104,29 @@ function setup() {
         assignments.push(Assignment.fromHTML(assignment))
     }
 
-    console.log("Read data")
+    console.log("Reading weights")
+    const weights = new Map();
+    const entries = sidebar.getElementsByClassName("summary")[0].getElementsByTagName("tr")
+    // The the first is the labels and last is the total so can be ignored
+    for (let i = 1; i < entries.length - 1; i++) {
+        const text = entries[i].textContent.split('\n')
+        weights.set(text[1].trim(), parseInt(text[2].trim()))
+    }
 
-    return assignments
+    if (weights.size == 0) {
+        weights = null
+        console.log("No weights")
+    }
+
+    console.log("Done")
+
+    return [assignments, weights]
 }
 
 // Sets up and runs if set up
 document.addEventListener('DOMContentLoaded', () => {
-    const assignments = setup()
-    if (assignments) {
-        popOpen(assignments)
+    const parsed = setup()
+    if (parsed) {
+        popOpen(parsed[0], parsed[1])
     }
 })
