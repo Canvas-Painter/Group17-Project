@@ -430,7 +430,11 @@ async function processSyllabus(filePath) {
     const uint8ArrayData = new Uint8Array(dataBuffer);
     const fullText = await pdfToText(uint8ArrayData);
     
+    const courseId = "myCourseId"; // or pass it in as a parameter
+
     const outputData = {
+      version: "0.1.1",   // Add the version field
+
       categories: [
         {
           name: "Course Information",
@@ -462,7 +466,10 @@ async function processSyllabus(filePath) {
         }
       ]
     };
-    
+
+    // Store it in Chrome storage under the same key your extension page uses:
+    const storageKey = `syllabus_${courseId}`;
+
     const baseName = path.basename(filePath, path.extname(filePath));
     
     // If running in a Chrome extension environment, use chrome.storage.local to save the JSON.
