@@ -84,6 +84,9 @@ function setupEditControls() {
     const doneBtn = document.querySelector('.done-btn');
     const addCategoryBtn = document.querySelector('.add-category-btn');
     
+    // Get reference to the upload button from the DOM
+    const uploadBtn = document.getElementById('uploadSyllabusBtn');
+
     editBtn.onclick = () => {
         isEditMode = true;
         backupData = JSON.parse(JSON.stringify(data));
@@ -92,6 +95,11 @@ function setupEditControls() {
         doneBtn.style.display = 'inline';
         document.body.classList.add('edit-mode');
         document.querySelector('.add-category-btn').style.display = 'block';
+
+        // Show Upload Button in Edit Mode
+        if (uploadBtn) {
+            uploadBtn.style.display = 'inline-block';
+        }
     };
 
     cancelBtn.onclick = async () => {
@@ -107,6 +115,11 @@ function setupEditControls() {
         doneBtn.style.display = 'none';
         document.body.classList.remove('edit-mode');
         document.querySelector('.add-category-btn').style.display = 'none';
+
+        // Hide Upload Button when done editing
+        if (uploadBtn) {
+            uploadBtn.style.display = 'none';
+        }
     };
 
     addCategoryBtn.onclick = async () => {
@@ -121,7 +134,6 @@ function setupEditControls() {
         // Trigger edit of the new category name
         section.querySelector('h2').click();
     };
-
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -135,18 +147,39 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Setup edit controls
     setupEditControls();
 
-    // Dynamically create sections from categories
+    // Dynamically create sections
     data.categories.forEach(category => {
-        const items = category.items.map(item => {
-            return [item.type, item.text, item.editable];
-        });
-        
+        const items = category.items.map(item => [item.type, item.text, item.editable]);
         const section = createSection(category.name, items, category, data);
         main.appendChild(section);
     });
 
     enableDragDrop(main, data);
+
+    // Setup for file uploading
+    const uploadBtn = document.getElementById("uploadSyllabusBtn");
+    const fileInput = document.getElementById("syllabusFileInput");
+
+    if (uploadBtn && fileInput) {
+        uploadBtn.addEventListener("click", () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener("change", (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                console.log("Selected file:", file.name);
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    console.log("File content:", e.target.result);
+                    // Handle the file data (e.g., parse, upload, display, etc.)
+                };
+                reader.readAsText(file);
+            }
+        });
+    }
 });
+
 
 function createSection(title, items, category, data) {
     const section = document.createElement('section');
