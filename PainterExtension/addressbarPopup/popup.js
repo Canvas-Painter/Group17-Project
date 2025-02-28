@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function () {
             chrome.storage.sync.get('custom_themes', function(result) {
                 let arr = result.custom_themes;
                 arr.push(newTheme);
-                chrome.storage.sync.set({ custom_themes: arr }, function() {
+                chrome.storage.sync.set({ custom_themes : arr }, function() {
                     // console.log("Custom themes saved:", newTheme, '\n', arr);
                     updateDropdown();
                 });
@@ -194,10 +194,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateCurrentTheme(true, newTheme);
 
                 // darkmodeButton off
-                darkmodeButton.disabled = themeButton.checked;
+                darkmodeButton.disabled = true;
+                themeButton.disabled = false;
 
                 // update dropdown
-                themeDropdown.value = themeName; // NOT DOING ANYTHING...??
+                //themeDropdown.value = themeName; // NOT DOING ANYTHING...??
             });
         }
     });
