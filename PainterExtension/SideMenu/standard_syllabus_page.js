@@ -167,38 +167,48 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         fileInput.addEventListener("change", async (event) => {
             const file = event.target.files[0];
-            if (!file) return;
-            
-            console.log("Selected file:", file.name);
-            
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                try {
-                    // Parse the file content as JSON
-                    const importedData = JSON.parse(e.target.result);
-        
-                    // Now you have an object that presumably matches
-                    // the structure of your existing `data`:
-                    // e.g., { version: "0.1.1", categories: [ ... ] }
-        
-                    // 1) Replace (or merge) the categories in your existing data
-                    data.categories = importedData.categories;
-                    // If the entire file is your new data, you could just do:
-                    // data = importedData; 
-                    // but be mindful of versioning or other fields.
-        
-                    // 2) Save to Chrome storage
-                    await saveCourseData(courseId, data);
-        
-                    // 3) Re-render or refresh to see changes
-                    window.location.reload();
-                } catch (err) {
-                    console.error("Error parsing file as JSON:", err);
-                    alert("The file is not valid JSON or has an incompatible structure.");
-                }
-            };
-            reader.readAsText(file);
-        });
+            if (file) {
+              // 1) Read the PDF file as an ArrayBuffer
+              const arrayBuffer = await file.arrayBuffer();
+          
+              // 2) Parse the PDF
+              //    Note: You need a browser-friendly pdf.js or your own pdfToText function.
+              //    If you have a function pdfToText(...) that returns text,
+              //    you can pass arrayBuffer or a Uint8Array to it.
+          
+              try {
+                const pdfText = await pdfToText(new Uint8Array(arrayBuffer));
+                
+                // 3) Build your data object
+                const outputData = {
+                  version: "0.1.1",
+                  categories: [
+                    {
+                      name: "Course Information",
+                      items: [
+                        { type: "Course Title", text: extractCourseTitle(pdfText) },
+                        { type: "Professor", text: extractProfessor(pdfText) },
+                        // ...
+                      ]
+                    },
+                    // ...
+                  ]
+                };
+          
+                // 4) Save to chrome.storage with the correct key
+                const courseId = "myCourseId";
+                const storageKey = `syllabus_${courseId}`;
+                chrome.storage.local.set({ [storageKey]: outputData }, () => {
+                  console.log(`Saved PDF-based syllabus to "${storageKey}"`);
+                });
+          
+              } catch (err) {
+                console.error("Error parsing PDF:", err);
+                alert("Failed to parse PDF. See console for details.");
+              }
+            }
+          });
+          
         
     }
 });
