@@ -1,17 +1,33 @@
 // Storage management functions
 function loadCourseData(courseId) {
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
         const key = `syllabus_${courseId}`;
-        chrome.storage.local.get(key, (result) => {
+        chrome.storage.local.get(key, async (result) => {
             const data = result[key];
-            console.log('Loaded data:', key, data);
+            console.log('Loaded local data:', key, data);
 
-            // Check version and reset if not current
+            // If no data or wrong version, try getting from server first
             if (!data || data.version !== '0.1.1') {
-                const defaultData = getDefaultStructure();
-                saveCourseData(courseId, defaultData);
-                resolve(defaultData);
-                return;
+                try {
+                    // Try to get from server
+                    const response = await fetch(`https://web.engr.oregonstate.edu/~ludwigo/cs362/api/syllabus-data.php?courseId=${courseId}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const serverData = await response.json();
+                    
+                    // Save server data locally and return it
+                    await saveCourseData(courseId, serverData);
+                    resolve(serverData);
+                    return;
+                } catch (error) {
+                    console.error('Error fetching from server, using default:', error);
+                    // Fall back to default structure if server fails
+                    const defaultData = getDefaultStructure();
+                    await saveCourseData(courseId, defaultData);
+                    resolve(defaultData);
+                    return;
+                }
             }
 
             resolve(data);
@@ -19,7 +35,9 @@ function loadCourseData(courseId) {
     });
 }
 
+// saves the data to local storage
 function saveCourseData(courseId, data) {
+    syllabusData = data;
     return new Promise((resolve, reject) => {
         const key = `syllabus_${courseId}`;
         const saveObj = { [key]: data };
@@ -31,11 +49,13 @@ function saveCourseData(courseId, data) {
                 return;
             }
             console.log('Saved data:', key, data);
+            
             resolve(true);
         });
     });
 }
 
+// default structure for the syllabus
 function getDefaultStructure() {
     return {
         version: '0.1.1',
@@ -43,63 +63,125 @@ function getDefaultStructure() {
             {
                 name: "Course Information",
                 items: [
-                    { type: "Course Title", text: "", editable: true },
-                    { type: "Professor", text: "", editable: true },
-                    { type: "Email", text: "", editable: true },
-                    { type: "Office Hours", text: "", editable: true }
+                    { type: "Course Title", text: "" },
+                    { type: "Professor", text: "" },
+                    { type: "Email", text: "" },
+                    { type: "Office Hours", text: "" }
                 ]
             },
             {
                 name: "Course Policies",
                 items: [
-                    { type: "Attendance", text: "", editable: true },
-                    { type: "Late Work", text: "", editable: true }
+                    { type: "Attendance", text: "" },
+                    { type: "Late Work", text: "" }
                 ]
             },
             {
                 name: "Grading",
                 items: [
-                    { type: "Assignments", text: "", editable: true },
-                    { type: "Midterm", text: "", editable: true },
-                    { type: "Final Project", text: "", editable: true },
-                    { type: "Participation", text: "", editable: true }
+                    { type: "Assignments", text: "" },
+                    { type: "Midterm", text: "" },
+                    { type: "Final Project", text: "" },
+                    { type: "Participation", text: "" }
                 ]
             }
         ]
     };
 }
 
-// Add after storage functions
+// show update button if data is different between local and server
+function showUpdateButtonIfAppl() {
+    const updateBtn = document.querySelector('.update-db-btn');
+    updateBtn.style.display = isSyllabusDataEqual(syllabusData, window.serverSyllabusData) ? 'none' : 'inline';
+}
+function isSyllabusDataEqual(data1, data2) {
+    console.log('Data1:', data1);
+    console.log('Data2:', data2);
+    
+    // Handle null/undefined cases
+    if (!data1 || !data2) return false;
+    
+    // Ensure both have required properties
+    if (!data1.categories || !data2.categories) return false;
+
+    try {
+        // Normalize objects by sorting keys
+        const normalize = (obj) => {
+            if (Array.isArray(obj)) {
+                return obj.map(normalize);
+            }
+            if (obj && typeof obj === 'object') {
+                return Object.keys(obj).sort().reduce((result, key) => {
+                    result[key] = normalize(obj[key]);
+                    return result;
+                }, {});
+            }
+            return obj;
+        };
+
+        const normalized1 = normalize(data1);
+        const normalized2 = normalize(data2);
+        
+        return JSON.stringify(normalized1) === JSON.stringify(normalized2);
+    } catch (e) {
+        console.error('Comparison error:', e);
+        return false;
+    }
+}
+
+// Load initial data and compare with server data
+async function loadInitialData(courseId) {
+    try {
+        
+        // Fetch server data
+        const response = await fetch(`https://web.engr.oregonstate.edu/~ludwigo/cs362/api/syllabus-data.php?courseId=${courseId}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const serverData = await response.json();
+        
+        // Store server data for later comparison
+        window.serverSyllabusData = serverData;
+        console.log('Server data:', serverData);
+        
+        showUpdateButtonIfAppl();
+    } catch (error) {
+        console.error('Error loading initial data:', error);
+    }
+}
+
+
 let isEditMode = false;
 let backupData = null;
-let data;
+let syllabusData;
 const main = document.getElementById('syllabus-categories');
 const urlParams = new URLSearchParams(window.location.search);
 const courseId = urlParams.get('courseId') || 'unknown';
 
+// setup edit control functions and visibility
 function setupEditControls() {
     const controls = document.getElementById('edit-controls');
     const editBtn = document.querySelector('.edit-mode-btn');
     const cancelBtn = document.querySelector('.cancel-btn');
     const doneBtn = document.querySelector('.done-btn');
     const addCategoryBtn = document.querySelector('.add-category-btn');
+    const uploadDbBtn = document.querySelector('.update-to-db-btn');
+    const updateDbBtn = document.querySelector('.update-db-btn');
 
     // Get reference to the upload button from the DOM
     const uploadBtn = document.getElementById('uploadSyllabusBtn');
 
     editBtn.onclick = () => {
         isEditMode = true;
-        backupData = JSON.parse(JSON.stringify(data));
+        backupData = JSON.parse(JSON.stringify(syllabusData));
         editBtn.style.display = 'none';
+        updateDbBtn.style.display = 'none';
         cancelBtn.style.display = 'inline';
+        uploadDbBtn.style.display = 'inline';
         doneBtn.style.display = 'inline';
+        uploadBtn.style.display = 'inline-block';
         document.body.classList.add('edit-mode');
         document.querySelector('.add-category-btn').style.display = 'block';
-
-        // Show Upload Button in Edit Mode
-        if (uploadBtn) {
-            uploadBtn.style.display = 'inline-block';
-        }
     };
 
     cancelBtn.onclick = async () => {
@@ -112,14 +194,12 @@ function setupEditControls() {
         backupData = null;
         editBtn.style.display = 'inline';
         cancelBtn.style.display = 'none';
+        uploadDbBtn.style.display = 'none';
+        uploadBtn.style.display = 'none';
         doneBtn.style.display = 'none';
         document.body.classList.remove('edit-mode');
         document.querySelector('.add-category-btn').style.display = 'none';
-
-        // Hide Upload Button when done editing
-        if (uploadBtn) {
-            uploadBtn.style.display = 'none';
-        }
+        showUpdateButtonIfAppl();
     };
 
     addCategoryBtn.onclick = async () => {
@@ -127,34 +207,43 @@ function setupEditControls() {
             name: 'New Category',
             items: []
         };
-        data.categories.push(newCategory);
-        const section = createSection(newCategory.name, [], newCategory, data);
+        syllabusData.categories.push(newCategory);
+        const section = createSection(newCategory.name, [], newCategory, syllabusData);
         main.appendChild(section);
-        await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
+        await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), syllabusData);
         // Trigger edit of the new category name
         section.querySelector('h2').click();
     };
+
+    updateDbBtn.addEventListener('click', updateFromDatabase);
+    uploadDbBtn.addEventListener('click', uploadToDatabase);
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const courseId = urlParams.get('courseId') || 'unknown';
+// display the syllabus data on the page
+function displaySyllabusData(data) {
+    main.innerHTML = '';
 
-    // Load saved data
-    data = await loadCourseData(courseId);
-    console.log('Loaded data structure:', data);
-
-    // Setup edit controls
-    setupEditControls();
-
-    // Dynamically create sections
     data.categories.forEach(category => {
-        const items = category.items.map(item => [item.type, item.text, item.editable]);
+        const items = category.items.map(item => [item.type, item.text]);
         const section = createSection(category.name, items, category, data);
         main.appendChild(section);
     });
 
     enableDragDrop(main, data);
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+    // Load saved data including server comparison
+    syllabusData = await loadCourseData(courseId);
+    console.log('Loaded data structure:', syllabusData);
+
+    // Setup edit controls
+    setupEditControls();
+
+    displaySyllabusData(syllabusData);
+
+    await loadInitialData(courseId);
 
     // Setup for file uploading
     const uploadBtn = document.getElementById("uploadSyllabusBtn");
@@ -214,6 +303,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+// Modify the updateFromDatabase function to properly update reference data
+async function updateFromDatabase() {
+    // Save old data as backup
+    backupData = syllabusData;
+    console.log('Backup data:', backupData);
+    
+    // Then update local data and display
+    syllabusData = structuredClone(window.serverSyllabusData);
+    await saveCourseData(courseId, syllabusData);
+    displaySyllabusData(syllabusData);
+
+    // Switch to edit mode if User wants to revert
+    isEditMode = true;
+    document.querySelector('.edit-mode-btn').style.display = 'none';
+    document.querySelector('.cancel-btn').style.display = 'inline';
+    document.querySelector('.done-btn').style.display = 'inline';
+    document.querySelector('.update-db-btn').style.display = 'none';
+
+    // After updating from database, update the server data reference
+    showUpdateButtonIfAppl();
+}
+
+function createCategorySection(category) {
+    const section = document.createElement('section');
+    section.innerHTML = `
+        <div class="category-header">
+            <h2>${category.title}</h2>
+        </div>
+        <div class="section-content">
+            ${category.items.map(item => `
+                <div class="info-row">
+                    <div class="label">${item.label}</div>
+                    <div class="value">${item.value}</div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+    return section;
+}
 
 function createSection(title, items, category, data) {
     const section = document.createElement('section');
@@ -306,13 +434,12 @@ async function deleteCategory(section, category, data) {
 async function addNewItem(section, category, data) {
     const newItem = {
         type: 'New Item',
-        text: '',
-        editable: true
+        text: ''
     };
 
     category.items.push(newItem);
     const content = section.querySelector('.section-content');
-    const row = createItemRow([newItem.type, newItem.text, newItem.editable], category, data);
+    const row = createItemRow([newItem.type, newItem.text], category, data);
     content.appendChild(row);
 
     await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
@@ -320,7 +447,7 @@ async function addNewItem(section, category, data) {
     row.querySelector('.label').click();
 }
 
-function createItemRow([label, value, editable], category, data) {
+function createItemRow([label, value], category, data) {
     const row = document.createElement('div');
     row.className = 'info-row';
     row.dataset.field = label;
@@ -333,26 +460,23 @@ function createItemRow([label, value, editable], category, data) {
     const valueElem = document.createElement('div');
     valueElem.className = 'value editable-text';
     valueElem.textContent = value;
-    valueElem.onclick = () => isEditMode && editable && makeEditable(valueElem, label, category, data);
-
+    valueElem.onclick = () => isEditMode && makeEditable(valueElem, label, category, data);
+    
     const controls = document.createElement('div');
     controls.className = 'item-controls';
     controls.style.display = 'none';
-
-    if (editable) {
-        const dragBtn = document.createElement('button');
-        dragBtn.className = 'standard-button drag-btn';
-        dragBtn.textContent = '⋮⋮';
-        dragBtn.title = 'Drag to reorder';
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'standard-button delete-btn';
-        deleteBtn.textContent = 'X';
-        deleteBtn.onclick = () => isEditMode && deleteItem(row, category, label, data);
-
-        controls.append(dragBtn, deleteBtn);
-    }
-
+    
+    const dragBtn = document.createElement('button');
+    dragBtn.className = 'standard-button drag-btn';
+    dragBtn.textContent = '⋮⋮';
+    dragBtn.title = 'Drag to reorder';
+    
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'standard-button delete-btn';
+    deleteBtn.textContent = 'X';
+    deleteBtn.onclick = () => isEditMode && deleteItem(row, category, label, data);
+    
+    controls.append(dragBtn, deleteBtn);
     row.append(controls, labelElem, valueElem);
     return row;
 }
@@ -626,5 +750,44 @@ async function updateItemOrder(data) {
 
     if (updated) {
         await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
+    }
+}
+
+// Add this new function
+async function uploadToDatabase() {
+    try {
+        const response = await fetch('https://web.engr.oregonstate.edu/~ludwigo/cs362/api/syllabus-data.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                courseId: courseId,
+                data: syllabusData
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        // Update server reference data
+        window.serverSyllabusData = structuredClone(syllabusData);
+        
+        // Exit edit mode (similar to done button)
+        isEditMode = false;
+        backupData = null;
+        document.querySelector('.edit-mode-btn').style.display = 'inline';
+        document.querySelector('.cancel-btn').style.display = 'none';
+        document.querySelector('.update-to-db-btn').style.display = 'none';
+        document.getElementById('uploadSyllabusBtn').style.display = 'none';
+        document.querySelector('.done-btn').style.display = 'none';
+        document.body.classList.remove('edit-mode');
+        document.querySelector('.add-category-btn').style.display = 'none';
+        showUpdateButtonIfAppl();
+
+    } catch (error) {
+        console.error('Error uploading to database:', error);
+        alert('Failed to upload changes. Please try again.');
     }
 }
