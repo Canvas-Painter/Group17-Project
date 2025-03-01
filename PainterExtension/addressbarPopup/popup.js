@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const themeNameInput = document.getElementById("themeName");
     const bg0Input = document.getElementById("--bg-0");
     const bg1Input = document.getElementById("--bg-1");
-    const bg2Input = document.getElementById("--bg-2"); 
+    const bg2Input = document.getElementById("--bg-2");
     const text0Input = document.getElementById("--text-0");
     const text1Input = document.getElementById("--text-1");
     const text2Input = document.getElementById("--text-2");
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Darkmode toggle
-    darkmodeButton.addEventListener('change', function() {    
+    darkmodeButton.addEventListener('change', function() {
         const isEnabled = darkmodeButton.checked;
         // console.log('darkmodeButton clicked');
 
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             chrome.storage.sync.get('custom_themes', function(result) {
                 const arr = result.custom_themes;
-                // get selected theme from dropdown 
+                // get selected theme from dropdown
                 const theme = arr.find(theme => theme.name === themeDropdown.value);
                 // console.log('selected theme:', theme);
                 if (theme != undefined) {
@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Edit a custom theme
     editButton.addEventListener('click', function() {
         // console.log('editButton clicked');
-        // get selected theme from dropdown 
+        // get selected theme from dropdown
         const to_edit = themeDropdown.value;
         chrome.storage.sync.get('custom_themes', function(result) {
             let arr = result.custom_themes; // get themes array
@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // update current_theme
             updateCurrentTheme(true, newTheme);
-            
+
             // darkmodeButton on/off
             darkmodeButton.disabled = themeButton.checked;
         });
@@ -293,7 +293,7 @@ document.addEventListener("DOMContentLoaded", function () {
     themeDropdown.addEventListener('click', function(event) {
         // update input colors with selected theme's values
         chrome.storage.sync.get('custom_themes', function(result) {
-        
+
             const theme = result.custom_themes.find(theme => theme.name === themeDropdown.value);
             bg0Input.value = theme.cssVars['--bg-0'];
             bg1Input.value = theme.cssVars['--bg-1'];

@@ -9,7 +9,7 @@ import { applyRewards } from "./gamification_rewards.js";
  */
 export function initializeGamifiedCalendar() {
     console.log("Gamified Calendar Feature Loaded");
-    
+
     document.addEventListener("DOMContentLoaded", async () => {
         setupGamification();
         displayUpcomingAssignments();
@@ -31,7 +31,7 @@ function setupGamification() {
 function enhanceCanvasCalendar() {
     let calendar = document.querySelector("#calendar-container");
     if (!calendar) return;
-    
+
     let gamificationBanner = document.createElement("div");
     gamificationBanner.id = "gamification-banner";
     gamificationBanner.style.padding = "10px";
@@ -39,7 +39,7 @@ function enhanceCanvasCalendar() {
     gamificationBanner.style.borderRadius = "5px";
     gamificationBanner.style.marginBottom = "10px";
     gamificationBanner.innerHTML = `<strong>Gamified Calendar:</strong> Earn points for completing assignments early!`;
-    
+
     calendar.prepend(gamificationBanner);
 }
 
@@ -49,12 +49,12 @@ function enhanceCanvasCalendar() {
 function displayUpcomingAssignments() {
     let sideMenu = document.getElementById("canvas-enhancer-side-menu");
     if (!sideMenu) return;
-    
+
     let assignmentsContainer = document.createElement("div");
     assignmentsContainer.id = "upcoming-assignments";
     assignmentsContainer.style.marginTop = "20px";
     assignmentsContainer.innerHTML = `<h4>Upcoming Assignments</h4><ul id="assignments-list"></ul>`;
-    
+
     sideMenu.appendChild(assignmentsContainer);
     fetchAssignments();
 }
@@ -69,9 +69,9 @@ async function fetchAssignments() {
                 "Authorization": `Bearer ${await getAccessToken()}`
             }
         });
-        
+
         if (!response.ok) throw new Error("Failed to fetch assignments");
-        
+
         const assignments = await response.json();
         updateAssignmentList(assignments);
     } catch (error) {
@@ -86,7 +86,7 @@ async function fetchAssignments() {
 function updateAssignmentList(assignments) {
     let assignmentsList = document.getElementById("assignments-list");
     assignmentsList.innerHTML = "";
-    
+
     assignments.forEach(assignment => {
         let li = document.createElement("li");
         li.innerText = `${assignment.title} - Due: ${new Date(assignment.due_at).toLocaleDateString()}`;
@@ -105,11 +105,11 @@ async function completeAssignment(assignment) {
     const dueDate = new Date(assignment.due_at);
     const completionDate = new Date();
     let pointsEarned = 10; // Base points for completion
-    
+
     if (completionDate < dueDate) {
         pointsEarned += 5; // Bonus for early completion
     }
-    
+
     await updatePoints(pointsEarned);
     applyRewards();
     updateSidebarPoints();
@@ -122,14 +122,14 @@ async function completeAssignment(assignment) {
 async function updateSidebarPoints() {
     let sideMenu = document.getElementById("canvas-enhancer-side-menu");
     if (!sideMenu) return;
-    
+
     let pointsDisplay = document.getElementById("user-points-display");
     if (!pointsDisplay) {
         pointsDisplay = document.createElement("div");
         pointsDisplay.id = "user-points-display";
         sideMenu.prepend(pointsDisplay);
     }
-    
+
     const userPoints = await getUserPoints();
     pointsDisplay.innerHTML = `<strong>Points:</strong> ${userPoints}`;
 }

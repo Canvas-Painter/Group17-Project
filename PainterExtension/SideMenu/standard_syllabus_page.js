@@ -5,7 +5,7 @@ function loadCourseData(courseId) {
         chrome.storage.local.get(key, (result) => {
             const data = result[key];
             console.log('Loaded data:', key, data);
-            
+
             // Check version and reset if not current
             if (!data || data.version !== '0.1.1') {
                 const defaultData = getDefaultStructure();
@@ -13,7 +13,7 @@ function loadCourseData(courseId) {
                 resolve(defaultData);
                 return;
             }
-            
+
             resolve(data);
         });
     });
@@ -23,7 +23,7 @@ function saveCourseData(courseId, data) {
     return new Promise((resolve, reject) => {
         const key = `syllabus_${courseId}`;
         const saveObj = { [key]: data };
-        
+
         chrome.storage.local.set(saveObj, () => {
             if (chrome.runtime.lastError) {
                 console.error('Save error:', chrome.runtime.lastError);
@@ -83,7 +83,7 @@ function setupEditControls() {
     const cancelBtn = document.querySelector('.cancel-btn');
     const doneBtn = document.querySelector('.done-btn');
     const addCategoryBtn = document.querySelector('.add-category-btn');
-    
+
     // Get reference to the upload button from the DOM
     const uploadBtn = document.getElementById('uploadSyllabusBtn');
 
@@ -139,7 +139,7 @@ function setupEditControls() {
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const courseId = urlParams.get('courseId') || 'unknown';
-    
+
     // Load saved data
     data = await loadCourseData(courseId);
     console.log('Loaded data structure:', data);
@@ -170,15 +170,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (file) {
               // 1) Read the PDF file as an ArrayBuffer
               const arrayBuffer = await file.arrayBuffer();
-          
+
               // 2) Parse the PDF
               //    Note: You need a browser-friendly pdf.js or your own pdfToText function.
               //    If you have a function pdfToText(...) that returns text,
               //    you can pass arrayBuffer or a Uint8Array to it.
-          
+
               try {
                 const pdfText = await pdfToText(new Uint8Array(arrayBuffer));
-                
+
                 // 3) Build your data object
                 const outputData = {
                   version: "0.1.1",
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     // ...
                   ]
                 };
-          
+
               } catch (err) {
                 console.log("Error parsing:", err);
                 console.log("Resorting to JSON");
@@ -209,32 +209,32 @@ document.addEventListener('DOMContentLoaded', async () => {
               }
             }
           });
-          
-        
+
+
     }
 });
 
 
 function createSection(title, items, category, data) {
     const section = document.createElement('section');
-    
+
     const heading = document.createElement('h2');
     heading.textContent = title;
     heading.onclick = () => isEditMode && editCategoryName(heading, category, data);
     heading.className = 'category-header';
-    
+
     const controls = createCategoryControls(section, category, data);
-    
+
     const content = document.createElement('div');
     content.className = 'category-content';
-    
+
     const itemsContainer = document.createElement('div');
     itemsContainer.className = 'section-content';
-    
+
     items.forEach(item => {
         itemsContainer.appendChild(createItemRow(item, category, data));
     });
-    
+
     content.appendChild(itemsContainer);
     section.append(heading, controls, content);
     return section;
@@ -244,22 +244,22 @@ function createCategoryControls(section, category, data) {
     const controls = document.createElement('div');
     controls.className = 'category-controls';
     controls.style.display = 'none';
-    
+
     const dragBtn = document.createElement('button');
     dragBtn.textContent = '⋮⋮';
     dragBtn.className = 'standard-button drag-btn';
     dragBtn.title = 'Drag to reorder';
-    
+
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'X';
     deleteBtn.className = 'standard-button delete-btn';
     deleteBtn.onclick = () => deleteCategory(section, category, data);
-    
+
     const addItemBtn = document.createElement('button');
     addItemBtn.textContent = '+ Add Item';
     addItemBtn.className = 'standard-button add-item-btn';
     addItemBtn.onclick = () => addNewItem(section, category, data);
-    
+
     controls.append(dragBtn, deleteBtn, addItemBtn);
     return controls;
 }
@@ -268,7 +268,7 @@ async function editCategoryName(heading, category, data) {
     const input = document.createElement('input');
     input.value = category.name;
     input.className = 'edit-input';
-    
+
     const save = async () => {
         const newName = input.value.trim();
         if (newName && newName !== category.name) {
@@ -281,7 +281,7 @@ async function editCategoryName(heading, category, data) {
         }
         input.remove();
     };
-    
+
     input.onblur = save;
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
@@ -289,7 +289,7 @@ async function editCategoryName(heading, category, data) {
             save();
         }
     });
-    
+
     heading.textContent = '';
     heading.appendChild(input);
     input.focus();
@@ -309,12 +309,12 @@ async function addNewItem(section, category, data) {
         text: '',
         editable: true
     };
-    
+
     category.items.push(newItem);
     const content = section.querySelector('.section-content');
     const row = createItemRow([newItem.type, newItem.text, newItem.editable], category, data);
     content.appendChild(row);
-    
+
     await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
     // Trigger edit of the new item's name
     row.querySelector('.label').click();
@@ -324,35 +324,35 @@ function createItemRow([label, value, editable], category, data) {
     const row = document.createElement('div');
     row.className = 'info-row';
     row.dataset.field = label;
-    
+
     const labelElem = document.createElement('div');
     labelElem.className = 'label editable-text';
     labelElem.textContent = label;
     labelElem.onclick = () => isEditMode && editItemName(labelElem, category, label, data);
-    
+
     const valueElem = document.createElement('div');
     valueElem.className = 'value editable-text';
     valueElem.textContent = value;
     valueElem.onclick = () => isEditMode && editable && makeEditable(valueElem, label, category, data);
-    
+
     const controls = document.createElement('div');
     controls.className = 'item-controls';
     controls.style.display = 'none';
-    
+
     if (editable) {
         const dragBtn = document.createElement('button');
         dragBtn.className = 'standard-button drag-btn';
         dragBtn.textContent = '⋮⋮';
         dragBtn.title = 'Drag to reorder';
-        
+
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'standard-button delete-btn';
         deleteBtn.textContent = 'X';
         deleteBtn.onclick = () => isEditMode && deleteItem(row, category, label, data);
-        
+
         controls.append(dragBtn, deleteBtn);
     }
-    
+
     row.append(controls, labelElem, valueElem);
     return row;
 }
@@ -368,7 +368,7 @@ async function editItemName(labelElem, category, oldType, data) {
     const input = document.createElement('input');
     input.value = oldType;
     input.className = 'edit-input';
-    
+
     const save = async () => {
         const newType = input.value.trim();
         if (newType && newType !== oldType) {
@@ -385,7 +385,7 @@ async function editItemName(labelElem, category, oldType, data) {
         }
         input.remove();
     };
-    
+
     input.onblur = save;
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
@@ -393,7 +393,7 @@ async function editItemName(labelElem, category, oldType, data) {
             save();
         }
     });
-    
+
     labelElem.textContent = '';
     labelElem.appendChild(input);
     input.focus();
@@ -416,14 +416,14 @@ function makeEditable(element, field, category, data) {
 
         try {
             const courseId = new URLSearchParams(window.location.search).get('courseId');
-            
+
             // Update the text in the nested structure
             category.items.forEach(item => {
                 if (item.type === field) {
                     item.text = newValue;
                 }
             });
-            
+
             await saveCourseData(courseId, data);
             element.textContent = newValue;
         } catch (error) {
@@ -456,7 +456,7 @@ function enableDragDrop(main, data) {
     main.querySelectorAll('section').forEach(section => {
         const dragBtn = section.querySelector('.category-controls .drag-btn');
         section.draggable = true;
-        
+
         dragBtn.addEventListener('mousedown', (e) => {
             if (!isEditMode) return;
             section.draggedAsCategory = true;
@@ -471,7 +471,7 @@ function enableDragDrop(main, data) {
             draggedCategory = section;
             section.classList.add('dragging');
         });
-        
+
         section.addEventListener('dragend', () => {
             section.classList.remove('dragging');
             section.draggedAsCategory = false;
@@ -482,9 +482,9 @@ function enableDragDrop(main, data) {
     main.querySelectorAll('.info-row').forEach(row => {
         const dragBtn = row.querySelector('.drag-btn');
         if (!dragBtn) return;
-        
+
         row.draggable = true;
-        
+
         dragBtn.addEventListener('mousedown', (e) => {
             if (!isEditMode) return;
             row.draggedAsItem = true;
@@ -504,7 +504,7 @@ function enableDragDrop(main, data) {
             });
             e.stopPropagation();
         });
-        
+
         row.addEventListener('dragend', () => {
             row.classList.remove('dragging');
             row.style.opacity = '';
@@ -533,12 +533,12 @@ function enableDragDrop(main, data) {
             if (!isEditMode || !draggedItem) return;
             e.preventDefault();
             e.stopPropagation();
-            
+
             // Only allow drops within the same category as original
             if (content !== originalCategory) return;
-            
+
             const afterElement = getDragAfterElement(content, e.clientY, '.info-row', draggedItem);
-            
+
             if (draggedItem !== afterElement) {
                 if (afterElement) {
                     content.insertBefore(draggedItem, afterElement);
@@ -551,10 +551,10 @@ function enableDragDrop(main, data) {
         content.addEventListener('drop', async (e) => {
             if (!isEditMode || !draggedItem) return;
             e.preventDefault();
-            
+
             // Only handle drops within the same category
             if (content !== originalCategory) return;
-            
+
             // Update the data structure and save
             await updateItemOrder(data);
         });
@@ -569,11 +569,11 @@ function enableDragDrop(main, data) {
 function getDragAfterElement(container, y, selector, draggedElement) {
     const draggableElements = [...container.querySelectorAll(`${selector}:not(.dragging)`)]
         .filter(element => element !== draggedElement);
-    
+
     return draggableElements.reduce((closest, child) => {
         const box = child.getBoundingClientRect();
         const offset = y - box.top - box.height / 2;
-        
+
         if (offset < 0 && offset > closest.offset) {
             return { offset: offset, element: child };
         } else {
@@ -585,7 +585,7 @@ function getDragAfterElement(container, y, selector, draggedElement) {
 async function updateCategoryOrder(data) {
     const sections = document.querySelectorAll('section');
     const newOrder = [];
-    
+
     sections.forEach(section => {
         const categoryName = section.querySelector('h2').textContent;
         const category = data.categories.find(c => c.name === categoryName);
@@ -593,7 +593,7 @@ async function updateCategoryOrder(data) {
             newOrder.push(category);
         }
     });
-    
+
     data.categories = newOrder;
     await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
 }
@@ -601,14 +601,14 @@ async function updateCategoryOrder(data) {
 async function updateItemOrder(data) {
     const sections = document.querySelectorAll('section');
     let updated = false;
-    
+
     sections.forEach(section => {
         const categoryName = section.querySelector('h2').textContent;
         const category = data.categories.find(c => c.name === categoryName);
         if (category) {
             const rows = section.querySelectorAll('.info-row');
             const newItems = [];
-            
+
             rows.forEach(row => {
                 const itemType = row.dataset.field;
                 const item = category.items.find(i => i.type === itemType);
@@ -617,13 +617,13 @@ async function updateItemOrder(data) {
                     updated = true;
                 }
             });
-            
+
             if (newItems.length > 0) {
                 category.items = newItems;
             }
         }
     });
-    
+
     if (updated) {
         await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
     }
