@@ -203,8 +203,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const reader = new FileReader()
                 reader.readAsText(file)
                 reader.onload = (event) => {
-                    console.log(event.target.result)
-                    console.log(JSON.parse(event.target.result))
                     saveCourseData(courseId, JSON.parse(event.target.result))
                     window.location.reload()
                 }
