@@ -195,16 +195,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                   ]
                 };
           
-                // 4) Save to chrome.storage with the correct key
-                const courseId = "myCourseId";
-                const storageKey = `syllabus_${courseId}`;
-                chrome.storage.local.set({ [storageKey]: outputData }, () => {
-                  console.log(`Saved PDF-based syllabus to "${storageKey}"`);
-                });
-          
               } catch (err) {
-                console.error("Error parsing PDF:", err);
-                alert("Failed to parse PDF. See console for details.");
+                console.log("Error parsing:", err);
+                console.log("Resorting to JSON");
+
+                // 4) Save to chrome.storage with the correct key
+                const reader = new FileReader()
+                reader.readAsText(file)
+                reader.onload = (event) => {
+                    console.log(event.target.result)
+                    console.log(JSON.parse(event.target.result))
+                    saveCourseData(courseId, JSON.parse(event.target.result))
+                    window.location.reload()
+                }
               }
             }
           });
