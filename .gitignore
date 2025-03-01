@@ -25,3 +25,4 @@
 *.vcxproj
 *vcxproj.*
 .vscode/
+.vscode/*
