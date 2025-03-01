@@ -43,26 +43,26 @@ function getDefaultStructure() {
             {
                 name: "Course Information",
                 items: [
-                    { type: "Course Title", text: "", editable: true },
-                    { type: "Professor", text: "", editable: true },
-                    { type: "Email", text: "", editable: true },
-                    { type: "Office Hours", text: "", editable: true }
+                    { type: "Course Title", text: "" },
+                    { type: "Professor", text: "" },
+                    { type: "Email", text: "" },
+                    { type: "Office Hours", text: "" }
                 ]
             },
             {
                 name: "Course Policies",
                 items: [
-                    { type: "Attendance", text: "", editable: true },
-                    { type: "Late Work", text: "", editable: true }
+                    { type: "Attendance", text: "" },
+                    { type: "Late Work", text: "" }
                 ]
             },
             {
                 name: "Grading",
                 items: [
-                    { type: "Assignments", text: "", editable: true },
-                    { type: "Midterm", text: "", editable: true },
-                    { type: "Final Project", text: "", editable: true },
-                    { type: "Participation", text: "", editable: true }
+                    { type: "Assignments", text: "" },
+                    { type: "Midterm", text: "" },
+                    { type: "Final Project", text: "" },
+                    { type: "Participation", text: "" }
                 ]
             }
         ]
@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Dynamically create sections
     data.categories.forEach(category => {
-        const items = category.items.map(item => [item.type, item.text, item.editable]);
+        const items = category.items.map(item => [item.type, item.text]);
         const section = createSection(category.name, items, category, data);
         main.appendChild(section);
     });
@@ -211,8 +211,75 @@ document.addEventListener('DOMContentLoaded', async () => {
           
         
     }
+    
+    const updateDbBtn = document.querySelector('.update-db-btn');
+    updateDbBtn.addEventListener('click', updateFromDatabase);
 });
 
+async function updateFromDatabase() {
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseId = urlParams.get('courseId');
+
+        if (!courseId) {
+            alert('No course ID found in URL');
+            return;
+        }
+
+        const response = await fetch(`https://web.engr.oregonstate.edu/~ludwigo/cs362/api/syllabus-data.php?courseId=${courseId}`);
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const fetchedData = await response.json();
+        console.log('Fetched data:', fetchedData);
+
+        // Check if we received valid data structure
+        if (!fetchedData.categories) {
+            throw new Error('Invalid data structure received from server');
+        }
+
+        // Save the fetched data to local storage
+        await saveCourseData(courseId, fetchedData);
+        
+        // Update the UI
+        const syllabusCategories = document.getElementById('syllabus-categories');
+        syllabusCategories.innerHTML = ''; // Clear existing content
+        
+        // Create sections for each category
+        fetchedData.categories.forEach(category => {
+            const items = category.items.map(item => [item.type, item.text]);
+            const section = createSection(category.name, items, category, fetchedData);
+            syllabusCategories.appendChild(section);
+        });
+
+        // Update our current data reference
+        data = fetchedData;
+
+    } catch (error) {
+        console.error('Error updating from database:', error);
+        alert('Failed to update from database. Please try again.');
+    }
+}
+
+function createCategorySection(category) {
+    const section = document.createElement('section');
+    section.innerHTML = `
+        <div class="category-header">
+            <h2>${category.title}</h2>
+        </div>
+        <div class="section-content">
+            ${category.items.map(item => `
+                <div class="info-row">
+                    <div class="label">${item.label}</div>
+                    <div class="value">${item.value}</div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+    return section;
+}
 
 function createSection(title, items, category, data) {
     const section = document.createElement('section');
@@ -305,13 +372,12 @@ async function deleteCategory(section, category, data) {
 async function addNewItem(section, category, data) {
     const newItem = {
         type: 'New Item',
-        text: '',
-        editable: true
+        text: ''
     };
     
     category.items.push(newItem);
     const content = section.querySelector('.section-content');
-    const row = createItemRow([newItem.type, newItem.text, newItem.editable], category, data);
+    const row = createItemRow([newItem.type, newItem.text], category, data);
     content.appendChild(row);
     
     await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
@@ -319,7 +385,7 @@ async function addNewItem(section, category, data) {
     row.querySelector('.label').click();
 }
 
-function createItemRow([label, value, editable], category, data) {
+function createItemRow([label, value], category, data) {
     const row = document.createElement('div');
     row.className = 'info-row';
     row.dataset.field = label;
@@ -332,26 +398,23 @@ function createItemRow([label, value, editable], category, data) {
     const valueElem = document.createElement('div');
     valueElem.className = 'value editable-text';
     valueElem.textContent = value;
-    valueElem.onclick = () => isEditMode && editable && makeEditable(valueElem, label, category, data);
+    valueElem.onclick = () => isEditMode && makeEditable(valueElem, label, category, data);
     
     const controls = document.createElement('div');
     controls.className = 'item-controls';
     controls.style.display = 'none';
     
-    if (editable) {
-        const dragBtn = document.createElement('button');
-        dragBtn.className = 'standard-button drag-btn';
-        dragBtn.textContent = '⋮⋮';
-        dragBtn.title = 'Drag to reorder';
-        
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'standard-button delete-btn';
-        deleteBtn.textContent = 'X';
-        deleteBtn.onclick = () => isEditMode && deleteItem(row, category, label, data);
-        
-        controls.append(dragBtn, deleteBtn);
-    }
+    const dragBtn = document.createElement('button');
+    dragBtn.className = 'standard-button drag-btn';
+    dragBtn.textContent = '⋮⋮';
+    dragBtn.title = 'Drag to reorder';
     
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'standard-button delete-btn';
+    deleteBtn.textContent = 'X';
+    deleteBtn.onclick = () => isEditMode && deleteItem(row, category, label, data);
+    
+    controls.append(dragBtn, deleteBtn);
     row.append(controls, labelElem, valueElem);
     return row;
 }
