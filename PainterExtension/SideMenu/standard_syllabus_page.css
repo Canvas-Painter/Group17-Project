@@ -157,14 +157,13 @@ h2 {
     padding: 6px 12px;
 }
 
-/* Add this with the other button variations */
-.update-db-btn {
+.update-to-db-btn {
     background: #f0f8ff;
     border-color: #b3d4fc;
     color: #0066cc;
 }
 
-.update-db-btn:hover {
+.update-to-db-btn:hover {
     background: #e6f2ff;
     border-color: #99c2ff;
 }

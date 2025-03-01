@@ -41,6 +41,22 @@ try {
                             ['type' => 'Email', 'text' => ''],
                             ['type' => 'Office Hours', 'text' => '']
                         ]
+                    ],
+                    [
+                        'name' => 'Course Policies',
+                        'items' => [
+                            ['type' => 'Attendance', 'text' => ''],
+                            ['type' => 'Late Work', 'text' => '']
+                        ]
+                    ],
+                    [
+                        'name' => 'Grading',
+                        'items' => [
+                            ['type' => 'Assignments', 'text' => ''],
+                            ['type' => 'Midterm', 'text' => ''],
+                            ['type' => 'Final Project', 'text' => ''],
+                            ['type' => 'Participation', 'text' => '']
+                        ]
                     ]
                 ]
             ]);
@@ -59,11 +75,10 @@ try {
 
         // Try to update existing record first
         $stmt = $db->prepare("
-            INSERT INTO syllabi (course_id, syllabus_data, updated_at) 
-            VALUES (?, ?, NOW()) 
+            INSERT INTO syllabi (course_id, syllabus_data) 
+            VALUES (?, ?) 
             ON DUPLICATE KEY UPDATE 
-                syllabus_data = VALUES(syllabus_data),
-                updated_at = VALUES(updated_at)
+                syllabus_data = VALUES(syllabus_data)
         ");
 
         $stmt->execute([$courseId, $syllabusData]);
