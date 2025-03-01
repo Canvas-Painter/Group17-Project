@@ -489,9 +489,19 @@ async function deleteItem(row, category, itemType, data) {
 }
 
 async function editItemName(labelElem, category, oldType, data) {
+    // Prevent multiple inputs
+    if (labelElem.querySelector('.edit-input')) {
+        return;
+    }
+
     const input = document.createElement('input');
     input.value = oldType;
     input.className = 'edit-input';
+
+    // Stop click propagation
+    input.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
 
     const save = async () => {
         const newType = input.value.trim();
@@ -510,7 +520,7 @@ async function editItemName(labelElem, category, oldType, data) {
         input.remove();
     };
 
-    input.onblur = save;
+    input.addEventListener('blur', save);
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -520,16 +530,29 @@ async function editItemName(labelElem, category, oldType, data) {
 
     labelElem.textContent = '';
     labelElem.appendChild(input);
-    input.focus();
-    input.select();
+    
+    // Set focus without selection
+    requestAnimationFrame(() => {
+        input.focus();
+    });
 }
 
 function makeEditable(element, field, category, data) {
+    // Prevent multiple inputs
+    if (element.querySelector('.edit-input')) {
+        return;
+    }
+
     const currentValue = element.textContent;
     const input = document.createElement('input');
     input.type = 'text';
     input.value = currentValue;
     input.className = 'edit-input';
+
+    // Stop click propagation
+    input.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
 
     const save = async () => {
         const newValue = input.value.trim();
@@ -557,17 +580,26 @@ function makeEditable(element, field, category, data) {
         }
     };
 
-    input.addEventListener('blur', save);
+    input.addEventListener('blur', () => {
+        save();
+        input.remove();
+    });
+
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
+            e.preventDefault();
             save();
+            input.remove();
         }
     });
 
     element.textContent = '';
     element.appendChild(input);
-    input.focus();
-    input.select();
+    
+    // Set focus without selection
+    requestAnimationFrame(() => {
+        input.focus();
+    });
 }
 
 

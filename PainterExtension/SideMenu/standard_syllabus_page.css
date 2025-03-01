@@ -95,6 +95,7 @@ h2 {
 
 .edit-mode .editable-text {
     display: inline-block;
+    user-select: none;  /* Prevent selection when in edit mode */
 }
 
 .edit-mode .editable-text:hover {
@@ -196,6 +197,10 @@ h2 {
     display: block !important;
 }
 
+.edit-mode .editable-text {
+    user-select: none;  /* Prevent selection when in edit mode */
+}
+
 .edit-mode .editable-text:hover {
     background: #e8e8e8;  /* Darker gray for text editing */
     cursor: text;
@@ -252,6 +257,10 @@ section.dragging {
 .editable-text {
     padding: 2px;
     box-sizing: border-box;
+    user-select: none;  /* Prevent selection by default */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .edit-input {
@@ -263,6 +272,10 @@ section.dragging {
     font-family: inherit;
     font-size: inherit;
     margin: -2px;
+    user-select: text;  /* Allow selection only when actively editing */
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
 }
 
 /* Loading State */
