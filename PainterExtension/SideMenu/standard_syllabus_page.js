@@ -37,6 +37,7 @@ function loadCourseData(courseId) {
 
 // saves the data to local storage
 function saveCourseData(courseId, data) {
+    syllabusData = data;
     return new Promise((resolve, reject) => {
         const key = `syllabus_${courseId}`;
         const saveObj = { [key]: data };
@@ -131,8 +132,6 @@ function isSyllabusDataEqual(data1, data2) {
 // Load initial data and compare with server data
 async function loadInitialData(courseId) {
     try {
-        // Load local data
-        syllabusData = await loadCourseData(courseId);
         
         // Fetch server data
         const response = await fetch(`https://web.engr.oregonstate.edu/~ludwigo/cs362/api/syllabus-data.php?courseId=${courseId}`);
@@ -148,7 +147,6 @@ async function loadInitialData(courseId) {
         showUpdateButtonIfAppl();
     } catch (error) {
         console.error('Error loading initial data:', error);
-        return await loadCourseData(courseId);
     }
 }
 
@@ -237,13 +235,15 @@ function displaySyllabusData(data) {
 document.addEventListener('DOMContentLoaded', async () => {
 
     // Load saved data including server comparison
-    await loadInitialData(courseId);
+    syllabusData = await loadCourseData(courseId);
     console.log('Loaded data structure:', syllabusData);
 
     // Setup edit controls
     setupEditControls();
 
     displaySyllabusData(syllabusData);
+
+    await loadInitialData(courseId);
 
     // Setup for file uploading
     const uploadBtn = document.getElementById("uploadSyllabusBtn");
