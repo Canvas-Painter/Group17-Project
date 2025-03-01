@@ -268,7 +268,7 @@ div.ic-announcement-row {
 
 .theme h1, .theme div.page-heading h1.course-title, .theme div.ic-item-row__meta-col p, .theme h2, .theme h3 {
     color: var(--text-2) !important;
-    
+
 }
 
 .theme div#assignments-not-weighted {

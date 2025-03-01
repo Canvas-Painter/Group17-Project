@@ -14,18 +14,18 @@ export async function applyRewards(assignment) {
     let userBadges = await getUserBadges();
     let classId = assignment.context_id; // Unique class identifier from Canvas
     let className = assignment.context_name || "Unknown Class"; // Retrieve class name if available
-    
+
     if (!userBadges[classId]) {
         userBadges[classId] = {}; // Initialize storage for the class if not present
     }
-    
+
     // Award badge for completing the first assignment in a class
     if (!userBadges[classId].firstAssignmentCompleted) {
         userBadges[classId].firstAssignmentCompleted = true;
         await saveUserBadges(userBadges);
         displayBadge(`🎖️ First Assignment Completed in ${className}!`);
     }
-    
+
     // Award badge for completing the last assignment in a class
     if (await isLastAssignment(assignment)) {
         if (!userBadges[classId].lastAssignmentCompleted) {
@@ -68,7 +68,7 @@ async function saveUserBadges(badges) {
 function displayBadge(badgeText) {
     let sideMenu = document.getElementById("canvas-enhancer-side-menu");
     if (!sideMenu) return;
-    
+
     let badgeDisplay = document.createElement("div");
     badgeDisplay.className = "badge-display";
     badgeDisplay.innerText = badgeText;
@@ -77,7 +77,7 @@ function displayBadge(badgeText) {
     badgeDisplay.style.background = "#4CAF50";
     badgeDisplay.style.color = "white";
     badgeDisplay.style.borderRadius = "5px";
-    
+
     sideMenu.appendChild(badgeDisplay);
 }
 
@@ -94,12 +94,12 @@ async function isLastAssignment(assignment) {
                 "Authorization": `Bearer ${await getAccessToken()}`
             }
         });
-        
+
         if (!response.ok) throw new Error("Failed to fetch assignments");
-        
+
         const assignments = await response.json();
         const dueDates = assignments.map(a => new Date(a.due_at)).sort((a, b) => b - a);
-        
+
         return new Date(assignment.due_at).getTime() === dueDates[0].getTime();
     } catch (error) {
         console.error("Error checking last assignment:", error);

@@ -34,7 +34,7 @@ function updateTheme(active, theme) {
         root.style.setProperty('--links', theme.cssVars['--links']);
         root.style.setProperty('--hamburger', theme.cssVars['--hamburger']);
         root.style.setProperty('--invrt', Number(theme.cssVars['--invrt']));
-        
+
         // add class
         document.body.classList.add('theme');
     }

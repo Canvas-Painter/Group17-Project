@@ -27,14 +27,14 @@ async function pdfToText(data) {
   const loadingTask = getDocument(data);
   const pdf = await loadingTask.promise;
   let fullText = "";
-  
+
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const textContent = await page.getTextContent();
     let pageText = "";
     let lastBlock = null;
     const blocks = textContent.items;
-    
+
     for (let k = 0; k < blocks.length; k++) {
       const block = blocks[k];
       if (lastBlock !== null && lastBlock.str[lastBlock.str.length - 1] !== ' ') {
@@ -104,7 +104,7 @@ function extractGradingPolicy(text) {
     }
     return "Grading policy not found.";
   }
-  
+
   let idx = text.indexOf("Grade Weighting");
   if (idx !== -1) {
     let chunk = text.substring(idx, idx + 1000);
@@ -112,7 +112,7 @@ function extractGradingPolicy(text) {
       .split("\n")
       .map(line => line.trim())
       .filter(line => line.includes("%"));
-    
+
     let letterIdx = text.search(/grade letter/i);
     let letterScaleLines = [];
     if (letterIdx !== -1) {
@@ -134,11 +134,11 @@ function extractGradingPolicy(text) {
         }
       }
     }
-    
+
     if (weightingLines.length === 0 && letterScaleLines.length === 0) {
       return "Grading policy not found.";
     }
-    
+
     let output = "";
     if (weightingLines.length > 0) {
       output += weightingLines.join("\n");
@@ -148,7 +148,7 @@ function extractGradingPolicy(text) {
     }
     return output;
   }
-  
+
   const markers = ["Graded Work", "Grading Policies:", "Grading Policy:", "Grading:"];
   for (const marker of markers) {
     idx = text.indexOf(marker);
@@ -429,7 +429,7 @@ async function processSyllabus(filePath) {
     const dataBuffer = fs.readFileSync(filePath);
     const uint8ArrayData = new Uint8Array(dataBuffer);
     const fullText = await pdfToText(uint8ArrayData);
-    
+
     const courseId = "myCourseId"; // or pass it in as a parameter
 
     const outputData = {
@@ -471,7 +471,7 @@ async function processSyllabus(filePath) {
     const storageKey = `syllabus_${courseId}`;
 
     const baseName = path.basename(filePath, path.extname(filePath));
-    
+
     // If running in a Chrome extension environment, use chrome.storage.local to save the JSON.
     if (typeof chrome !== "undefined" && chrome.storage && chrome.storage.local) {
       chrome.storage.local.set({ [baseName]: outputData }, () => {
