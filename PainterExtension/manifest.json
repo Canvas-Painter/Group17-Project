@@ -14,7 +14,8 @@
         "sayHello.js",
         "SpeedBoost/speed_boost.js",
         "GradeBook/math.js",
-        "GradeBook/grade_book.js"
+        "GradeBook/grade_book.js",
+        "WeirdTime/fix.js"
       ],
       "css": [
         "styles.css",
