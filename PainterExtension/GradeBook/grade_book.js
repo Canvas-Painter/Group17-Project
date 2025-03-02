@@ -27,8 +27,20 @@ class Assignment {
     }
 }
 
+class Points {
+    constructor(current, max) {
+        this.current = current
+        this.max = max
+    }
+
+    static parse(text) {
+        const texts = text.split('/')
+        return new Points(parseFloat(texts[0]), parseFloat(texts[1]))
+    }
+}
+
 // Intented to open window with info currently adds info to the sidebar
-function popOpen(assignments, weights) {
+function popOpen(assignments, weights, totals) {
     // Creates a category map by grouping up the assignments
     const categories = new Map()
     assignments.forEach(assignment => {
@@ -58,15 +70,78 @@ function popOpen(assignments, weights) {
         })
 
         // Creates the element
-        const elem = /*doc*/document.createElement('div')
+        const elem = document.createElement('div')
         elem.textContent = `${key}: Mean: ${mean(scores).toFixed(2)}, StdDev: ${stdDev(scores).toFixed(2)}`
         elements.push(elem)
     })
 
     // Addes the elements
     elements.forEach(value =>
-        doc/*.body*/.appendChild(value)
+        doc.appendChild(value)
     )
+
+    fetch(chrome.runtime.getURL('GradeBook/test_assignment.html'))
+        .then(response => response.text())
+        .then(text => {
+            document.getElementById("grade-summary-content").getElementsByTagName('tbody')[0].innerHTML += text;
+
+            const points = document.getElementById('test-points')
+            const grade = document.getElementById('test-grade')
+            const output = document.getElementById('test-output')
+            let update_fun
+            if (weights) {
+                const dropdown = document.getElementById('test-dropdown')
+
+                for (const [name, points] of weights) {
+                    const opt = document.createElement('option')
+                    opt.value = name
+                    opt.textContent = name
+                    dropdown.appendChild(opt)
+                }
+
+                let total_current = 0
+                let total_max = 0
+                for (const [name, points] of totals) {
+                    total_current += points.current
+                    total_max += points.max
+                }
+
+                update_fun = () => {
+                    const max = parseFloat(points.value)
+                    if (!isNaN(max)) { output.textContent = ''; return }
+
+                    const target = parseFloat(grade.value) / 100
+                    if (!isNaN(target)) { output.textContent = ''; return }
+
+                    output.textContent = ((target * (total_max + max)) - total_current).toFixed(2)
+                }
+
+                dropdown.onchange = update_fun
+            } else {
+                document.getElementById('test-dropdown').remove()
+
+                let total_current = 0
+                let total_max = 0
+                for (const [name, points] of totals) {
+                    total_current += points.current
+                    total_max += points.max
+                }
+
+                update_fun = () => {
+                    const max = parseFloat(points.value)
+                    if (!isNaN(max)) { output.textContent = ''; return }
+
+                    const target = parseFloat(grade.value) / 100
+                    if (!isNaN(target)) { output.textContent = ''; return }
+
+                    output.textContent = ((target * (total_max + max)) - total_current).toFixed(2)
+                }
+            }
+
+
+            points.onchange = update_fun
+            grade.onchange = update_fun
+        })
 }
 
 // Sets up the code code by loading all the assignments
@@ -92,11 +167,19 @@ function setup() {
     console.log("Found gradebook")
 
     console.log("Reading grades")
-    // Goes through the table looking for the assignments
+    // Goes through the table looking for the assignments and totals
+    let totals = new Map()
     for (const assignment of grade_div.getElementsByClassName("student_assignment")) {
         // If a class is hard coded it is not a valid assignment it
         //  it is something like the table bar or to the totals
         if (assignment.classList.contains("hard_coded")) {
+            if (assignment.classList.contains("group_total")) {
+                totals.set(
+                    assignment.getElementsByClassName("title")[0].textContent.trim(),
+                    Points.parse(assignment.getElementsByClassName("points_possible")[0].textContent)
+                )
+            }
+
             continue
         }
 
@@ -121,13 +204,17 @@ function setup() {
 
     console.log("Done")
 
-    return [assignments, weights]
+    return [assignments, weights, totals]
 }
 
 // Sets up and runs if set up
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // This allows canvas to load things
+    // This could be improved by dynamic checking
+    await new Promise(res => setTimeout(res, 1000));
+
     const parsed = setup()
     if (parsed) {
-        popOpen(parsed[0], parsed[1])
+        popOpen(parsed[0], parsed[1], parsed[2])
     }
 })
