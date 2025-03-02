@@ -6,7 +6,7 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 2. /PainterExtension: Chrome Extension, features in sub-directories
 3. /documents: the location of project documents including Project Proposal, Developer Documentation and User Documentation
 
-# HOW TO INSTALL & RUN (also see Developer/User Documentation below for more info...):
+# HOW TO INSTALL & RUN:
 # Installation
 1. Navigate to the the main page of the Repository (https://github.com/Canvas-Painter/Group17-Project)
 2. Select the green button labeled "Code"
