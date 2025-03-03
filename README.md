@@ -5,7 +5,9 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 1. /reports : Weekly reports, YYYYMMDD.md
 2. /PainterExtension: Chrome Extension, features in sub-directories
 3. /PainterExtensionSupplementary: Software that supports the Painter extension, but is not part of the extension.
-4. /documents: the location of project documents including Project Proposal, Developer Documentation and User Documentation
+4. /documents: The location of project documents including Project Proposal, Developer Documentation and User Documentation
+5. /reports: The location of weekly reports written throughout its development
+6. /uml: The location of systems and architecture diagrams for the project
 
 # HOW TO INSTALL & RUN:
 # Installation
