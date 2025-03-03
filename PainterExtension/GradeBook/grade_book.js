@@ -88,13 +88,17 @@ function popOpen(assignments, weights, totals) {
             body.innerHTML = text
             document.getElementById('grade-summary-content').getElementsByTagName('tbody')[0].appendChild(body.firstChild);
 
+            // Get the important elements
             const points = document.getElementById('test-points')
             const grade = document.getElementById('test-grade')
             const output = document.getElementById('test-output')
+            // Declare the update function
             let update_fun
-            if (weights) {
-                const dropdown = document.getElementById('test-dropdown')
 
+            // If the grades are weighted things are different
+            if (weights) {
+                // Create the dropdwon and populate it
+                const dropdown = document.getElementById('test-dropdown')
                 for (const [name, points] of weights) {
                     const opt = document.createElement('option')
                     opt.value = name
@@ -102,6 +106,7 @@ function popOpen(assignments, weights, totals) {
                     dropdown.appendChild(opt)
                 }
 
+                // Calulate the total grade as a percent
                 let total_grade = 0
                 for (const [name, points] of totals) {
                     if (points.max == 0) { continue }
@@ -110,6 +115,7 @@ function popOpen(assignments, weights, totals) {
                 }
 
                 update_fun = () => {
+                    // Parse the elements and check for nulls
                     const max = parseFloat(points.value)
                     if (isNaN(max)) { output.textContent = ''; return }
 
@@ -122,15 +128,20 @@ function popOpen(assignments, weights, totals) {
                     // category_weight could be 0 so an explicit check is needed
                     if (!category_points || category_weight === undefined) { output.textContent = ''; return }
 
+                    // Find the total grade assuming that the relevant category is 0
                     const grade_without = total_grade - (category_weight * (category_points.current / category_points.max))
+                    // Find what percent in the relevant categary would create the target grade
                     const needed = (target - grade_without) / category_weight
+                    // Calulate the total points needed to bring the category to that value (like below)
                     output.textContent = ((needed * (category_points.max + max)) - category_points.current).toFixed(2)
                 }
 
+                // Add the update function
                 dropdown.onchange = update_fun
             } else {
                 document.getElementById('test-dropdown').remove()
 
+                // Calculate the total points possible and the total points collected
                 let total_current = 0
                 let total_max = 0
                 for (const [name, points] of totals) {
@@ -139,17 +150,20 @@ function popOpen(assignments, weights, totals) {
                 }
 
                 update_fun = () => {
+                    // Try to parse the elements with graceful failures
                     const max = parseFloat(points.value)
                     if (isNaN(max)) { output.textContent = ''; return }
 
                     const target = parseFloat(grade.value) / 100
                     if (isNaN(target)) { output.textContent = ''; return }
 
+                    // Calculate the value needed to bring the percentage up to the target
                     output.textContent = ((target * (total_max + max)) - total_current).toFixed(2)
                 }
             }
 
 
+            // Add the update function
             points.onchange = update_fun
             grade.onchange = update_fun
         })
