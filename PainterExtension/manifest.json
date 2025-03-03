@@ -39,7 +39,7 @@
         "SideMenu/standard_syllabus_page.css",
         "SideMenu/standard_syllabus_page.js",
         "HelpInfo/help.html",
-        "GradeBook/grades.html"
+        "GradeBook/test_assignment.html"
       ],
       "matches": ["*://canvas.oregonstate.edu/*", "file://*"]
     }

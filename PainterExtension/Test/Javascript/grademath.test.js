@@ -8,8 +8,8 @@ eval(imp.test_import('../../GradeBook/math.js'))
 const sample1 = [1, 2, 3]
 const sample2 = [-3, 2, 2, 5, -1, -1, -1, -4, 6, -1]
 const sample3 = [-33, 0, -46, -34, 2, 11, -32, 14, -22, -18, -16, -58, -44, -56, -41, -42, -14, 9, 25, 20, -58, -51, -36, -37, -35]
-const sample4 = [-1, -2, -3]
-
+const sample4 = []
+const sample5 = [-1, -2, -3]
 
 // These check that the means are valid
 test('Mean Test 1', () => {
@@ -29,6 +29,11 @@ test('Mean Test 3', () => {
 
 test('Mean Test 4', () => {
     expect(mean(sample4))
+        .toBeNaN()
+})
+
+test('Mean Test 5', () => {
+    expect(mean(sample5))
         .toBeCloseTo(-2)
 })
 
@@ -55,9 +60,13 @@ test('StdDev Test 3', () => {
 })
 
 test('StdDev Test 4', () => {
-    expect(stdDev(sample1, false))
-        .toBeCloseTo(1)
-    expect(stdDev(sample1, true))
-        .toBeCloseTo(0.816496580927726)
+    expect(mean(sample4))
+        .toBeNaN()
 })
 
+test('StdDev Test 5', () => {
+    expect(stdDev(sample5, false))
+        .toBeCloseTo(1)
+    expect(stdDev(sample5, true))
+        .toBeCloseTo(0.816496580927726)
+})
