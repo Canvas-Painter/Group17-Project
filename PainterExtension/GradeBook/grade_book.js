@@ -99,21 +99,34 @@ function popOpen(assignments, weights, totals) {
                     dropdown.appendChild(opt)
                 }
 
-                let total_current = 0
-                let total_max = 0
+                let total_grade = 0
                 for (const [name, points] of totals) {
-                    total_current += points.current
-                    total_max += points.max
+                    if (points.max == 0) { continue }
+
+                    total_grade += (points.current / points.max) * weights.get(name)
                 }
 
                 update_fun = () => {
                     const max = parseFloat(points.value)
-                    if (!isNaN(max)) { output.textContent = ''; return }
+                    if (isNaN(max)) { output.textContent = ''; return }
 
                     const target = parseFloat(grade.value) / 100
-                    if (!isNaN(target)) { output.textContent = ''; return }
+                    if (isNaN(target)) { output.textContent = ''; return }
 
-                    output.textContent = ((target * (total_max + max)) - total_current).toFixed(2)
+                    const category = dropdown.value
+                    const category_points = totals.get(category)
+                    const category_weight = weights.get(category)
+                    // category_weight could be 0 so an explicit check is needed
+                    if (!category_points || category_weight === undefined) { output.textContent = ''; return }
+
+                    console.log(total_grade)
+                    console.log(category_weight * (category_points.current / category_points.max))
+                    const grade_without = total_grade - (category_weight * (category_points.current / category_points.max))
+                    console.log(grade_without)
+                    const needed = (target - grade_without) / category_weight
+                    console.log(needed)
+
+                    output.textContent = ((needed * (category_points.max + max)) - category_points.current).toFixed(2)
                 }
 
                 dropdown.onchange = update_fun
@@ -129,10 +142,10 @@ function popOpen(assignments, weights, totals) {
 
                 update_fun = () => {
                     const max = parseFloat(points.value)
-                    if (!isNaN(max)) { output.textContent = ''; return }
+                    if (isNaN(max)) { output.textContent = ''; return }
 
                     const target = parseFloat(grade.value) / 100
-                    if (!isNaN(target)) { output.textContent = ''; return }
+                    if (isNaN(target)) { output.textContent = ''; return }
 
                     output.textContent = ((target * (total_max + max)) - total_current).toFixed(2)
                 }
@@ -195,7 +208,7 @@ function setup() {
         // The the first is the labels and last is the total so can be ignored
         for (let i = 1; i < entries.length - 1; i++) {
             const text = entries[i].textContent.split('\n')
-            weights.set(text[1].trim(), parseInt(text[2].trim()))
+            weights.set(text[1].trim(), parseFloat(text[2].trim()) * 0.01)
         }
     } else {
         weights = null
