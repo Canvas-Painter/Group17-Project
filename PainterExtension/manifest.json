@@ -3,7 +3,7 @@
   "name": "Canvas Painter",
   "version": "0.1",
   "description": "Changes to improve Canvas LMS accessibility and efficiency",
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": ["storage", "activeTab", "scripting", "tabs"],
   "host_permissions": ["*://canvas.oregonstate.edu/*", "file://*"],
   "content_scripts": [
     {
@@ -22,6 +22,12 @@
         "CanvasColors/custom.css"
       ],
       "run_at": "document_start"
+    },
+    {
+      "matches": ["*://canvas.oregonstate.edu/calendar*"],
+      "js": ["GamifyCalendar/gamified_calendar.js"],
+      "css": ["GamifyCalendar/gamify-calendar-style.css"],
+      "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
@@ -38,7 +44,8 @@
     }
   ],
   "action": {
-    "default_popup": "addressbarPopup/popup.html"
+    "default_popup": "addressbarPopup/popup.html",
+    "default_icon": "icons/icon.png"
   },
   "options_page": "options.html",
   "key": "test"

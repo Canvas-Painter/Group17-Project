@@ -1,0 +1,71 @@
+{
+  "categories": [
+    {
+      "name": "Course Information",
+      "items": [
+        {
+          "type": "Course Title",
+          "text": " Course Schedule"
+        },
+        {
+          "type": "Professor",
+          "text": "Hi, I am Dr. Michael Curry and will be your instructor this term. I am based out of the Portland Oregon area although I frequently work remotely at other locations. I have been a professor on campus at Oregon State and now online. I didn't plan to become a computer scientist, but maybe like you I had a bit of a knack for it and kind of enjoyed doing things that required writing little programs. After college I was a telecommunications oƯicer in the US Army"
+        },
+        {
+          "type": "Email",
+          "text": "michael.curry@oregonstate.edu"
+        },
+        {
+          "type": "Office Hours",
+          "text": "TA office hours not found."
+        }
+      ]
+    },
+    {
+      "name": "Course Policies",
+      "items": [
+        {
+          "type": "Attendance",
+          "text": "Attendance policy not found."
+        },
+        {
+          "type": "Late Work",
+          "text": "Late Policy, this course\r\nhas some flexible grading policies on some assignments and most students earn a higher score than would be otherwise possible without such flexibility. Conversely, asking clarifying questions about how to apply feedback and improve future work are highly productive lines of inquiry that are encouraged. The TAs will grade all your submissions, unless otherwise noted. If you have any concerns, contact the grader for\r\nthat specific assignment via email as noted in the Where to go for help? Any concerns about grades should be\r\ncommunicated within 7 days of receiving the grade. If you do not receive a satisfactory response, you may email one of the instructors and state your case. When an instructor re-evaluates your assignment, we reserve the right to assess the entire work in addition to areas you asked for review. If you are not satisfied with the instructor's decision you may petition the EECS Head of the Online Program.\r\nStatement Regarding Students with Disabilities Accommodations for students with disabilities are determined and approved by Disability Access Services (DAS). If you, as a student, believe you are eligible for accommodations but have not obtained approval, please contact DAS immediately at 541-737-4098 or at http://ds.oregonstate.edu. DAS notifies students and faculty members of\r\napproved academic accommodations and coordinates implementation of those accommodations. While not required, students and faculty members are encouraged to discuss details of the implementation of individual accommodations. Accessibility of Course Materials All materials used in this course are intended to be accessible. However, resources available through external providers (i.e., YouTube, websites, etc.) may not fully comply with accessibility standards. If you require accommodations please contact Disability Access Services (DAS).\r\nAdditionally, Canvas, the learning management system through which this course is oƯered, provides a detailed\r\npage about how the platform is accessible to students with disabilities.\r\nLate Policy You must submit all assignments before the due date, even if it is incomplete! However, if your submission is\r\nincomplete your grade maybe a Zero, unless you follow these instructions. 1. Notify the TA that you plan to resubmit it within 3 days (you can notify them by email or in the Canvas\r\ncomment with your submission)."
+        }
+      ]
+    },
+    {
+      "name": "Grading",
+      "items": [
+        {
+          "type": "Assignments",
+          "text": "Assignments and activities - 25%"
+        },
+        {
+          "type": "Quizzes",
+          "text": "Quiz grading information not found."
+        },
+        {
+          "type": "Midterm",
+          "text": "Midterm grading information not found."
+        },
+        {
+          "type": "Final Project",
+          "text": "Project Step 1 Final Version (Group / On Canvas) Activity 4 - Gradescope Assignme"
+        },
+        {
+          "type": "Final Exam",
+          "text": "Project Step 1 Final Version (Group / On Canvas) Activity 4 - Gradescope Assignme"
+        },
+        {
+          "type": "Participation",
+          "text": "Participation in Research During this course students will be invited to participate in a research study on cybersecurity behavior and receive extra credit in return for completing the study. Students who elect not to participate will have an alternative activity to complete for extra credit. Students may only complete one extra credit activity (ether the research or the alternative). About the Instructor Hi, I am Dr. Michael Curry and will be your instructor this term. I am based out of the Portland Oregon area although I frequently work remotely at other locations. I have been a professor on campus at Oregon State and now online. I didn't plan to become a computer scientist, but maybe like you I had a bit of a knack for it and kind of enjoyed doing things that required writing little programs. After college I was a telecommunications oƯicer in the US Army"
+        },
+        {
+          "type": "Grading Policy",
+          "text": "Grade Weighting The following shows the approximate breakdown of grading assessment for the course.  Quizzes - 25%\n Assignments and activities - 25%\n Course Project (including participation, e.g. peer reviews) - 50%\n Extra Credit - 4%\n\nGrading Scale:\nA 94\nA- 90\nB+ 87\nB 84\nB- 80\nC+ 77\nC 74\nC- 70\nD+ 67\nD 64\nD- 61\nF 0"
+        }
+      ]
+    }
+  ]
+}

@@ -18,13 +18,13 @@ export async function updatePoints(assignment) {
     let basePoints = 10; // Base points for completing an assignment
     let completionDate = new Date(); // The current date when the assignment is marked complete
     let dueDate = new Date(assignment.due_at); // The assignment's due date
-    
+
     // Calculate bonus points for early submission
     let daysEarly = Math.max(0, Math.ceil((dueDate - completionDate) / (1000 * 60 * 60 * 24)));
     let totalPoints = basePoints + daysEarly; // Total points awarded
-    
+
     let newPoints = currentPoints + totalPoints; // Update the user's total points
-    
+
     return new Promise((resolve) => {
         chrome.storage.local.set({ [POINTS_STORAGE_KEY]: newPoints }, () => {
             resolve(newPoints);
@@ -40,9 +40,9 @@ export async function checkCompletedAssignments() {
                 "Authorization": `Bearer ${await getAccessToken()}` // Retrieve and use OAuth token
             }
         });
-        
+
         if (!response.ok) throw new Error("Failed to fetch assignments"); // Error handling if request fails
-        
+
         const assignments = await response.json(); // Parse the JSON response
         assignments.forEach(async (assignment) => {
             if (isAssignmentCompleted(assignment)) { // Check if the assignment is marked complete

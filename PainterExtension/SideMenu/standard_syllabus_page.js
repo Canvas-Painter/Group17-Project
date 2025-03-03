@@ -1,29 +1,47 @@
 // Storage management functions
 function loadCourseData(courseId) {
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
         const key = `syllabus_${courseId}`;
-        chrome.storage.local.get(key, (result) => {
+        chrome.storage.local.get(key, async (result) => {
             const data = result[key];
-            console.log('Loaded data:', key, data);
-            
-            // Check version and reset if not current
+            console.log('Loaded local data:', key, data);
+
+            // If no data or wrong version, try getting from server first
             if (!data || data.version !== '0.1.1') {
-                const defaultData = getDefaultStructure();
-                saveCourseData(courseId, defaultData);
-                resolve(defaultData);
-                return;
+                try {
+                    // Try to get from server
+                    const response = await fetch(`https://web.engr.oregonstate.edu/~ludwigo/cs362/api/syllabus-data.php?courseId=${courseId}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const serverData = await response.json();
+                    
+                    // Save server data locally and return it
+                    await saveCourseData(courseId, serverData);
+                    resolve(serverData);
+                    return;
+                } catch (error) {
+                    console.error('Error fetching from server, using default:', error);
+                    // Fall back to default structure if server fails
+                    const defaultData = getDefaultStructure();
+                    await saveCourseData(courseId, defaultData);
+                    resolve(defaultData);
+                    return;
+                }
             }
-            
+
             resolve(data);
         });
     });
 }
 
+// saves the data to local storage
 function saveCourseData(courseId, data) {
+    syllabusData = data;
     return new Promise((resolve, reject) => {
         const key = `syllabus_${courseId}`;
         const saveObj = { [key]: data };
-        
+
         chrome.storage.local.set(saveObj, () => {
             if (chrome.runtime.lastError) {
                 console.error('Save error:', chrome.runtime.lastError);
@@ -31,11 +49,13 @@ function saveCourseData(courseId, data) {
                 return;
             }
             console.log('Saved data:', key, data);
+            
             resolve(true);
         });
     });
 }
 
+// default structure for the syllabus
 function getDefaultStructure() {
     return {
         version: '0.1.1',
@@ -43,53 +63,123 @@ function getDefaultStructure() {
             {
                 name: "Course Information",
                 items: [
-                    { type: "Course Title", text: "", editable: true },
-                    { type: "Professor", text: "", editable: true },
-                    { type: "Email", text: "", editable: true },
-                    { type: "Office Hours", text: "", editable: true }
+                    { type: "Course Title", text: "" },
+                    { type: "Professor", text: "" },
+                    { type: "Email", text: "" },
+                    { type: "Office Hours", text: "" }
                 ]
             },
             {
                 name: "Course Policies",
                 items: [
-                    { type: "Attendance", text: "", editable: true },
-                    { type: "Late Work", text: "", editable: true }
+                    { type: "Attendance", text: "" },
+                    { type: "Late Work", text: "" }
                 ]
             },
             {
                 name: "Grading",
                 items: [
-                    { type: "Assignments", text: "", editable: true },
-                    { type: "Midterm", text: "", editable: true },
-                    { type: "Final Project", text: "", editable: true },
-                    { type: "Participation", text: "", editable: true }
+                    { type: "Assignments", text: "" },
+                    { type: "Midterm", text: "" },
+                    { type: "Final Project", text: "" },
+                    { type: "Participation", text: "" }
                 ]
             }
         ]
     };
 }
 
-// Add after storage functions
+// show update button if data is different between local and server
+function showUpdateButtonIfAppl() {
+    const updateBtn = document.querySelector('.update-db-btn');
+    updateBtn.style.display = isSyllabusDataEqual(syllabusData, window.serverSyllabusData) ? 'none' : 'inline';
+}
+function isSyllabusDataEqual(data1, data2) {
+    console.log('Data1:', data1);
+    console.log('Data2:', data2);
+    
+    // Handle null/undefined cases
+    if (!data1 || !data2) return false;
+    
+    // Ensure both have required properties
+    if (!data1.categories || !data2.categories) return false;
+
+    try {
+        // Normalize objects by sorting keys
+        const normalize = (obj) => {
+            if (Array.isArray(obj)) {
+                return obj.map(normalize);
+            }
+            if (obj && typeof obj === 'object') {
+                return Object.keys(obj).sort().reduce((result, key) => {
+                    result[key] = normalize(obj[key]);
+                    return result;
+                }, {});
+            }
+            return obj;
+        };
+
+        const normalized1 = normalize(data1);
+        const normalized2 = normalize(data2);
+        
+        return JSON.stringify(normalized1) === JSON.stringify(normalized2);
+    } catch (e) {
+        console.error('Comparison error:', e);
+        return false;
+    }
+}
+
+// Load initial data and compare with server data
+async function loadInitialData(courseId) {
+    try {
+        
+        // Fetch server data
+        const response = await fetch(`https://web.engr.oregonstate.edu/~ludwigo/cs362/api/syllabus-data.php?courseId=${courseId}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const serverData = await response.json();
+        
+        // Store server data for later comparison
+        window.serverSyllabusData = serverData;
+        console.log('Server data:', serverData);
+        
+        showUpdateButtonIfAppl();
+    } catch (error) {
+        console.error('Error loading initial data:', error);
+    }
+}
+
+
 let isEditMode = false;
 let backupData = null;
-let data;
+let syllabusData;
 const main = document.getElementById('syllabus-categories');
 const urlParams = new URLSearchParams(window.location.search);
 const courseId = urlParams.get('courseId') || 'unknown';
 
+// setup edit control functions and visibility
 function setupEditControls() {
     const controls = document.getElementById('edit-controls');
     const editBtn = document.querySelector('.edit-mode-btn');
     const cancelBtn = document.querySelector('.cancel-btn');
     const doneBtn = document.querySelector('.done-btn');
     const addCategoryBtn = document.querySelector('.add-category-btn');
-    
+    const uploadDbBtn = document.querySelector('.update-to-db-btn');
+    const updateDbBtn = document.querySelector('.update-db-btn');
+
+    // Get reference to the upload button from the DOM
+    const uploadBtn = document.getElementById('uploadSyllabusBtn');
+
     editBtn.onclick = () => {
         isEditMode = true;
-        backupData = JSON.parse(JSON.stringify(data));
+        backupData = JSON.parse(JSON.stringify(syllabusData));
         editBtn.style.display = 'none';
+        updateDbBtn.style.display = 'none';
         cancelBtn.style.display = 'inline';
+        uploadDbBtn.style.display = 'inline';
         doneBtn.style.display = 'inline';
+        uploadBtn.style.display = 'inline-block';
         document.body.classList.add('edit-mode');
         document.querySelector('.add-category-btn').style.display = 'block';
     };
@@ -104,9 +194,12 @@ function setupEditControls() {
         backupData = null;
         editBtn.style.display = 'inline';
         cancelBtn.style.display = 'none';
+        uploadDbBtn.style.display = 'none';
+        uploadBtn.style.display = 'none';
         doneBtn.style.display = 'none';
         document.body.classList.remove('edit-mode');
         document.querySelector('.add-category-btn').style.display = 'none';
+        showUpdateButtonIfAppl();
     };
 
     addCategoryBtn.onclick = async () => {
@@ -114,60 +207,162 @@ function setupEditControls() {
             name: 'New Category',
             items: []
         };
-        data.categories.push(newCategory);
-        const section = createSection(newCategory.name, [], newCategory, data);
+        syllabusData.categories.push(newCategory);
+        const section = createSection(newCategory.name, [], newCategory, syllabusData);
         main.appendChild(section);
-        await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
+        await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), syllabusData);
         // Trigger edit of the new category name
         section.querySelector('h2').click();
     };
 
+    updateDbBtn.addEventListener('click', updateFromDatabase);
+    uploadDbBtn.addEventListener('click', uploadToDatabase);
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const courseId = urlParams.get('courseId') || 'unknown';
-    
-    // Load saved data
-    data = await loadCourseData(courseId);
-    console.log('Loaded data structure:', data);
+// display the syllabus data on the page
+function displaySyllabusData(data) {
+    main.innerHTML = '';
 
-    // Setup edit controls
-    setupEditControls();
-
-    // Dynamically create sections from categories
     data.categories.forEach(category => {
-        const items = category.items.map(item => {
-            return [item.type, item.text, item.editable];
-        });
-        
+        const items = category.items.map(item => [item.type, item.text]);
         const section = createSection(category.name, items, category, data);
         main.appendChild(section);
     });
 
     enableDragDrop(main, data);
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+
+    // Load saved data including server comparison
+    syllabusData = await loadCourseData(courseId);
+    console.log('Loaded data structure:', syllabusData);
+
+    // Setup edit controls
+    setupEditControls();
+
+    displaySyllabusData(syllabusData);
+
+    await loadInitialData(courseId);
+
+    // Setup for file uploading
+    const uploadBtn = document.getElementById("uploadSyllabusBtn");
+    const fileInput = document.getElementById("syllabusFileInput");
+
+    if (uploadBtn && fileInput) {
+        uploadBtn.addEventListener("click", () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener("change", async (event) => {
+            const file = event.target.files[0];
+            if (file) {
+              // 1) Read the PDF file as an ArrayBuffer
+              const arrayBuffer = await file.arrayBuffer();
+
+              // 2) Parse the PDF
+              //    Note: You need a browser-friendly pdf.js or your own pdfToText function.
+              //    If you have a function pdfToText(...) that returns text,
+              //    you can pass arrayBuffer or a Uint8Array to it.
+
+              try {
+                const pdfText = await pdfToText(new Uint8Array(arrayBuffer));
+
+                // 3) Build your data object
+                const outputData = {
+                  version: "0.1.1",
+                  categories: [
+                    {
+                      name: "Course Information",
+                      items: [
+                        { type: "Course Title", text: extractCourseTitle(pdfText) },
+                        { type: "Professor", text: extractProfessor(pdfText) },
+                        // ...
+                      ]
+                    },
+                    // ...
+                  ]
+                };
+
+              } catch (err) {
+                console.log("Error parsing:", err);
+                console.log("Resorting to JSON");
+
+                // 4) Save to chrome.storage with the correct key
+                const reader = new FileReader()
+                reader.readAsText(file)
+                reader.onload = (event) => {
+                    saveCourseData(courseId, JSON.parse(event.target.result))
+                    window.location.reload()
+                }
+              }
+            }
+          });
+
+
+    }
 });
+
+// Modify the updateFromDatabase function to properly update reference data
+async function updateFromDatabase() {
+    // Save old data as backup
+    backupData = syllabusData;
+    console.log('Backup data:', backupData);
+    
+    // Then update local data and display
+    syllabusData = structuredClone(window.serverSyllabusData);
+    await saveCourseData(courseId, syllabusData);
+    displaySyllabusData(syllabusData);
+
+    // Switch to edit mode if User wants to revert
+    isEditMode = true;
+    document.querySelector('.edit-mode-btn').style.display = 'none';
+    document.querySelector('.cancel-btn').style.display = 'inline';
+    document.querySelector('.done-btn').style.display = 'inline';
+    document.querySelector('.update-db-btn').style.display = 'none';
+
+    // After updating from database, update the server data reference
+    showUpdateButtonIfAppl();
+}
+
+function createCategorySection(category) {
+    const section = document.createElement('section');
+    section.innerHTML = `
+        <div class="category-header">
+            <h2>${category.title}</h2>
+        </div>
+        <div class="section-content">
+            ${category.items.map(item => `
+                <div class="info-row">
+                    <div class="label">${item.label}</div>
+                    <div class="value">${item.value}</div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+    return section;
+}
 
 function createSection(title, items, category, data) {
     const section = document.createElement('section');
-    
+
     const heading = document.createElement('h2');
     heading.textContent = title;
     heading.onclick = () => isEditMode && editCategoryName(heading, category, data);
     heading.className = 'category-header';
-    
+
     const controls = createCategoryControls(section, category, data);
-    
+
     const content = document.createElement('div');
     content.className = 'category-content';
-    
+
     const itemsContainer = document.createElement('div');
     itemsContainer.className = 'section-content';
-    
+
     items.forEach(item => {
         itemsContainer.appendChild(createItemRow(item, category, data));
     });
-    
+
     content.appendChild(itemsContainer);
     section.append(heading, controls, content);
     return section;
@@ -177,22 +372,22 @@ function createCategoryControls(section, category, data) {
     const controls = document.createElement('div');
     controls.className = 'category-controls';
     controls.style.display = 'none';
-    
+
     const dragBtn = document.createElement('button');
     dragBtn.textContent = '⋮⋮';
     dragBtn.className = 'standard-button drag-btn';
     dragBtn.title = 'Drag to reorder';
-    
+
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'X';
     deleteBtn.className = 'standard-button delete-btn';
     deleteBtn.onclick = () => deleteCategory(section, category, data);
-    
+
     const addItemBtn = document.createElement('button');
     addItemBtn.textContent = '+ Add Item';
     addItemBtn.className = 'standard-button add-item-btn';
     addItemBtn.onclick = () => addNewItem(section, category, data);
-    
+
     controls.append(dragBtn, deleteBtn, addItemBtn);
     return controls;
 }
@@ -201,7 +396,7 @@ async function editCategoryName(heading, category, data) {
     const input = document.createElement('input');
     input.value = category.name;
     input.className = 'edit-input';
-    
+
     const save = async () => {
         const newName = input.value.trim();
         if (newName && newName !== category.name) {
@@ -214,7 +409,7 @@ async function editCategoryName(heading, category, data) {
         }
         input.remove();
     };
-    
+
     input.onblur = save;
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
@@ -222,7 +417,7 @@ async function editCategoryName(heading, category, data) {
             save();
         }
     });
-    
+
     heading.textContent = '';
     heading.appendChild(input);
     input.focus();
@@ -239,53 +434,49 @@ async function deleteCategory(section, category, data) {
 async function addNewItem(section, category, data) {
     const newItem = {
         type: 'New Item',
-        text: '',
-        editable: true
+        text: ''
     };
-    
+
     category.items.push(newItem);
     const content = section.querySelector('.section-content');
-    const row = createItemRow([newItem.type, newItem.text, newItem.editable], category, data);
+    const row = createItemRow([newItem.type, newItem.text], category, data);
     content.appendChild(row);
-    
+
     await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
     // Trigger edit of the new item's name
     row.querySelector('.label').click();
 }
 
-function createItemRow([label, value, editable], category, data) {
+function createItemRow([label, value], category, data) {
     const row = document.createElement('div');
     row.className = 'info-row';
     row.dataset.field = label;
-    
+
     const labelElem = document.createElement('div');
     labelElem.className = 'label editable-text';
     labelElem.textContent = label;
     labelElem.onclick = () => isEditMode && editItemName(labelElem, category, label, data);
-    
+
     const valueElem = document.createElement('div');
     valueElem.className = 'value editable-text';
     valueElem.textContent = value;
-    valueElem.onclick = () => isEditMode && editable && makeEditable(valueElem, label, category, data);
+    valueElem.onclick = () => isEditMode && makeEditable(valueElem, label, category, data);
     
     const controls = document.createElement('div');
     controls.className = 'item-controls';
     controls.style.display = 'none';
     
-    if (editable) {
-        const dragBtn = document.createElement('button');
-        dragBtn.className = 'standard-button drag-btn';
-        dragBtn.textContent = '⋮⋮';
-        dragBtn.title = 'Drag to reorder';
-        
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'standard-button delete-btn';
-        deleteBtn.textContent = 'X';
-        deleteBtn.onclick = () => isEditMode && deleteItem(row, category, label, data);
-        
-        controls.append(dragBtn, deleteBtn);
-    }
+    const dragBtn = document.createElement('button');
+    dragBtn.className = 'standard-button drag-btn';
+    dragBtn.textContent = '⋮⋮';
+    dragBtn.title = 'Drag to reorder';
     
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'standard-button delete-btn';
+    deleteBtn.textContent = 'X';
+    deleteBtn.onclick = () => isEditMode && deleteItem(row, category, label, data);
+    
+    controls.append(dragBtn, deleteBtn);
     row.append(controls, labelElem, valueElem);
     return row;
 }
@@ -298,10 +489,20 @@ async function deleteItem(row, category, itemType, data) {
 }
 
 async function editItemName(labelElem, category, oldType, data) {
+    // Prevent multiple inputs
+    if (labelElem.querySelector('.edit-input')) {
+        return;
+    }
+
     const input = document.createElement('input');
     input.value = oldType;
     input.className = 'edit-input';
-    
+
+    // Stop click propagation
+    input.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+
     const save = async () => {
         const newType = input.value.trim();
         if (newType && newType !== oldType) {
@@ -318,27 +519,40 @@ async function editItemName(labelElem, category, oldType, data) {
         }
         input.remove();
     };
-    
-    input.onblur = save;
+
+    input.addEventListener('blur', save);
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
             save();
         }
     });
-    
+
     labelElem.textContent = '';
     labelElem.appendChild(input);
-    input.focus();
-    input.select();
+    
+    // Set focus without selection
+    requestAnimationFrame(() => {
+        input.focus();
+    });
 }
 
 function makeEditable(element, field, category, data) {
+    // Prevent multiple inputs
+    if (element.querySelector('.edit-input')) {
+        return;
+    }
+
     const currentValue = element.textContent;
     const input = document.createElement('input');
     input.type = 'text';
     input.value = currentValue;
     input.className = 'edit-input';
+
+    // Stop click propagation
+    input.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
 
     const save = async () => {
         const newValue = input.value.trim();
@@ -349,14 +563,14 @@ function makeEditable(element, field, category, data) {
 
         try {
             const courseId = new URLSearchParams(window.location.search).get('courseId');
-            
+
             // Update the text in the nested structure
             category.items.forEach(item => {
                 if (item.type === field) {
                     item.text = newValue;
                 }
             });
-            
+
             await saveCourseData(courseId, data);
             element.textContent = newValue;
         } catch (error) {
@@ -366,17 +580,26 @@ function makeEditable(element, field, category, data) {
         }
     };
 
-    input.addEventListener('blur', save);
+    input.addEventListener('blur', () => {
+        save();
+        input.remove();
+    });
+
     input.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
+            e.preventDefault();
             save();
+            input.remove();
         }
     });
 
     element.textContent = '';
     element.appendChild(input);
-    input.focus();
-    input.select();
+    
+    // Set focus without selection
+    requestAnimationFrame(() => {
+        input.focus();
+    });
 }
 
 
@@ -389,7 +612,7 @@ function enableDragDrop(main, data) {
     main.querySelectorAll('section').forEach(section => {
         const dragBtn = section.querySelector('.category-controls .drag-btn');
         section.draggable = true;
-        
+
         dragBtn.addEventListener('mousedown', (e) => {
             if (!isEditMode) return;
             section.draggedAsCategory = true;
@@ -404,7 +627,7 @@ function enableDragDrop(main, data) {
             draggedCategory = section;
             section.classList.add('dragging');
         });
-        
+
         section.addEventListener('dragend', () => {
             section.classList.remove('dragging');
             section.draggedAsCategory = false;
@@ -415,9 +638,9 @@ function enableDragDrop(main, data) {
     main.querySelectorAll('.info-row').forEach(row => {
         const dragBtn = row.querySelector('.drag-btn');
         if (!dragBtn) return;
-        
+
         row.draggable = true;
-        
+
         dragBtn.addEventListener('mousedown', (e) => {
             if (!isEditMode) return;
             row.draggedAsItem = true;
@@ -437,7 +660,7 @@ function enableDragDrop(main, data) {
             });
             e.stopPropagation();
         });
-        
+
         row.addEventListener('dragend', () => {
             row.classList.remove('dragging');
             row.style.opacity = '';
@@ -466,12 +689,12 @@ function enableDragDrop(main, data) {
             if (!isEditMode || !draggedItem) return;
             e.preventDefault();
             e.stopPropagation();
-            
+
             // Only allow drops within the same category as original
             if (content !== originalCategory) return;
-            
+
             const afterElement = getDragAfterElement(content, e.clientY, '.info-row', draggedItem);
-            
+
             if (draggedItem !== afterElement) {
                 if (afterElement) {
                     content.insertBefore(draggedItem, afterElement);
@@ -484,10 +707,10 @@ function enableDragDrop(main, data) {
         content.addEventListener('drop', async (e) => {
             if (!isEditMode || !draggedItem) return;
             e.preventDefault();
-            
+
             // Only handle drops within the same category
             if (content !== originalCategory) return;
-            
+
             // Update the data structure and save
             await updateItemOrder(data);
         });
@@ -502,11 +725,11 @@ function enableDragDrop(main, data) {
 function getDragAfterElement(container, y, selector, draggedElement) {
     const draggableElements = [...container.querySelectorAll(`${selector}:not(.dragging)`)]
         .filter(element => element !== draggedElement);
-    
+
     return draggableElements.reduce((closest, child) => {
         const box = child.getBoundingClientRect();
         const offset = y - box.top - box.height / 2;
-        
+
         if (offset < 0 && offset > closest.offset) {
             return { offset: offset, element: child };
         } else {
@@ -518,7 +741,7 @@ function getDragAfterElement(container, y, selector, draggedElement) {
 async function updateCategoryOrder(data) {
     const sections = document.querySelectorAll('section');
     const newOrder = [];
-    
+
     sections.forEach(section => {
         const categoryName = section.querySelector('h2').textContent;
         const category = data.categories.find(c => c.name === categoryName);
@@ -526,7 +749,7 @@ async function updateCategoryOrder(data) {
             newOrder.push(category);
         }
     });
-    
+
     data.categories = newOrder;
     await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
 }
@@ -534,14 +757,14 @@ async function updateCategoryOrder(data) {
 async function updateItemOrder(data) {
     const sections = document.querySelectorAll('section');
     let updated = false;
-    
+
     sections.forEach(section => {
         const categoryName = section.querySelector('h2').textContent;
         const category = data.categories.find(c => c.name === categoryName);
         if (category) {
             const rows = section.querySelectorAll('.info-row');
             const newItems = [];
-            
+
             rows.forEach(row => {
                 const itemType = row.dataset.field;
                 const item = category.items.find(i => i.type === itemType);
@@ -550,14 +773,53 @@ async function updateItemOrder(data) {
                     updated = true;
                 }
             });
-            
+
             if (newItems.length > 0) {
                 category.items = newItems;
             }
         }
     });
-    
+
     if (updated) {
         await saveCourseData(new URLSearchParams(window.location.search).get('courseId'), data);
+    }
+}
+
+// Add this new function
+async function uploadToDatabase() {
+    try {
+        const response = await fetch('https://web.engr.oregonstate.edu/~ludwigo/cs362/api/syllabus-data.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                courseId: courseId,
+                data: syllabusData
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        // Update server reference data
+        window.serverSyllabusData = structuredClone(syllabusData);
+        
+        // Exit edit mode (similar to done button)
+        isEditMode = false;
+        backupData = null;
+        document.querySelector('.edit-mode-btn').style.display = 'inline';
+        document.querySelector('.cancel-btn').style.display = 'none';
+        document.querySelector('.update-to-db-btn').style.display = 'none';
+        document.getElementById('uploadSyllabusBtn').style.display = 'none';
+        document.querySelector('.done-btn').style.display = 'none';
+        document.body.classList.remove('edit-mode');
+        document.querySelector('.add-category-btn').style.display = 'none';
+        showUpdateButtonIfAppl();
+
+    } catch (error) {
+        console.error('Error uploading to database:', error);
+        alert('Failed to upload changes. Please try again.');
     }
 }

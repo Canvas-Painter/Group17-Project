@@ -95,6 +95,7 @@ h2 {
 
 .edit-mode .editable-text {
     display: inline-block;
+    user-select: none;  /* Prevent selection when in edit mode */
 }
 
 .edit-mode .editable-text:hover {
@@ -157,6 +158,17 @@ h2 {
     padding: 6px 12px;
 }
 
+.update-to-db-btn {
+    background: #f0f8ff;
+    border-color: #b3d4fc;
+    color: #0066cc;
+}
+
+.update-to-db-btn:hover {
+    background: #e6f2ff;
+    border-color: #99c2ff;
+}
+
 /* Controls Positioning */
 .category-controls,
 .item-controls {
@@ -183,6 +195,10 @@ h2 {
 .edit-mode .item-controls,
 .edit-mode .category-controls {
     display: block !important;
+}
+
+.edit-mode .editable-text {
+    user-select: none;  /* Prevent selection when in edit mode */
 }
 
 .edit-mode .editable-text:hover {
@@ -241,6 +257,10 @@ section.dragging {
 .editable-text {
     padding: 2px;
     box-sizing: border-box;
+    user-select: none;  /* Prevent selection by default */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 .edit-input {
@@ -252,6 +272,10 @@ section.dragging {
     font-family: inherit;
     font-size: inherit;
     margin: -2px;
+    user-select: text;  /* Allow selection only when actively editing */
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
 }
 
 /* Loading State */
@@ -267,7 +291,7 @@ body > div:first-child {
     .info-row {
         flex-direction: column;
     }
-    
+
     .label {
         width: 100%;
         margin-bottom: 0.25rem;

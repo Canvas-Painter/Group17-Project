@@ -1,0 +1,71 @@
+{
+  "categories": [
+    {
+      "name": "Course Information",
+      "items": [
+        {
+          "type": "Course Title",
+          "text": "CS 381-001 Programming Language Fundamentals 4 credits"
+        },
+        {
+          "type": "Professor",
+          "text": "Julianne Coffman"
+        },
+        {
+          "type": "Email",
+          "text": "coffmaju@oregonstate.edu"
+        },
+        {
+          "type": "Office Hours",
+          "text": "Posted on Canvas"
+        }
+      ]
+    },
+    {
+      "name": "Course Policies",
+      "items": [
+        {
+          "type": "Attendance",
+          "text": "Attendance - Be respectful of your classmates’ right to learn and my right to teach by following"
+        },
+        {
+          "type": "Late Work",
+          "text": "Homework: There are seven homework assignments. Assignments will submitted to Canvas  Homework submitted up to 24 hours late will receive a 10% penalty.\r\n Homework submitted from 24 to 48 hours late will receive a 20% penalty."
+        }
+      ]
+    },
+    {
+      "name": "Grading",
+      "items": [
+        {
+          "type": "Assignments",
+          "text": "Assignments will submitted to Canvas"
+        },
+        {
+          "type": "Quizzes",
+          "text": "Quiz grading information not found."
+        },
+        {
+          "type": "Midterm",
+          "text": "Midterm grading information not found."
+        },
+        {
+          "type": "Final Project",
+          "text": "Final project grading information not found."
+        },
+        {
+          "type": "Final Exam",
+          "text": "Final Exam 20%"
+        },
+        {
+          "type": "Participation",
+          "text": "Participation grading information not found."
+        },
+        {
+          "type": "Grading Policy",
+          "text": "Scores for coursework items will be posted on Canvas as they are graded. Feedback will be provided when available. You will turn in all coursework items through Canvas and/or Gradescope before 23:59 on the date they are due, be sure you give yourself an hour or more to submit\r\ncoursework. Grade Evaluation: Your course grade will be based on the following:\r\nHomework 60%\r\nQuizzes 20%\r\nFinal Exam 20%\r\nTOTAL ------- 100%\r\nHomework: There are seven homework assignments. Assignments will submitted to Canvas  Homework submitted up to 24 hours late will receive a 10% penalty.\r\n Homework submitted from 24 to 48 hours late will receive a 20% penalty.\r\n Any disagreement in scoring must be addressed within one week of the work being\r\ngraded. All questions about grading must be placed in the “Assignment Comments” section of the Canvas submission for that assignment. If a response to your comment is not posted within 48 hours you can email a TA requesting that they review the comments.\r\nQuizzes: There are seven quizzes for this course, Quizzes administered in Canvas and contain multiple\r\nchoice. True/False, matching and fill in the blank questions. Each quiz attempt has a 90 minute\r\ntime limit and is not proctored. You will get two attempts at each quiz and your AVERAGE score is\r\nkept. Some quizzes contain randomly selected question so you may receive different questions on each attempt at the quiz. Quizzes are open book. Late quizzes are not allowed. Your low quiz score will be dropped. Final Exam: The cumulative final exam will be given in class during finals week at the time scheduled for this class, Wednesday March 19 th at 9:30am\r\nGrading Scale: Note: Average score ranges given in interval notation\r\nGrade Average Score\r\nA [93, 100]\r\nA- [90, 93)\r\nB+ [87, 90)\r\nB [83, 87)\r\nB- [80, 83)\r\nC+ [77, 79)\r\nC [73, 77)\r\nC- [70, 73)\r\nD+ [67, 70)\r\nD [63, 67)\r\nD- [60, 63)\r\nF [0, 60)"
+        }
+      ]
+    }
+  ]
+}

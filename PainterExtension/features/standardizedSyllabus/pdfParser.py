@@ -31,9 +31,9 @@ from PIL import Image, ImageEnhance
 
 def extract_text_from_pdf(pdf_path):
     """
-    Input: 
+    Input:
       pdf_path (str) - The file path to the PDF file.
-    Output: 
+    Output:
       Returns a string containing all the text extracted from the PDF.
     Function description:
       Opens the specified PDF file using pdfplumber, iterates over each page, and extracts the text.
@@ -135,7 +135,7 @@ def extract_section_with_boundaries(text, start_heading, end_boundaries):
     Output:
         Returns a string containing the extracted section content if found; otherwise, returns None.
     Function description:
-        This function builds a regex pattern to extract a section of text that starts at the given 
+        This function builds a regex pattern to extract a section of text that starts at the given
         start_heading and continues until one of the specified end_boundaries is encountered (each
         preceded by a newline) or until the end of the text if none of the boundaries are found.
         It returns the extracted section with leading and trailing whitespace removed.
@@ -201,18 +201,18 @@ def main():
     if len(sys.argv) < 2:
         print("Usage: python pdfParser.py [path_to_pdf_file]")
         sys.exit(1)
-    
+
     # Get the PDF file path from the command-line arguments.
     pdf_path = sys.argv[1]
     print(f"Processing PDF file: {pdf_path}")
-    
+
     # Extract text using pdfplumber.
     pdf_text = extract_text_from_pdf(pdf_path)
     # If no usable text is extracted or the text appears to be raw PDF data, fall back to OCR extraction.
     if not pdf_text.strip() or pdf_text.strip().startswith("%PDF"):
         print("pdfplumber did not extract any usable text. Trying OCR...")
         pdf_text = extract_text_with_ocr(pdf_path)
-    
+
     # Define candidate headings and boundaries for each section.
     sections = {
         "Late Policy": {
@@ -228,7 +228,7 @@ def main():
             "boundaries": ["Grading Scale"]  # Extraction stops at "Grading Scale" for the 341 syllabus.
         }
     }
-    
+
     extracted_data = {}
     # Iterate over each section and extract its text.
     for section, params in sections.items():
@@ -246,13 +246,13 @@ def main():
                 section_text = extract_section_multiple(pdf_text, headings)
         else:
             section_text = extract_section_multiple(pdf_text, headings)
-        
+
         # For Late Policy, filter the extracted text for lines containing "late" or "penalty".
         if section == "Late Policy" and section_text:
             section_text = filter_late_policy(section_text)
-        
+
         extracted_data[section] = section_text
-    
+
     output_lines = []
     # Prepare and print output for each section.
     for section, content in extracted_data.items():
@@ -267,7 +267,7 @@ def main():
             output_lines.append(not_found_msg)
             print(not_found_msg)
         output_lines.append("\n")
-    
+
     # Build the output file path and write the extracted content.
     base_name = os.path.splitext(os.path.basename(pdf_path))[0]
     output_filename = os.path.join(os.getcwd(), base_name + "_extracted.txt")

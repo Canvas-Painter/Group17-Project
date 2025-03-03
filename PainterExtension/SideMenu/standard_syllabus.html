@@ -10,17 +10,31 @@
     <main class="syllabus-content">
         <!-- Edit Controls -->
         <div id="edit-mode-controls">
+            <button class="update-db-btn standard-button" style="display: none;">Update</button>
             <button class="edit-mode-btn standard-button">Edit</button>
             <button class="cancel-btn standard-button" style="display: none;">Cancel</button>
             <button class="done-btn standard-button" style="display: none;">Done</button>
+            <button class="done-btn standard-button" style="display: none;">Done</button>
+            <button class="update-to-db-btn standard-button" style="display: none;">Upload Changes</button>
         </div>
 
         <div id="syllabus-categories">
 
         </div>
-        
+
         <!-- Add Category Button -->
         <button class="add-category-btn standard-button" style="display: none;">+ Add New Category</button>
+
+        <!---New Syllabus Upload-->
+        <button class="standard-button" id="uploadSyllabusBtn" style="display: none;">
+            Upload New Syllabus
+        </button>
+        <input
+            type="file"
+            id="syllabusFileInput"
+            accept=".pdf"
+            style="display: none;"
+        />
     </main>
     <script src="standard_syllabus_page.js"></script>
 </body>
