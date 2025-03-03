@@ -19,9 +19,9 @@ class Assignment {
 
         return new Assignment(
             title.getElementsByTagName("a")[0],
-            parseFloat(gradeHolder.getElementsByClassName("original_score")[0].textContent),
+            parseFloat(gradeHolder.getElementsByClassName("original_score")[0].textContent.replace(',', '')),
             // Slice will remove the slash at the front
-            maxHolder ? parseFloat(maxHolder.textContent.slice(1)) : NaN,
+            maxHolder ? parseFloat(maxHolder.textContent.slice(1).replace(',', '')) : NaN,
             title.getElementsByClassName("context")[0].textContent
         )
     }
@@ -35,7 +35,7 @@ class Points {
 
     static parse(text) {
         const texts = text.split('/')
-        return new Points(parseFloat(texts[0]), parseFloat(texts[1]))
+        return new Points(parseFloat(texts[0].replace(',', '')), parseFloat(texts[1].replace(',', '')))
     }
 }
 
@@ -83,7 +83,10 @@ function popOpen(assignments, weights, totals) {
     fetch(chrome.runtime.getURL('GradeBook/test_assignment.html'))
         .then(response => response.text())
         .then(text => {
-            document.getElementById("grade-summary-content").getElementsByTagName('tbody')[0].innerHTML += text;
+            // If innerHTML is used on the original thing then canvas freezes up for some reason
+            const body = document.createElement('tbody')
+            body.innerHTML = text
+            document.getElementById('grade-summary-content').getElementsByTagName('tbody')[0].appendChild(body.firstChild);
 
             const points = document.getElementById('test-points')
             const grade = document.getElementById('test-grade')
@@ -119,13 +122,8 @@ function popOpen(assignments, weights, totals) {
                     // category_weight could be 0 so an explicit check is needed
                     if (!category_points || category_weight === undefined) { output.textContent = ''; return }
 
-                    console.log(total_grade)
-                    console.log(category_weight * (category_points.current / category_points.max))
                     const grade_without = total_grade - (category_weight * (category_points.current / category_points.max))
-                    console.log(grade_without)
                     const needed = (target - grade_without) / category_weight
-                    console.log(needed)
-
                     output.textContent = ((needed * (category_points.max + max)) - category_points.current).toFixed(2)
                 }
 
@@ -208,7 +206,7 @@ function setup() {
         // The the first is the labels and last is the total so can be ignored
         for (let i = 1; i < entries.length - 1; i++) {
             const text = entries[i].textContent.split('\n')
-            weights.set(text[1].trim(), parseFloat(text[2].trim()) * 0.01)
+            weights.set(text[1].trim(), parseFloat(text[2].trim()) / 100)
         }
     } else {
         weights = null
