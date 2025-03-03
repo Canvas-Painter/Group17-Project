@@ -13,7 +13,7 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 2. Select the green button labeled "Code"
 3. Select "Download Zip" at the bottom of the popup
 4. Unzip the downloaded file
-# Setup (Windows/MacOS)
+# Setup
 1. Open a chrome browser (can download here if not already installed: https://www.google.com/chrome/)
 2. In the search bar, enter "chrome://extensions", or right click the **puzzle piece** to the right of the search bar and select “Manage Extensions”
 3. In the top right of the page, ensure that “Developer mode” is turned on (slider button)
