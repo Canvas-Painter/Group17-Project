@@ -65,8 +65,8 @@ test('StdDev Test 4', () => {
 })
 
 test('StdDev Test 5', () => {
-    expect(stdDev(sample4, false))
+    expect(stdDev(sample5, false))
         .toBeCloseTo(1)
-    expect(stdDev(sample4, true))
+    expect(stdDev(sample5, true))
         .toBeCloseTo(0.816496580927726)
 })
