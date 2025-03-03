@@ -3,11 +3,11 @@
   "name": "Canvas Painter",
   "version": "0.1",
   "description": "Changes to improve Canvas LMS accessibility and efficiency",
-  "permissions": ["storage", "activeTab", "scripting", "tabs"],
-  "host_permissions": ["*://canvas.oregonstate.edu/*", "file://*"],
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": ["*://canvas.oregonstate.edu/*"],
   "content_scripts": [
     {
-      "matches": ["*://canvas.oregonstate.edu/*", "file://*"],
+      "matches": ["*://canvas.oregonstate.edu/*"],
       "js": [
         "SideMenu/standardized_syllabus.js",
         "CanvasColors/colorCanvas.js",
@@ -40,7 +40,7 @@
         "HelpInfo/help.html",
         "GradeBook/grades.html"
       ],
-      "matches": ["*://canvas.oregonstate.edu/*", "file://*"]
+      "matches": ["*://canvas.oregonstate.edu/*"]
     }
   ],
   "action": {
