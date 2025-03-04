@@ -27,10 +27,31 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 9. Relevant information on how to use the extension can be found by clicking the “Canvas Painter” icon when pinned, and clicking the “Help” button
 
 # Use Cases
-1. User can turn darkmode on and off.
-2. User can create a custom theme. Can turn it on and off.
-3. User can open the Standarized Syllabus, create a class, write out information, save and close the Standarized Syllabus, then open it again to see the same saved data.
-4. User can edit the Standard Syllabus, and then revert it by selecting "Update" button.
+**Make Canvas Look Better**
+- Actors: Students and instructors who prefer a customized theme for improved accessibility or visual comfort.
+- Triggers: A student or instructor finds the default Canvas interface visually uncomfortable.
+**Preconditions:** 
+1. The Chrome extension is installed and active.
+2. The user is logged into Canvas.
+**Postconditions (success scenario):** The user applies a customized theme (e.g., dark mode) that persists across sessions.
+**List of steps (success scenario):**
+1. The user logs into Canvas using the Chrome browser with the extension installed.
+2. The user opens the extension’s settings menu.
+3. The user selects a predefined theme (e.g., dark mode) or customizes colors manually.
+4. The extension dynamically updates Canvas pages with the selected theme.
+5. The theme settings are saved locally and persist across user sessions.
+**Extensions/variations of the success scenario:**
+1. The extension provides darkmode default theme.
+2. The extension allows users to create, save, and edit their own themes.
+3. The theme persists through tabs/browser tab sessions
+**Exceptions (failure conditions and scenarios):**
+1. The user selects a theme that causes readability issues > Can turn off the theme and edit colors or delete the theme
+2. Changes to Canvas's DOM break theme application > The extension reverts to default or provides a warning.
+
+
+**other...**
+User can open the Standarized Syllabus, create a class, write out information, save and close the Standarized Syllabus, then open it again to see the same saved data.
+User can edit the Standard Syllabus, and then revert it by selecting "Update" button.
 
 
 ## Links
