@@ -97,78 +97,31 @@ function extractTAOfficeHours(text) {
  * Input: A string containing the full text extracted from the PDF.
  * Output: A string with the extracted grading policy information (grade weights and letter scale),
  *         or a message if not found.
- * Description: For CS/ECE 476, if detected, extracts text starting at "Evaluation of Student Performance"
+ * Description: For a class, if detected, extracts text starting at "Evaluation of Student Performance"
  *              until the first double newline. Otherwise, it searches for the "Grade Weighting" section,
  *              extracts a chunk of text, filters for lines containing "%" (grade weights) and letter-grade lines,
  *              and returns the combined result.
  */
 function extractGradingPolicy(text) {
-  if (/CS\/ECE 476/i.test(text)) {
-    let idx = text.indexOf("Evaluation of Student Performance");
-    if (idx !== -1) {
-      let sub = text.substring(idx);
-      let endIdx = sub.indexOf("\n\n");
-      if (endIdx === -1) endIdx = sub.length;
-      return sub.substring(0, endIdx).trim();
-    }
-    return "Grading policy not found.";
-  }
-
-  let idx = text.indexOf("Grade Weighting");
-  if (idx !== -1) {
-    let chunk = text.substring(idx, idx + 1000);
-    const weightingLines = chunk
-      .split("\n")
-      .map(line => line.trim())
-      .filter(line => line.includes("%"));
-
-    let letterIdx = text.search(/grade letter/i);
-    let letterScaleLines = [];
-    if (letterIdx !== -1) {
-      let letterChunk = text.substring(letterIdx, letterIdx + 500);
-      const scaleRegex = /^[A-F][+-]?\s+\d+/gm;
-      let match;
-      while ((match = scaleRegex.exec(letterChunk)) !== null) {
-        letterScaleLines.push(match[0].trim());
+  const gradingKeywords = ["grading policy", "grade weighting", "evaluation criteria", "grading scale", "assessment breakdown", "grading system", "grading scheme", "course grading"];
+  const lines = text.split("\n").map(function(line) {
+      return line.trim();
+  });
+  
+  for (var i = 0; i < lines.length; i++) {
+      var lowerLine = lines[i].toLowerCase();
+      for (var j = 0; j < gradingKeywords.length; j++) {
+          if (lowerLine.includes(gradingKeywords[j])) {
+              let gradingText = lines[i];
+              for (var k = i + 1; k < Math.min(i + 7, lines.length); k++) {
+                  if (lines[k].trim() === "") break;
+                  gradingText += "\n" + lines[k];
+              }
+              return gradingText;
+          }
       }
-    }
-    if (letterScaleLines.length === 0) {
-      let idxScale = text.indexOf("Grading Scale", idx);
-      if (idxScale !== -1) {
-        let scaleChunk = text.substring(idxScale, idxScale + 500);
-        const scaleRegex = /^[A-F][+-]?\s+\d+/gm;
-        let match;
-        while ((match = scaleRegex.exec(scaleChunk)) !== null) {
-          letterScaleLines.push(match[0].trim());
-        }
-      }
-    }
-
-    if (weightingLines.length === 0 && letterScaleLines.length === 0) {
-      return "Grading policy not found.";
-    }
-
-    let output = "";
-    if (weightingLines.length > 0) {
-      output += weightingLines.join("\n");
-    }
-    if (letterScaleLines.length > 0) {
-      output += "\n\nGrading Scale:\n" + letterScaleLines.join("\n");
-    }
-    return output;
   }
-
-  const markers = ["Graded Work", "Grading Policies:", "Grading Policy:", "Grading:"];
-  for (const marker of markers) {
-    idx = text.indexOf(marker);
-    if (idx !== -1) {
-      let sub = text.substring(idx + marker.length);
-      let endIdx = sub.search(/\r?\n\r?\n/);
-      if (endIdx === -1) endIdx = sub.length;
-      let result = sub.substring(0, endIdx).trim();
-      if (result.length > 0) return result;
-    }
-  }
+  
   return "Grading policy not found.";
 }
 
@@ -181,19 +134,26 @@ function extractGradingPolicy(text) {
  *              Otherwise, uses a regular expression to find a line starting with "Quiz" or "Quizzes:".
  */
 function extractQuizzes(text) {
-  if (/CS\/ECE 476/i.test(text)) {
-    let idx = text.indexOf("Category Portion of Grade");
-    if (idx !== -1) {
-      let sub = text.substring(idx, idx + 1000);
-      const lines = sub.split("\n").map(l => l.trim());
-      const quizLine = lines.find(line => /^Quizzes\s+\d+%/.test(line));
-      return quizLine || "Quiz grading information not found.";
-    }
-    return "Quiz grading information not found.";
+  const quizKeywords = ["quizzes", "quiz", "weekly quizzes", "pop quizzes", "quiz grading", "assessment quizzes", "online quizzes"];
+  const lines = text.split("\n").map(function(line) {
+      return line.trim();
+  });
+  
+  for (var i = 0; i < lines.length; i++) {
+      var lowerLine = lines[i].toLowerCase();
+      for (var j = 0; j < quizKeywords.length; j++) {
+          if (lowerLine.includes(quizKeywords[j])) {
+              let quizText = lines[i];
+              for (var k = i + 1; k < Math.min(i + 5, lines.length); k++) {
+                  if (lines[k].trim() === "") break;
+                  quizText += "\n" + lines[k];
+              }
+              return quizText;
+          }
+      }
   }
-  const regex = /^Quiz(?:es)?:\s*(.+)$/im;
-  const match = text.match(regex);
-  return match ? match[1].trim() : "Quiz grading information not found.";
+  
+  return "Quiz grading information not found.";
 }
 
 /**
@@ -205,21 +165,26 @@ function extractQuizzes(text) {
  *              lines and attempts to find a line that includes key course title keywords.
  */
 function extractCourseTitle(text) {
-  if (/CS\/ECE 476/i.test(text)) {
-    const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
-    return lines[1] || "Course title not found.";
+  const lines = text.split("\n").map(function(line) {
+      return line.trim();
+  }).filter(function(line) {
+      return line.length > 0;
+  });
+  
+  for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].toLowerCase();
+      if (line.includes("course title") || line.includes("introduction to") || line.match(/^[a-z]+ \d{3}/i)) {
+          return lines[i];
+      }
   }
-  const lines = text.split("\n").map(line => line.trim()).filter(line => line.length > 0);
-  for (const line of lines) {
-    if (/linear algebra/i.test(line)) {
-      return line;
-    }
+  
+  for (var j = 0; j < lines.length; j++) {
+      var line = lines[j].toLowerCase();
+      if (!line.startsWith("last updated") && !line.includes("syllabus") && line.length > 3) {
+          return lines[j];
+      }
   }
-  for (const line of lines) {
-    if (!line.toLowerCase().startsWith("last updated") && !line.toLowerCase().includes("syllabus")) {
-      return line;
-    }
-  }
+  
   return "Course title not found.";
 }
 
@@ -232,30 +197,47 @@ function extractCourseTitle(text) {
  *              searches for "Instructor:" or "Professor:" and returns the text on that line (or falls back to
  *              "About the Instructor").
  */
-function extractProfessor(text) {
-  if (/CS\/ECE 476/i.test(text)) {
-    const lines = text.split("\n").map(l => l.trim()).filter(l => l.length > 0);
-    return lines[2] || "Professor not found.";
-  }
-  let idx = text.indexOf("Instructor:");
-  if (idx === -1) {
-    idx = text.indexOf("Professor:");
-    if (idx === -1) {
-      idx = text.indexOf("About the Instructor");
-      if (idx === -1) return "Professor not found.";
-      else {
-        let sub = text.substring(idx);
-        const lineEnd = sub.indexOf("\n");
-        return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined)
-                  .replace(/About the Instructor/i, "").trim();
+function extractCourseTitle(text) {
+  const lines = text.split("\n").map(function(line) {
+      return line.trim();
+  }).filter(function(line) {
+      return line.length > 0;
+  });
+  
+  for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].toLowerCase();
+      if (line.includes("course title") || line.includes("introduction to") || line.match(/^[a-z]+ \d{3}/i)) {
+          return lines[i];
       }
-    }
   }
-  let sub = text.substring(idx);
-  const lineEnd = sub.indexOf("\n");
-  return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined)
-            .replace(/Instructor:|Professor:/i, "").trim();
+  
+  for (var j = 0; j < lines.length; j++) {
+      var line = lines[j].toLowerCase();
+      if (!line.startsWith("last updated") && !line.includes("syllabus") && line.length > 3) {
+          return lines[j];
+      }
+  }
+  
+  return "Course title not found.";
 }
+
+function extractProfessor(text) {
+  const lines = text.split("\n").map(function(line) {
+      return line.trim();
+  }).filter(function(line) {
+      return line.length > 0;
+  });
+  
+  for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].toLowerCase();
+      if (line.includes("instructor:") || line.includes("professor:") || line.includes("about the instructor")) {
+          return lines[i].replace(/instructor:|professor:|about the instructor/i, "").trim();
+      }
+  }
+  
+  return "Professor not found.";
+}
+
 
 /**
  * extractEmail
@@ -265,9 +247,25 @@ function extractProfessor(text) {
  * Description: Uses a regular expression to search for a pattern that matches an email address in the text.
  */
 function extractEmail(text) {
-  const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
-  const match = text.match(emailRegex);
-  return match ? match[0] : "Email not found.";
+  const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+  const matches = text.match(emailRegex);
+  if (!matches) return "Email not found.";
+  
+  // Find the first email that appears near an "Instructor" or "Professor" reference
+  const lines = text.split("\n");
+  for (var i = 0; i < lines.length; i++) {
+      if (/instructor|professor|email/i.test(lines[i])) {
+          for (var j = i; j < Math.min(i + 5, lines.length); j++) { // Search within the next 5 lines
+              const emailMatch = lines[j].match(emailRegex);
+              if (emailMatch) {
+                  return emailMatch[0];
+              }
+          }
+      }
+  }
+  
+  // If no nearby match is found, return the first email found
+  return matches[0];
 }
 
 /**
@@ -278,11 +276,21 @@ function extractEmail(text) {
  * Description: Searches for the marker "Attendance" and returns the text on that line.
  */
 function extractAttendance(text) {
-  const idx = text.indexOf("Attendance");
-  if (idx === -1) return "Attendance policy not found.";
-  let sub = text.substring(idx);
-  const lineEnd = sub.indexOf("\n");
-  return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined).trim();
+  const attendanceKeywords = ["attendance policy", "class attendance", "participation requirement", "attendance expectations", "attendance is mandatory", "attendance requirement"];
+  const lines = text.split("\n").map(function(line) {
+      return line.trim();
+  });
+  
+  for (var i = 0; i < lines.length; i++) {
+      var lowerLine = lines[i].toLowerCase();
+      for (var j = 0; j < attendanceKeywords.length; j++) {
+          if (lowerLine.includes(attendanceKeywords[j])) {
+              return lines[i];
+          }
+      }
+  }
+  
+  return "Attendance policy not found.";
 }
 
 /**
@@ -296,28 +304,25 @@ function extractAttendance(text) {
  *              with a "%" penalty.
  */
 function extractLateWork(text) {
-  const explicitMarkers = ["Late Policy", "Late Policies", "Late Work"];
-  for (const marker of explicitMarkers) {
-    let idx = text.indexOf(marker);
-    if (idx !== -1) {
-      let sub = text.substring(idx);
-      let endIdx = sub.search(/\r?\n\r?\n/);
-      if (endIdx === -1) endIdx = sub.length;
-      return sub.substring(0, endIdx).trim();
-    }
+  const lateWorkKeywords = ["late policy", "late work policy", "late submission", "late homework", "late assignment", "penalty for late", "late penalties"];
+  const lines = text.split("\n").map(function(line) {
+      return line.trim();
+  });
+  
+  for (var i = 0; i < lines.length; i++) {
+      var lowerLine = lines[i].toLowerCase();
+      for (var j = 0; j < lateWorkKeywords.length; j++) {
+          if (lowerLine.includes(lateWorkKeywords[j])) {
+              let policyText = lines[i];
+              for (var k = i + 1; k < Math.min(i + 5, lines.length); k++) {
+                  if (lines[k].trim() === "") break;
+                  policyText += "\n" + lines[k];
+              }
+              return policyText;
+          }
+      }
   }
-  // Fallback: check the Homework section for late penalty details.
-  let homeworkIdx = text.indexOf("Homework:");
-  if (homeworkIdx !== -1) {
-    let sub = text.substring(homeworkIdx);
-    let endIdx = sub.search(/\r?\n\r?\n/);
-    if (endIdx === -1) endIdx = sub.length;
-    let lines = sub.substring(0, endIdx).split("\n");
-    let filtered = lines.filter(line => /late/i.test(line) && /%/.test(line));
-    if (filtered.length > 0) {
-      return filtered.join("\n").trim();
-    }
-  }
+  
   return "Late work policy not found.";
 }
 
@@ -331,22 +336,26 @@ function extractLateWork(text) {
  *              and splits the result by a bullet character (""), returning only the first segment.
  */
 function extractGradingAssignments(text) {
-  if (/CS\/ECE 476/i.test(text)) {
-    let idx = text.indexOf("Category Portion of Grade");
-    if (idx !== -1) {
-      let sub = text.substring(idx, idx + 1000);
-      const lines = sub.split("\n").map(l => l.trim()).filter(l => {
-        return /\d+%/.test(l) && !/^[A-F]/i.test(l);
-      });
-      return lines.join("\n");
-    }
-    return "Assignment grading information not found.";
+  const gradingKeywords = ["assignments", "homework", "assignment grading", "grade breakdown", "evaluation criteria"];
+  const lines = text.split("\n").map(function(line) {
+      return line.trim();
+  });
+  
+  for (var i = 0; i < lines.length; i++) {
+      var lowerLine = lines[i].toLowerCase();
+      for (var j = 0; j < gradingKeywords.length; j++) {
+          if (lowerLine.includes(gradingKeywords[j])) {
+              let gradingText = lines[i];
+              for (var k = i + 1; k < Math.min(i + 5, lines.length); k++) {
+                  if (lines[k].trim() === "") break;
+                  gradingText += "\n" + lines[k];
+              }
+              return gradingText;
+          }
+      }
   }
-  const idx = text.indexOf("Assignments");
-  if (idx === -1) return "Assignment grading information not found.";
-  let sub = text.substring(idx);
-  let parts = sub.split("");
-  return parts[0].trim();
+  
+  return "Assignment grading information not found.";
 }
 
 /**
@@ -358,12 +367,26 @@ function extractGradingAssignments(text) {
  *              and returns the text on that line.
  */
 function extractMidterm(text) {
-  if (/CS\/ECE 476/i.test(text)) return "Midterm grading information not found.";
-  const idx = text.indexOf("Midterm");
-  if (idx === -1) return "Midterm grading information not found.";
-  let sub = text.substring(idx);
-  const lineEnd = sub.indexOf("\n");
-  return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined).trim();
+  const midtermKeywords = ["midterm", "mid-term exam", "midterm examination", "midterm grading", "midterm weight"];
+  const lines = text.split("\n").map(function(line) {
+      return line.trim();
+  });
+  
+  for (var i = 0; i < lines.length; i++) {
+      var lowerLine = lines[i].toLowerCase();
+      for (var j = 0; j < midtermKeywords.length; j++) {
+          if (lowerLine.includes(midtermKeywords[j])) {
+              let midtermText = lines[i];
+              for (var k = i + 1; k < Math.min(i + 5, lines.length); k++) {
+                  if (lines[k].trim() === "") break;
+                  midtermText += "\n" + lines[k];
+              }
+              return midtermText;
+          }
+      }
+  }
+  
+  return "Midterm grading information not found.";
 }
 
 /**
@@ -375,16 +398,28 @@ function extractMidterm(text) {
  *              or "Project Step 1 Final Version" and returns the text on that line.
  */
 function extractFinalProject(text) {
-  if (/CS\/ECE 476/i.test(text)) return "Final project grading information not found.";
-  let idx = text.indexOf("Final Project");
-  if (idx === -1) {
-    idx = text.indexOf("Project Step 1 Final Version");
-    if (idx === -1) return "Final project grading information not found.";
+  const projectKeywords = ["final project", "project", "capstone project", "major project", "term project", "course project"];
+  const lines = text.split("\n").map(function(line) {
+      return line.trim();
+  });
+  
+  for (var i = 0; i < lines.length; i++) {
+      var lowerLine = lines[i].toLowerCase();
+      for (var j = 0; j < projectKeywords.length; j++) {
+          if (lowerLine.includes(projectKeywords[j])) {
+              let projectText = lines[i];
+              for (var k = i + 1; k < Math.min(i + 5, lines.length); k++) {
+                  if (lines[k].trim() === "") break;
+                  projectText += "\n" + lines[k];
+              }
+              return projectText;
+          }
+      }
   }
-  let sub = text.substring(idx);
-  const lineEnd = sub.indexOf("\n");
-  return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined).trim();
+  
+  return "Final project grading information not found.";
 }
+
 
 /**
  * extractFinalExam
@@ -395,13 +430,25 @@ function extractFinalProject(text) {
  *              and returns the text on that line. If not found, falls back to extracting final project information.
  */
 function extractFinalExam(text) {
-  if (/CS\/ECE 476/i.test(text)) return "Final exam grading information not found.";
-  let idx = text.indexOf("Final Exam");
-  if (idx !== -1) {
-    let sub = text.substring(idx);
-    const lineEnd = sub.indexOf("\n");
-    return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined).trim();
+  const finalExamKeywords = ["final exam", "final examination", "final test", "final assessment", "comprehensive exam"];
+  const lines = text.split("\n").map(function(line) {
+      return line.trim();
+  });
+  
+  for (var i = 0; i < lines.length; i++) {
+      var lowerLine = lines[i].toLowerCase();
+      for (var j = 0; j < finalExamKeywords.length; j++) {
+          if (lowerLine.includes(finalExamKeywords[j])) {
+              let finalExamText = lines[i];
+              for (var k = i + 1; k < Math.min(i + 5, lines.length); k++) {
+                  if (lines[k].trim() === "") break;
+                  finalExamText += "\n" + lines[k];
+              }
+              return finalExamText;
+          }
+      }
   }
+  
   return extractFinalProject(text);
 }
 
@@ -414,12 +461,26 @@ function extractFinalExam(text) {
  *              and returns the text on that line.
  */
 function extractParticipation(text) {
-  if (/CS\/ECE 476/i.test(text)) return "Participation grading information not found.";
-  const idx = text.indexOf("Participation");
-  if (idx === -1) return "Participation grading information not found.";
-  let sub = text.substring(idx);
-  const lineEnd = sub.indexOf("\n");
-  return sub.substring(0, lineEnd !== -1 ? lineEnd : undefined).trim();
+  const participationKeywords = ["participation", "class participation", "engagement", "attendance and participation", "discussion participation", "student involvement"];
+  const lines = text.split("\n").map(function(line) {
+      return line.trim();
+  });
+  
+  for (var i = 0; i < lines.length; i++) {
+      var lowerLine = lines[i].toLowerCase();
+      for (var j = 0; j < participationKeywords.length; j++) {
+          if (lowerLine.includes(participationKeywords[j])) {
+              let participationText = lines[i];
+              for (var k = i + 1; k < Math.min(i + 5, lines.length); k++) {
+                  if (lines[k].trim() === "") break;
+                  participationText += "\n" + lines[k];
+              }
+              return participationText;
+          }
+      }
+  }
+  
+  return "Participation grading information not found.";
 }
 
 /**
