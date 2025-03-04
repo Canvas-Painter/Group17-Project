@@ -580,5 +580,9 @@ async function processAllSyllabi() {
 processAllSyllabi();
 
 console.log("pdf_parser.js has been loaded!");
-window.pdfToText = pdfToText;  // Ensure function is globally available
+
+if (typeof window !== "undefined") {
+  window.pdfToText = pdfToText;
+  console.log("✅ pdfToText is now available globally:", typeof window.pdfToText);
+}
 

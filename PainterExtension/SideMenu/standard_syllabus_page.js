@@ -162,7 +162,15 @@ const courseId = urlParams.get('courseId') || 'unknown';
 function setupEditControls() {
     const controls = document.getElementById('edit-controls');
     const editBtn = document.querySelector('.edit-mode-btn');
+    if (!editBtn) {
+        console.error("Error: .edit-mode-btn not found in the DOM.");
+        return;
+    }
     const cancelBtn = document.querySelector('.cancel-btn');
+    if (!cancelBtn) {
+        console.error("Error: .cancel-btn not found in the DOM.");
+        return;
+    }
     const doneBtn = document.querySelector('.done-btn');
     const addCategoryBtn = document.querySelector('.add-category-btn');
     const uploadDbBtn = document.querySelector('.update-to-db-btn');
@@ -170,12 +178,20 @@ function setupEditControls() {
 
     // Get reference to the upload button from the DOM
     const uploadBtn = document.getElementById('uploadSyllabusBtn');
+    if (!uploadBtn) {
+        console.error("Error: #uploadSyllabusBtn not found in the DOM.");
+        return;
+    }
 
     console.log("🛠 Debugging Line 174: What is failing?");
-    console.log("📄 Is pdfToText available?", typeof window.pdfToText);
+    console.log("📄 Checking if pdfToText is available before calling it...");
+    console.log("📌 pdfToText type:", typeof window.pdfToText);
+    console.log("🔍 Is pdf_parser.js loaded?", document.querySelector("script[src*='pdf_parser.js']") ? "Yes" : "No");    
     console.log("🔄 File Input Event Triggered", event);
 
+
     editBtn.onclick = () => {
+        console.log("📝 Edit mode activated.");
         isEditMode = true;
         backupData = JSON.parse(JSON.stringify(syllabusData));
         editBtn.style.display = 'none';
