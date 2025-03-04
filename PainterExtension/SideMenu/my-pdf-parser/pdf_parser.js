@@ -1,18 +1,17 @@
 // multi_pdf_parser.js
 
+console.log("📌 Ensuring PDF.js is loaded...");
 
-
-console.log("Ensuring PDF.js is loaded...");
-
-// Load PDF.js from the local extension files
-var pdfjsLib = window['pdfjs-dist/build/pdf'] || {};
+// Ensure `pdfjsLib` is correctly initialized
+var pdfjsLib = window.pdfjsLib || {};
 pdfjsLib.GlobalWorkerOptions = pdfjsLib.GlobalWorkerOptions || {};
 pdfjsLib.GlobalWorkerOptions.workerSrc = chrome.runtime.getURL("SideMenu/libs/pdf.worker.js");
 
+// Wait for PDF.js to be available before continuing
 if (typeof pdfjsLib.getDocument !== "function") {
-    console.error("PDF.js failed to initialize.");
+    console.error("❌ PDF.js failed to initialize.");
 } else {
-    console.log("PDF.js loaded successfully.");
+    console.log("✅ PDF.js loaded successfully.");
 }
 
 // Ensure `getDocument` is properly assigned
@@ -20,10 +19,11 @@ var getDocument = function (data) {
     if (typeof pdfjsLib !== "undefined" && typeof pdfjsLib.getDocument === "function") {
         return pdfjsLib.getDocument(data);
     } else {
-        console.error("PDF.js not loaded properly.");
+        console.error("❌ PDF.js not loaded properly.");
         return null;
     }
 };
+
 
 console.log("pdf_parser.js has been loaded!");
 window.pdfToText = pdfToText;  // Ensure function is globally available
