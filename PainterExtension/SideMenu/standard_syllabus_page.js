@@ -71,9 +71,20 @@ function waitForPdfParser(callback, attempts = 10) {
 }
 
 // Wrap the main execution in a wait function
-waitForPdfParser(() => {
-    console.log("🚀 Running standard_syllabus_page.js after pdf_parser.js is loaded...");
-});
+function waitForPdfParser(callback, attempts = 10) {
+    ensurePdfParserAlwaysLoaded(() => {
+        if (typeof window.pdfToText === "function") {
+            console.log("pdf_parser.js is now available!");
+            callback();
+        } else if (attempts > 0) {
+            console.warn(`pdf_parser.js not ready. Retrying... (${10 - attempts}/10)`);
+            setTimeout(() => waitForPdfParser(callback, attempts - 1), 500);
+        } else {
+            console.error("pdf_parser.js failed to load after multiple attempts.");
+        }
+    });
+}
+
 
 
 // saves the data to local storage
@@ -294,6 +305,12 @@ function displaySyllabusData(data) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log("Ensuring pdf_parser.js is available inside the iframe...");
+
+
+    ensurePdfParserAlwaysLoaded(() => {
+        console.log("pdf_parser.js confirmed available inside the iframe.");
+    });
 
     // Load saved data including server comparison
     syllabusData = await loadCourseData(courseId);
