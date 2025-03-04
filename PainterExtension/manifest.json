@@ -10,13 +10,13 @@
       "matches": ["*://canvas.oregonstate.edu/*", "file://*"],
       "js": [
         "SideMenu/standardized_syllabus.js",
+        "SideMenu/my-pdf-parser/pdf_parser.js",
         "CanvasColors/colorCanvas.js",
         "sayHello.js",
         "SpeedBoost/speed_boost.js",
         "GradeBook/math.js",
         "GradeBook/grade_book.js",
         "WeirdTime/fix.js",
-        "SideMenu/my-pdf-parser/pdf_parser.js",
         "SideMenu/standard_syllabus_page.js"
       ],
       "css": [
