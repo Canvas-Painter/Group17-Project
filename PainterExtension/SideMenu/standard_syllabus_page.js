@@ -35,12 +35,12 @@ function loadCourseData(courseId) {
     });
 }
 
-function ensurePdfParserLoaded(callback) {
+function ensurePdfParserAlwaysLoaded(callback) {
     if (typeof window.pdfToText === "function") {
-        console.log("pdf_parser.js is already available.");
+        console.log("pdf_parser.js is still available.");
         callback();
     } else {
-        console.warn("⚠️ pdf_parser.js is missing. Injecting dynamically...");
+        console.warn("pdf_parser.js is missing. Injecting dynamically...");
         var script = document.createElement("script");
         script.src = chrome.runtime.getURL("SideMenu/my-pdf-parser/pdf_parser.js");
         script.onload = function () {
@@ -54,6 +54,7 @@ function ensurePdfParserLoaded(callback) {
         document.head.appendChild(script);
     }
 }
+
 
 
 console.log("🛠 Waiting for pdf_parser.js to load...");
