@@ -34,7 +34,7 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 
 
 ## Links
-- [Project Proposal](https://docs.google.com/document/d/1Sg_moN46KJ2fcR-Hak0WlZDEZvt-L2gO4nh3mJlo9x4)
+- [Project Living Document](https://docs.google.com/document/d/1Sg_moN46KJ2fcR-Hak0WlZDEZvt-L2gO4nh3mJlo9x4)
 - [Developer Documentation](https://docs.google.com/document/d/13YbMxTzsQXYc2uVJYm61ArJ58H_LvJ6tH59HM6h7rzQ)
 - [User Documentation](https://docs.google.com/document/d/1xUaHkDol8P2Ght-Y0p4gwRxqx8HyKfweMmLJVI2JGq8)
 - [Project Ideas Notion](https://www.notion.so/CS-362-Software-Engineering-2-Project-176bd7e17f8880f7a190db13b8cf9de8)
