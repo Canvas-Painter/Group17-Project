@@ -1,5 +1,7 @@
 // multi_pdf_parser.js
 
+
+
 var pdfjsLib = window['pdfjs-dist/build/pdf'] || {};
 pdfjsLib.GlobalWorkerOptions = pdfjsLib.GlobalWorkerOptions || {};
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
@@ -8,6 +10,9 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs
 var getDocument = pdfjsLib.getDocument || function() { console.error("PDF.js not loaded!"); };
 
 
+console.log("pdf_parser.js has been loaded!");
+window.pdfToText = pdfToText;  // Ensure function is globally available
+console.log("Is pdfToText available in pdf_parser.js?", typeof window.pdfToText);
 
 
 
