@@ -583,6 +583,5 @@ console.log("pdf_parser.js has been loaded!");
 
 if (typeof window !== "undefined") {
   window.pdfToText = pdfToText;
-  console.log("✅ pdfToText is now available globally:", typeof window.pdfToText);
+  console.log("pdf_parser.js has been fully loaded. pdfToText is now available.");
 }
-

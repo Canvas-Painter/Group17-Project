@@ -35,6 +35,26 @@ function loadCourseData(courseId) {
     });
 }
 
+console.log("🛠 Waiting for pdf_parser.js to load...");
+
+function waitForPdfParser(callback, attempts = 10) {
+    if (typeof window.pdfToText === "function") {
+        console.log("pdf_parser.js is now available!");
+        callback();
+    } else if (attempts > 0) {
+        console.warn(`pdf_parser.js not ready. Retrying... (${10 - attempts}/10)`);
+        setTimeout(() => waitForPdfParser(callback, attempts - 1), 500);
+    } else {
+        console.error("pdf_parser.js failed to load after multiple attempts.");
+    }
+}
+
+// Wrap the main execution in a wait function
+waitForPdfParser(() => {
+    console.log("🚀 Running standard_syllabus_page.js after pdf_parser.js is loaded...");
+});
+
+
 // saves the data to local storage
 function saveCourseData(courseId, data) {
     syllabusData = data;
