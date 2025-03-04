@@ -26,7 +26,7 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 8. The extension is now active and can be pinned by clicking the **puzzle piece** again, then clicking the **tac** next to “Canvas Painter” in the menu that pops up
 9. Relevant information on how to use the extension can be found by clicking the “Canvas Painter” icon when pinned, and clicking the “Help” button
 
-#Use Case
+# Use Cases
 1. User can turn darkmode on and off.
 2. User can create a custom theme. Can turn it on and off.
 3. User can open the Standarized Syllabus, create a class, write out information, save and close the Standarized Syllabus, then open it again to see the same saved data.
