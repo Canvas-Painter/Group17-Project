@@ -14,6 +14,31 @@ console.log("pdf_parser.js has been loaded!");
 window.pdfToText = pdfToText;  // Ensure function is globally available
 console.log("Is pdfToText available in pdf_parser.js?", typeof window.pdfToText);
 
+console.log("Ensuring PDF.js is loaded...");
+
+// Check if pdfjsLib is already available
+if (typeof window.pdfjsLib === "undefined" || typeof window.pdfjsLib.getDocument !== "function") {
+    console.warn("PDF.js is missing. Injecting dynamically...");
+    var script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js";
+    script.onload = function () {
+        console.log("PDF.js dynamically loaded.");
+        window.pdfjsLib = window['pdfjs-dist/build/pdf'] || {};
+        window.pdfjsLib.GlobalWorkerOptions = window.pdfjsLib.GlobalWorkerOptions || {};
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
+    };
+    document.head.appendChild(script);
+}
+
+// Ensure `getDocument` is properly assigned
+var getDocument = function (data) {
+    if (typeof pdfjsLib !== "undefined" && typeof pdfjsLib.getDocument === "function") {
+        return pdfjsLib.getDocument(data);
+    } else {
+        console.error("PDF.js not loaded properly.");
+        return null;
+    }
+};
 
 
 
