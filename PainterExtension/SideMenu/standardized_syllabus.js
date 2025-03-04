@@ -18,6 +18,27 @@ function activateSideMenu() {
     });
 }
 
+function ensurePdfParserAlwaysLoaded(callback) {
+    if (typeof window.pdfToText === "function") {
+        console.log("pdf_parser.js is still available.");
+        callback();
+    } else {
+        console.warn("pdf_parser.js is missing. Injecting dynamically...");
+        var script = document.createElement("script");
+        script.src = chrome.runtime.getURL("SideMenu/my-pdf-parser/pdf_parser.js");
+        script.onload = function () {
+            console.log("pdf_parser.js dynamically loaded.");
+            if (typeof window.pdfToText === "function") {
+                callback();
+            } else {
+                console.error("pdfToText is still undefined after injecting pdf_parser.js.");
+            }
+        };
+        document.head.appendChild(script);
+    }
+}
+
+
 function addStandardSyllabusLink(menu) {
     const newItem = document.createElement('li');
     newItem.className = 'section';
@@ -38,55 +59,62 @@ function addStandardSyllabusLink(menu) {
 }
 
 function showSyllabusPopup() {
-    // Extract course ID from current URL
-    const courseId = window.location.pathname.match(/\/courses\/(\d+)/)?.[1] || 'unknown';
+    console.log("📌 Standard Syllabus button clicked. Checking pdf_parser.js...");
 
-    const wrapper = document.createElement('div');
-    wrapper.className = 'standardized-syllabus-feature popup-wrapper';
+    ensurePdfParserAlwaysLoaded(() => {
+        console.log("✅ pdf_parser.js confirmed available after button click.");
 
-    const popup = document.createElement('div');
-    popup.className = 'syllabus-popup';
+        // Extract course ID from current URL
+        const courseId = window.location.pathname.match(/\/courses\/(\d+)/)?.[1] || 'unknown';
 
-    const closePopup = () => wrapper.remove();
+        const wrapper = document.createElement('div');
+        wrapper.className = 'standardized-syllabus-feature popup-wrapper';
 
-    const closeBtn = document.createElement('span');
-    closeBtn.className = 'close-btn';
-    closeBtn.textContent = 'X';
-    closeBtn.onclick = closePopup;
+        const popup = document.createElement('div');
+        popup.className = 'syllabus-popup';
 
-    const popoutBtn = document.createElement('span');
-    popoutBtn.className = 'popout-btn';
-    popoutBtn.textContent = '⤢';
+        const closePopup = () => wrapper.remove();
 
-    const syllabusUrl = `${chrome.runtime.getURL('SideMenu/standard_syllabus.html')}?courseId=${courseId}`;
+        const closeBtn = document.createElement('span');
+        closeBtn.className = 'close-btn';
+        closeBtn.textContent = 'X';
+        closeBtn.onclick = closePopup;
 
-    popoutBtn.onclick = () => {
-        const syllabusWindow = window.open(syllabusUrl, 'StandardSyllabus',
-            'width=800,height=600,menubar=no,toolbar=no,location=no,status=no');
-        closePopup();
-    };
+        const popoutBtn = document.createElement('span');
+        popoutBtn.className = 'popout-btn';
+        popoutBtn.textContent = '⤢';
 
-    const controls = document.createElement('div');
-    controls.className = 'popup-controls';
-    controls.appendChild(popoutBtn);
-    controls.appendChild(closeBtn);
+        const syllabusUrl = `${chrome.runtime.getURL('SideMenu/standard_syllabus.html')}?courseId=${courseId}`;
 
-    const iframe = document.createElement('iframe');
-    iframe.src = syllabusUrl;
-    iframe.className = 'syllabus-iframe';
+        popoutBtn.onclick = () => {
+            const syllabusWindow = window.open(syllabusUrl, 'StandardSyllabus',
+                'width=800,height=600,menubar=no,toolbar=no,location=no,status=no');
+            closePopup();
+        };
 
-    wrapper.addEventListener('click', (e) => {
-        if (e.target === wrapper) closePopup();
+        const controls = document.createElement('div');
+        controls.className = 'popup-controls';
+        controls.appendChild(popoutBtn);
+        controls.appendChild(closeBtn);
+
+        const iframe = document.createElement('iframe');
+        iframe.src = syllabusUrl;
+        iframe.className = 'syllabus-iframe';
+
+        wrapper.addEventListener('click', (e) => {
+            if (e.target === wrapper) closePopup();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closePopup();
+        }, { once: true });
+
+        popup.appendChild(controls);
+        popup.appendChild(iframe);
+        wrapper.appendChild(popup);
+        document.body.appendChild(wrapper);
     });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closePopup();
-    }, { once: true });
-
-    popup.appendChild(controls);
-    popup.appendChild(iframe);
-    wrapper.appendChild(popup);
-    document.body.appendChild(wrapper);
 }
+
 
 activateSideMenu();
