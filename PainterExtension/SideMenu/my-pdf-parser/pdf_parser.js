@@ -565,6 +565,7 @@ async function processSyllabus(filePath) {
  * Description: Iterates over each file path in the syllabusFiles array and calls processSyllabus
  *              for each file sequentially.
  */
+var syllabusFiles = syllabusFiles || []; // Ensure it's at least an empty array
 async function processAllSyllabi() {
   for (const filePath of syllabusFiles) {
     await processSyllabus(filePath);

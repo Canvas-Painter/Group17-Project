@@ -171,6 +171,10 @@ function setupEditControls() {
     // Get reference to the upload button from the DOM
     const uploadBtn = document.getElementById('uploadSyllabusBtn');
 
+    console.log("🛠 Debugging Line 174: What is failing?");
+    console.log("📄 Is pdfToText available?", typeof window.pdfToText);
+    console.log("🔄 File Input Event Triggered", event);
+
     editBtn.onclick = () => {
         isEditMode = true;
         backupData = JSON.parse(JSON.stringify(syllabusData));
