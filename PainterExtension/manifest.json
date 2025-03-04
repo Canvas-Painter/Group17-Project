@@ -42,6 +42,8 @@
         "SideMenu/standard_syllabus_page.css",
         "SideMenu/standard_syllabus_page.js",
         "HelpInfo/help.html",
+        "SideMenu/libs/pdf.js",
+        "SideMenu/libs/pdf.worker.js",
         "GradeBook/test_assignment.html"
       ],
       "matches": ["*://canvas.oregonstate.edu/*", "file://*"]
