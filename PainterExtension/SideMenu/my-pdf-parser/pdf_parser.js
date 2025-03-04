@@ -1,12 +1,10 @@
 // multi_pdf_parser.js
 
-import fs from 'fs';
-import path from 'path';
-import pdfjsLib from 'pdfjs-dist/legacy/build/pdf.js';
-const { getDocument } = pdfjsLib;
-
 var pdfjsLib = window['pdfjs-dist/build/pdf'];
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
+
+const { getDocument } = pdfjsLib;
+
 
 
 /**
