@@ -9,8 +9,8 @@
     {
       "matches": ["*://canvas.oregonstate.edu/*", "file://*"],
       "js": [
-        "SideMenu/standardized_syllabus.js",
         "SideMenu/my-pdf-parser/pdf_parser.js",
+        "SideMenu/standardized_syllabus.js",
         "CanvasColors/colorCanvas.js",
         "sayHello.js",
         "SpeedBoost/speed_boost.js",
