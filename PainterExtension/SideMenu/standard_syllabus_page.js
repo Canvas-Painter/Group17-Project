@@ -213,11 +213,13 @@ const courseId = urlParams.get('courseId') || 'unknown';
 
 // setup edit control functions and visibility
 function setupEditControls() {
+    console.log("🔍 Setting up edit controls...");
+
     const controls = document.getElementById('edit-controls');
     const editBtn = document.querySelector('.edit-mode-btn');
     if (!editBtn) {
         console.error("Error: .edit-mode-btn not found in the DOM.");
-        return;
+        return; // Stop execution to prevent crashes
     }
     const cancelBtn = document.querySelector('.cancel-btn');
     if (!cancelBtn) {
@@ -294,11 +296,18 @@ function setupEditControls() {
 
 // display the syllabus data on the page
 function displaySyllabusData(data) {
+    console.log("Running displaySyllabusData...");
+
+    const main = document.getElementById("syllabus-categories");
+    if (!main) {
+        console.error("Error: #syllabus-categories not found in the DOM.");
+        return; // Stop execution to prevent crashes
+    }
+
     main.innerHTML = '';
 
     data.categories.forEach(category => {
-        const items = category.items.map(item => [item.type, item.text]);
-        const section = createSection(category.name, items, category, data);
+        const section = createSection(category.name, category.items, category, data);
         main.appendChild(section);
     });
 
