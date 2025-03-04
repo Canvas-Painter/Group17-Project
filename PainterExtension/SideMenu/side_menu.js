@@ -11,6 +11,27 @@ export function initializeSideMenu() {
     });
 }
 
+function ensurePdfParserAlwaysLoaded(callback) {
+    if (typeof window.pdfToText === "function") {
+        console.log("pdf_parser.js is still available.");
+        callback();
+    } else {
+        console.warn("pdf_parser.js is missing. Injecting dynamically...");
+        var script = document.createElement("script");
+        script.src = chrome.runtime.getURL("SideMenu/my-pdf-parser/pdf_parser.js");
+        script.onload = function () {
+            console.log("pdf_parser.js dynamically loaded.");
+            if (typeof window.pdfToText === "function") {
+                callback();
+            } else {
+                console.error("pdfToText is still undefined after injecting pdf_parser.js.");
+            }
+        };
+        document.head.appendChild(script);
+    }
+}
+
+
 function createSideMenu() {
     let sideMenu = document.createElement("div");
     sideMenu.id = "canvas-enhancer-side-menu";
