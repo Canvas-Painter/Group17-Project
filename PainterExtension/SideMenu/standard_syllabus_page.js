@@ -292,7 +292,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                             throw new Error("pdfToText is not defined. Check if pdf_parser.js is loading.");
                         }
                         var pdfText = await window.pdfToText(pdfUint8Array); // Ensure it uses `window.`
-                        var pdfText = await pdfToText(pdfUint8Array);  // Call function from pdf_parser.js
+                        if (typeof window.pdfToText !== "function") {
+                            console.error("Error: pdfToText is not loaded! Check if pdf_parser.js is included first.");
+                        } else {
+                            var pdfText = await window.pdfToText(pdfUint8Array);
+                        }
+                        
                         
                         var parsedData = {
                             version: "0.1.1",
