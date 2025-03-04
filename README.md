@@ -30,6 +30,7 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 1. User can turn darkmode on and off.
 2. User can create a custom theme. Can turn it on and off.
 3. User can open the Standarized Syllabus, create a class, write out information, save and close the Standarized Syllabus, then open it again to see the same saved data.
+4. User can edit the Standard Syllabus, and then revert it by selecting "Update" button.
 
 
 ## Links
