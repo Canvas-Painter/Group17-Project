@@ -282,10 +282,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             else if (file.name.endsWith(".pdf")) {
                 reader.readAsArrayBuffer(file);
                 reader.onload = async function(event) {
+                    console.log("📂 File loaded:", event.target.result);
+                    console.log("🔎 Checking if pdfToText is available:", typeof window.pdfToText);
                     var arrayBuffer = event.target.result;
                     var pdfUint8Array = new Uint8Array(arrayBuffer);
         
                     try {
+                        if (typeof window.pdfToText !== "function") {
+                            throw new Error("pdfToText is not defined. Check if pdf_parser.js is loading.");
+                        }
+                        var pdfText = await window.pdfToText(pdfUint8Array); // Ensure it uses `window.`
                         var pdfText = await pdfToText(pdfUint8Array);  // Call function from pdf_parser.js
                         
                         var parsedData = {
