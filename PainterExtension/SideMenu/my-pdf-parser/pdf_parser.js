@@ -498,4 +498,6 @@ async function processAllSyllabi() {
 
 processAllSyllabi();
 
-window.pdfToText = pdfToText;
+console.log("pdf_parser.js has been loaded!");
+window.pdfToText = pdfToText;  // Ensure function is globally available
+
