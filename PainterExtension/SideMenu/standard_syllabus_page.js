@@ -254,50 +254,85 @@ document.addEventListener('DOMContentLoaded', async () => {
             fileInput.click();
         });
 
-        fileInput.addEventListener("change", async (event) => {
-            const file = event.target.files[0];
-            if (file) {
-              // 1) Read the PDF file as an ArrayBuffer
-              const arrayBuffer = await file.arrayBuffer();
-
-              // 2) Parse the PDF
-              //    Note: You need a browser-friendly pdf.js or your own pdfToText function.
-              //    If you have a function pdfToText(...) that returns text,
-              //    you can pass arrayBuffer or a Uint8Array to it.
-
-              try {
-                const pdfText = await pdfToText(new Uint8Array(arrayBuffer));
-
-                // 3) Build your data object
-                const outputData = {
-                  version: "0.1.1",
-                  categories: [
-                    {
-                      name: "Course Information",
-                      items: [
-                        { type: "Course Title", text: extractCourseTitle(pdfText) },
-                        { type: "Professor", text: extractProfessor(pdfText) },
-                        // ...
-                      ]
-                    },
-                    // ...
-                  ]
+        fileInput.addEventListener("change", async function(event) {
+            var file = event.target.files[0];
+            if (!file) return;
+        
+            var reader = new FileReader();
+        
+            // If JSON file, process it normally
+            if (file.name.endsWith(".json")) {
+                reader.readAsText(file);
+                reader.onload = function(event) {
+                    try {
+                        var jsonData = JSON.parse(event.target.result);
+                        saveCourseData(courseId, jsonData);
+                        window.location.reload();
+                    } catch (err) {
+                        console.error("Error parsing JSON:", err);
+                    }
                 };
-
-              } catch (err) {
-                console.log("Error parsing:", err);
-                console.log("Resorting to JSON");
-
-                // 4) Save to chrome.storage with the correct key
-                const reader = new FileReader()
-                reader.readAsText(file)
-                reader.onload = (event) => {
-                    saveCourseData(courseId, JSON.parse(event.target.result))
-                    window.location.reload()
-                }
-              }
+            } 
+            
+            // If PDF file, process it using pdf.js
+            else if (file.name.endsWith(".pdf")) {
+                reader.readAsArrayBuffer(file);
+                reader.onload = async function(event) {
+                    var arrayBuffer = event.target.result;
+                    var pdfUint8Array = new Uint8Array(arrayBuffer);
+        
+                    try {
+                        var pdfText = await pdfToText(pdfUint8Array);  // Call function from pdf_parser.js
+                        
+                        var parsedData = {
+                            version: "0.1.1",
+                            categories: [
+                                {
+                                    name: "Course Information",
+                                    items: [
+                                        { type: "Course Title", text: extractCourseTitle(pdfText) },
+                                        { type: "Professor", text: extractProfessor(pdfText) },
+                                        { type: "Email", text: extractEmail(pdfText) },
+                                        { type: "Office Hours", text: extractTAOfficeHours(pdfText) }
+                                    ]
+                                },
+                                {
+                                    name: "Course Policies",
+                                    items: [
+                                        { type: "Attendance", text: extractAttendance(pdfText) },
+                                        { type: "Late Work", text: extractLateWork(pdfText) }
+                                    ]
+                                },
+                                {
+                                    name: "Grading",
+                                    items: [
+                                        { type: "Assignments", text: extractGradingAssignments(pdfText) },
+                                        { type: "Quizzes", text: extractQuizzes(pdfText) },
+                                        { type: "Midterm", text: extractMidterm(pdfText) },
+                                        { type: "Final Project", text: extractFinalProject(pdfText) },
+                                        { type: "Final Exam", text: extractFinalExam(pdfText) },
+                                        { type: "Participation", text: extractParticipation(pdfText) },
+                                        { type: "Grading Policy", text: extractGradingPolicy(pdfText) }
+                                    ]
+                                }
+                            ]
+                        };
+        
+                        // Save extracted syllabus data
+                        await saveCourseData(courseId, parsedData);
+                        window.location.reload();
+                    } catch (err) {
+                        console.error("Error processing PDF:", err);
+                        alert("Could not parse PDF syllabus. Please check the format.");
+                    }
+                };
+            } 
+            
+            else {
+                alert("Unsupported file format. Please upload a JSON or PDF file.");
             }
-          });
+        });
+        
 
 
     }

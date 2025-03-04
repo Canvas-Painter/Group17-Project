@@ -5,14 +5,9 @@ import path from 'path';
 import pdfjsLib from 'pdfjs-dist/legacy/build/pdf.js';
 const { getDocument } = pdfjsLib;
 
-// Array of syllabus PDF file paths
-const syllabusFiles = [
-  "C:\\Users\\Sam\\Downloads\\Syllabus 341 Winter 2025_Section_010_V2.pdf",
-  "C:\\Users\\Sam\\Downloads\\cs381W25Syllabus.pdf",
-  "C:\\Users\\Sam\\Downloads\\Syllabus CS340 Winter 2025 (1).pdf",
-  "C:\\Users\\Sam\\Downloads\\Technology & Ethics_Syllabus_WN 25.pdf",
-  "C:\\Users\\Sam\\Downloads\\Syllabus.pdf"
-];
+var pdfjsLib = window['pdfjs-dist/build/pdf'];
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
+
 
 /**
  * pdfToText
