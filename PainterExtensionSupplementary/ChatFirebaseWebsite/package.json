@@ -1,0 +1,14 @@
+{
+  "name": "chatfirebasewebsite",
+  "version": "1.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "firebase-tools": "^13.32.0"
+  }
+}
