@@ -35,6 +35,27 @@ function loadCourseData(courseId) {
     });
 }
 
+function ensurePdfParserLoaded(callback) {
+    if (typeof window.pdfToText === "function") {
+        console.log("pdf_parser.js is already available.");
+        callback();
+    } else {
+        console.warn("⚠️ pdf_parser.js is missing. Injecting dynamically...");
+        var script = document.createElement("script");
+        script.src = chrome.runtime.getURL("SideMenu/my-pdf-parser/pdf_parser.js");
+        script.onload = function () {
+            console.log("pdf_parser.js dynamically loaded.");
+            if (typeof window.pdfToText === "function") {
+                callback();
+            } else {
+                console.error("pdfToText is still undefined after injecting pdf_parser.js.");
+            }
+        };
+        document.head.appendChild(script);
+    }
+}
+
+
 console.log("🛠 Waiting for pdf_parser.js to load...");
 
 function waitForPdfParser(callback, attempts = 10) {
@@ -320,20 +341,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 reader.onload = async function(event) {
                     console.log("📂 File loaded:", event.target.result);
                     console.log("🔎 Checking if pdfToText is available:", typeof window.pdfToText);
+                    
                     var arrayBuffer = event.target.result;
                     var pdfUint8Array = new Uint8Array(arrayBuffer);
         
                     try {
                         if (typeof window.pdfToText !== "function") {
-                            throw new Error("pdfToText is not defined. Check if pdf_parser.js is loading.");
-                        }
-                        var pdfText = await window.pdfToText(pdfUint8Array); // Ensure it uses `window.`
-                        if (typeof window.pdfToText !== "function") {
-                            console.error("Error: pdfToText is not loaded! Check if pdf_parser.js is included first.");
-                        } else {
-                            var pdfText = await window.pdfToText(pdfUint8Array);
+                            throw new Error("❌ pdfToText is not defined. Check if pdf_parser.js is loading.");
                         }
                         
+                        // ✅ Call pdfToText when the user uploads a PDF
+                        var pdfText = await window.pdfToText(pdfUint8Array);
+                        console.log("✅ Extracted PDF text:", pdfText);
                         
                         var parsedData = {
                             version: "0.1.1",
@@ -369,9 +388,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                             ]
                         };
         
-                        // Save extracted syllabus data
+                        // ✅ Save extracted syllabus data
                         await saveCourseData(courseId, parsedData);
                         window.location.reload();
+                        
                     } catch (err) {
                         console.error("Error processing PDF:", err);
                         alert("Could not parse PDF syllabus. Please check the format.");
@@ -383,6 +403,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 alert("Unsupported file format. Please upload a JSON or PDF file.");
             }
         });
+        
         
 
 
