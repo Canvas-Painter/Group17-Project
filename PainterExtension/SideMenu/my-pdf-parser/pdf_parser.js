@@ -497,3 +497,5 @@ async function processAllSyllabi() {
 }
 
 processAllSyllabi();
+
+window.pdfToText = pdfToText;

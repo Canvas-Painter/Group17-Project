@@ -15,11 +15,14 @@
         "SpeedBoost/speed_boost.js",
         "GradeBook/math.js",
         "GradeBook/grade_book.js",
-        "WeirdTime/fix.js"
+        "WeirdTime/fix.js",
+        "SideMenu/pdf_parser.js",
+        "SideMenu/standard_syllabus_page.js"
       ],
       "css": [
         "styles.css",
         "SideMenu/standardized_syllabus.css",
+        "SideMenu/standard_syllabus_page.css",
         "CanvasColors/custom.css"
       ],
       "run_at": "document_start"
