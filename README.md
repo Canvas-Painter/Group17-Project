@@ -8,6 +8,7 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 4. /documents: The location of project documents including Project Proposal, Developer Documentation and User Documentation
 5. /reports: The location of weekly reports written throughout its development
 6. /uml: The location of systems and architecture diagrams for the project
+7. /beta-testing: The location of the feedback received from our in-class beta test
 
 # HOW TO INSTALL & RUN:
 # Installation
