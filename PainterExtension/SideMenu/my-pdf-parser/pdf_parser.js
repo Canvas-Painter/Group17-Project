@@ -3,7 +3,8 @@
 var pdfjsLib = window['pdfjs-dist/build/pdf'];
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
 
-const { getDocument } = pdfjsLib;
+var getDocument = pdfjsLib.getDocument;
+
 
 
 
