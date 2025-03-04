@@ -33,7 +33,8 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 **Preconditions:** 
 1. The Chrome extension is installed and active.
 2. The user is logged into Canvas.
-**Postconditions (success scenario):** The user applies a customized theme (e.g., dark mode) that persists across sessions.
+**Postconditions (success scenario):**
+- The user applies a customized theme (e.g., dark mode) that persists across sessions.
 **List of steps (success scenario):**
 1. The user logs into Canvas using the Chrome browser with the extension installed.
 2. The user opens the extension’s settings menu.
