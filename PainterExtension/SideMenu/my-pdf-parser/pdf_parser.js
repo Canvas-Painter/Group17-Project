@@ -1,9 +1,13 @@
 // multi_pdf_parser.js
 
-var pdfjsLib = window['pdfjs-dist/build/pdf'];
+var pdfjsLib = window['pdfjs-dist/build/pdf'] || {};
+pdfjsLib.GlobalWorkerOptions = pdfjsLib.GlobalWorkerOptions || {};
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
 
-var getDocument = pdfjsLib.getDocument;
+// Ensure `getDocument` is properly assigned
+var getDocument = pdfjsLib.getDocument || function() { console.error("PDF.js not loaded!"); };
+
+
 
 
 
@@ -17,36 +21,47 @@ var getDocument = pdfjsLib.getDocument;
  *              each text block, concatenates the text (inserting newlines as appropriate), and returns the
  *              complete text.
  */
-async function pdfToText(data) {
-  const loadingTask = getDocument(data);
-  const pdf = await loadingTask.promise;
-  let fullText = "";
-
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const textContent = await page.getTextContent();
-    let pageText = "";
-    let lastBlock = null;
-    const blocks = textContent.items;
-
-    for (let k = 0; k < blocks.length; k++) {
-      const block = blocks[k];
-      if (lastBlock !== null && lastBlock.str[lastBlock.str.length - 1] !== ' ') {
-        if (block.transform[4] < lastBlock.transform[4]) {
-          pageText += "\r\n";
-        } else if (
-          lastBlock.transform[5] !== block.transform[5] &&
-          !/^\s?[a-zA-Z]$/.test(lastBlock.str)
-        ) {
-          pageText += ' ';
-        }
-      }
-      pageText += block.str;
-      lastBlock = block;
-    }
-    fullText += pageText + "\n\n";
-  }
-  return fullText;
+function pdfToText(data) {
+  return new Promise(function (resolve, reject) {
+      var loadingTask = getDocument(data);
+      loadingTask.promise.then(function (pdf) {
+          var fullText = "";
+          var pages = [];
+          for (var i = 1; i <= pdf.numPages; i++) {
+              pages.push(
+                  pdf.getPage(i).then(function (page) {
+                      return page.getTextContent().then(function (textContent) {
+                          var pageText = "";
+                          var lastBlock = null;
+                          var blocks = textContent.items;
+                          for (var k = 0; k < blocks.length; k++) {
+                              var block = blocks[k];
+                              if (lastBlock !== null && lastBlock.str[lastBlock.str.length - 1] !== ' ') {
+                                  if (block.transform[4] < lastBlock.transform[4]) {
+                                      pageText += "\r\n";
+                                  } else if (
+                                      lastBlock.transform[5] !== block.transform[5] &&
+                                      !/\s?[a-zA-Z]$/.test(lastBlock.str)
+                                  ) {
+                                      pageText += ' ';
+                                  }
+                              }
+                              pageText += block.str;
+                              lastBlock = block;
+                          }
+                          return pageText + "\n\n";
+                      });
+                  })
+              );
+          }
+          Promise.all(pages).then(function (results) {
+              fullText = results.join("");
+              resolve(fullText);
+          });
+      }).catch(function (error) {
+          reject(error);
+      });
+  });
 }
 
 /**
