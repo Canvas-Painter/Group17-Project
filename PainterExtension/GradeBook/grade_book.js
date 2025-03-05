@@ -108,11 +108,17 @@ function popOpen(assignments, weights, totals) {
 
                 // Calulate the total grade as a percent
                 let total_grade = 0
+                // To handle 0 / 0 situations
+                let total_percent = 0
                 for (const [name, points] of totals) {
                     if (points.max == 0) { continue }
 
-                    total_grade += (points.current / points.max) * weights.get(name)
+                    const weight = weights.get(name)
+                    total_grade += (points.current / points.max) * weight
+                    total_percent += weight
                 }
+
+                total_grade /= total_percent
 
                 update_fun = () => {
                     // Parse the elements and check for nulls
@@ -128,12 +134,23 @@ function popOpen(assignments, weights, totals) {
                     // category_weight could be 0 so an explicit check is needed
                     if (!category_points || category_weight === undefined) { output.textContent = ''; return }
 
-                    // Find the total grade assuming that the relevant category is 0
-                    const grade_without = total_grade - (category_weight * (category_points.current / category_points.max))
+                    // Find the total grade assuming that the relevant category is percent
+                    let grade_without
+                    if (category_points.max != 0) {
+                        grade_without = total_grade - (category_weight * (category_points.current / category_points.max))
+                    } else {
+                        grade_without = total_grade * (1 - category_weight)
+                    }
+
                     // Find what percent in the relevant categary would create the target grade
                     const needed = (target - grade_without) / category_weight
                     // Calulate the total points needed to bring the category to that value (like below)
-                    output.textContent = ((needed * (category_points.max + max)) - category_points.current).toFixed(2)
+                    const value = (needed * (category_points.max + max)) - category_points.current
+                    if (0 <= value && value <= max) {
+                        output.textContent = value.toFixed(2)
+                    } else {
+                        output.textContent = value.toFixed(2) + ' Likely impossible'
+                    }
                 }
 
                 // Add the update function
@@ -158,7 +175,12 @@ function popOpen(assignments, weights, totals) {
                     if (isNaN(target)) { output.textContent = ''; return }
 
                     // Calculate the value needed to bring the percentage up to the target
-                    output.textContent = ((target * (total_max + max)) - total_current).toFixed(2)
+                    const value = (target * (total_max + max)) - total_current
+                    if (0 <= value && value <= max) {
+                        output.textContent = value.toFixed(2)
+                    } else {
+                        output.textContent = value.toFixed(2) + ' Likely impossible'
+                    }
                 }
             }
 
