@@ -55,6 +55,22 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 1. The user selects a theme that causes readability issues > Can turn off the theme and edit colors or delete the theme
 2. Changes to Canvas's DOM break theme application > The extension reverts to default or provides a warning.
 
+**Check Grade Needed**
+**Actors:** A student in a class.
+**Triggers:**
+The student wants to see what grade they need on an assignment to achieve a grade.
+**Preconditions:**
+1. The student has an assignment and grade they want to check for a grade in class.
+**Postconditions (success scenario):**
+1. The user is displayed the grade they need.
+**List of steps (success scenario):**
+1. The user inputs the grade they desire.
+2. The user inputs the category and points.
+3. Then the program uses math to compute the results.
+4. Then the program displays the results.
+**Extensions/variations of the success scenario:**
+**Exceptions:** failure conditions and scenarios:
+1. The student inputs an invalid grade in which case the program will give an output telling them that and telling what the math gives even with the strange inputs.
 
 **other...**
 User can open the Standarized Syllabus, create a class, write out information, save and close the Standarized Syllabus, then open it again to see the same saved data.
