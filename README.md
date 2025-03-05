@@ -28,7 +28,7 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 9. Relevant information on how to use the extension can be found by clicking the “Canvas Painter” icon when pinned, and clicking the “Help” button
 
 # Use Cases
-##Make Canvas Look Better
+## Make Canvas Look Better
 - Actors: Students and instructors who prefer a customized theme for improved accessibility or visual comfort.
 - Triggers: A student or instructor finds the default Canvas interface visually uncomfortable.
 
@@ -80,7 +80,7 @@ The student wants to see what grade they need on an assignment to achieve a grad
 **Exceptions (failure conditions and scenarios):**
 1. The student inputs an invalid grade in which case the program will give an output telling them that and telling what the math gives even with the strange inputs.
 
-**other...**
+## other...
 User can open the Standarized Syllabus, create a class, write out information, save and close the Standarized Syllabus, then open it again to see the same saved data.
 User can edit the Standard Syllabus, and then revert it by selecting "Update" button.
 
