@@ -27,9 +27,6 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 8. The extension is now active and can be pinned by clicking the **puzzle piece** again, then clicking the **tac** next to “Canvas Painter” in the menu that pops up
 9. Relevant information on how to use the extension can be found by clicking the “Canvas Painter” icon when pinned, and clicking the “Help” button
 
-# How To test
-See the [test guide](Test.md).
-
 # Report Bugs?
 If you find an issue/error with the project code, you can simply create a [git issue](https://github.com/Canvas-Painter/Group17-Project/issues). Please leave a descriptive comment that explains what steps should be taken for the error to occur. Images where applicable can also be helpful.
 
@@ -94,6 +91,10 @@ User can edit the Standard Syllabus, and then revert it by selecting "Update" bu
 **Source Code**
 
 This repository holds all the information related to the development of this project. There are a few branches outside of *main* that were used to develop specific features. You may look through the history to become more informed on how features were made and changed throughout. You can additionally check git blame.
+
+**How To Test**
+
+See the [test guide](Test.md).
 
 **Issue Tracking**
 
