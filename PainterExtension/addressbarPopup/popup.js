@@ -72,20 +72,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // update the dropdown with custom_themes
     function updateDropdown() {
-        // console.log('updateDropdown');
         chrome.storage.sync.get('custom_themes', function(result) {
-            themeDropdown.innerHTML = ""; // clear dropdown
-            const arr = result.custom_themes; // get themes array
-            if (Array.isArray(arr)) {
-                arr.forEach(theme => {
-                    const option = document.createElement("option");
-                    option.value = theme.name;
-                    option.text = theme.name;
-                    themeDropdown.appendChild(option);
-                });
+          themeDropdown.innerHTML = "";
+          let arr = result.custom_themes || [];
+      
+          arr.forEach(theme => {
+            const option = document.createElement("option");
+            option.value = theme.name;
+            option.text = theme.name;
+            themeDropdown.appendChild(option);
+          });
+      
+          // Now grab the current_theme and set the dropdown accordingly
+          chrome.storage.sync.get('current_theme', function(res) {
+            if (res.current_theme && res.current_theme.name) {
+              themeDropdown.value = res.current_theme.name;
             }
+          });
         });
-    }
+      }
+      
 
     // update on initial load
     updateDropdown();
@@ -291,11 +297,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 themeButton.checked = true;
                 darkmodeButton.checked = false;
                 chrome.tabs.sendMessage(tabs[0].id, {
-                    action: 'toggleTheme',
-                    enabled: themeButton.checked,
-                    theme: newTheme
+                  action: 'toggleTheme',
+                  enabled: themeButton.checked,
+                  theme: newTheme
                 });
-            });
+             });         
 
             // update current_theme
             updateCurrentTheme(true, newTheme);
