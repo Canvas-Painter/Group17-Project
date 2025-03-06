@@ -1,3 +1,7 @@
+// popup.js
+
+// This file contains all the code for the popup's functionality
+
 document.addEventListener("DOMContentLoaded", function () {
     const darkmodeButton = document.getElementById("darkmode-btn");
     const themeButton = document.getElementById("applyTheme-btn");
@@ -66,6 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    // update the dropdown with custom_themes
     function updateDropdown() {
         // console.log('updateDropdown');
         chrome.storage.sync.get('custom_themes', function(result) {
@@ -82,17 +87,18 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // update on initial load
     updateDropdown();
 
     // Update current_theme in storage
     function updateCurrentTheme(enabled, theme) {
         if (enabled) {
             chrome.storage.sync.set({current_theme : theme}, function() {
-                // console.log('updated current_theme:', theme);
+                //console.log('updated current_theme:', theme);
             });
         } else {
             chrome.storage.sync.set({current_theme : null}, function() {
-                // console.log('updated current_theme:', null);
+                //console.log('updated current_theme:', null);
             });
         }
     }
@@ -156,25 +162,29 @@ document.addEventListener("DOMContentLoaded", function () {
         // console.log('saveButton clicked');
         // Retrieve values from input fields
         const themeName = themeNameInput.value.trim();
-        if (themeName !== "") {
-            const newTheme = {
-                name: themeName,
-                cssVars: {
-                    '--bg-0': bg0Input.value.trim(),
-                    '--bg-1': bg1Input.value.trim(),
-                    '--bg-2': bg2Input.value.trim(),
-                    '--text-0': text0Input.value.trim(),
-                    '--text-1': text1Input.value.trim(),
-                    '--text-2': text2Input.value.trim(),
-                    '--sidebar': sidebarInput.value.trim(),
-                    '--links': linksInput.value.trim(),
-                    '--hamburger': hamburgerInput.value.trim(),
-                    '--invrt': invrtInput.checked
-                }
-            };
 
-            // Save the new theme as the current theme in storage
-            chrome.storage.sync.get('custom_themes', function(result) {
+        chrome.storage.sync.get('custom_themes', function(result) {
+            const themeExists = result.custom_themes.some(theme => theme.name === themeName);
+
+            // theme must have a name and cannot be a duplicate
+            if (themeName !== "" && !themeExists) {
+                const newTheme = {
+                    name: themeName,
+                    cssVars: {
+                        '--bg-0': bg0Input.value.trim(),
+                        '--bg-1': bg1Input.value.trim(),
+                        '--bg-2': bg2Input.value.trim(),
+                        '--text-0': text0Input.value.trim(),
+                        '--text-1': text1Input.value.trim(),
+                        '--text-2': text2Input.value.trim(),
+                        '--sidebar': sidebarInput.value.trim(),
+                        '--links': linksInput.value.trim(),
+                        '--hamburger': hamburgerInput.value.trim(),
+                        '--invrt': invrtInput.checked
+                    }
+                };
+
+                // Save the new theme as the current theme in storage
                 let arr = result.custom_themes;
                 arr.push(newTheme);
                 chrome.storage.sync.set({ custom_themes : arr }, function() {
@@ -194,12 +204,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // update current_theme
                 updateCurrentTheme(true, newTheme);
+            
 
                 // darkmodeButton off
                 darkmodeButton.disabled = true;
                 themeButton.disabled = false;
-            });
-        }
+            }
+        });
+        
     });
 
     // Delete a custom theme
@@ -328,6 +340,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // open help page
     helpButton.addEventListener('click', function() {
         chrome.tabs.create({url: 'help.html'});
     });
