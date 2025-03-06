@@ -84,6 +84,16 @@ The student wants to see what grade they need on an assignment to achieve a grad
 User can open the Standarized Syllabus, create a class, write out information, save and close the Standarized Syllabus, then open it again to see the same saved data.
 User can edit the Standard Syllabus, and then revert it by selecting "Update" button.
 
+## Continue this project?
+**Source Code**
+
+This repository holds all the information related to the development of this project. There are a few branches outside of *main* that were used to develop specific features. You may look through the history to become more informed on how features were made and changed throughout. You can additionally check git blame.
+
+**Issue Tracking**
+
+We have a Trello board [Project TODO Trello](https://trello.com/b/JSf9TgUc/cs-362-pt-team-17-project-painter) where we tracked the our plans for the project. This included plans outside of the software development itself. The "Backlog" includes some of our plans for future development of this project; more ideas are listed in the projects Living Document [Project Living Document](https://docs.google.com/document/d/1Sg_moN46KJ2fcR-Hak0WlZDEZvt-L2gO4nh3mJlo9x4).
+
+
 
 ## Links
 - [Project Living Document](https://docs.google.com/document/d/1Sg_moN46KJ2fcR-Hak0WlZDEZvt-L2gO4nh3mJlo9x4)
