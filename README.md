@@ -30,6 +30,9 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 # How To test
 See the [test guide](Test.md).
 
+# Report Bugs?
+If you find an issue/error with the project code, you can simply create a [git issue](https://github.com/Canvas-Painter/Group17-Project/issues). Please leave a descriptive comment that explains what steps should be taken for the error to occur. Images where applicable can also be helpful.
+
 # Use Cases
 ## Make Canvas Look Better
 - Actors: Students and instructors who prefer a customized theme for improved accessibility or visual comfort.
