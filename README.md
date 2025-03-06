@@ -27,6 +27,9 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 8. The extension is now active and can be pinned by clicking the **puzzle piece** again, then clicking the **tac** next to “Canvas Painter” in the menu that pops up
 9. Relevant information on how to use the extension can be found by clicking the “Canvas Painter” icon when pinned, and clicking the “Help” button
 
+# How To test
+See the [test guide](Test.md).
+
 # Use Cases
 ## Make Canvas Look Better
 - Actors: Students and instructors who prefer a customized theme for improved accessibility or visual comfort.
