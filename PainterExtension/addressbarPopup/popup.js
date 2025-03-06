@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Theme toggle
-    themeButton.addEventListener('change', function() {
+    themeButton.addEventListener('click', function() {
         const isEnabled = themeButton.checked;
         // console.log('themeButton clicked');
 
@@ -268,6 +268,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Replace the old theme with the new theme in the array
             arr[index] = newTheme;
+            chrome.storage.sync.set({ custom_themes: arr }, function() {
+                // now the updated array is persisted
+                // you can add console.logs here if needed
+            });
+            
 
             // alert colorCanvas.js to update the theme
             chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -304,7 +309,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 sidebarInput.value = theme.cssVars['--sidebar'];
                 linksInput.value = theme.cssVars['--links'];
                 hamburgerInput.value = theme.cssVars['--hamburger'];
-                invrtInput.checked = theme.cssVars['--inv'];
+                invrtInput.checked = theme.cssVars['--invrt'];
 
                 if (themeButton.checked) {
                     // alert colorCanvas.js to update the theme
