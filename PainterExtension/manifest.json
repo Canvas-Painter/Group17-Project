@@ -29,7 +29,7 @@
     },
     {
       "matches": ["*://canvas.oregonstate.edu/calendar*"],
-      "js": ["GamifyCalendar/gamified_calendar.js"],
+      "js": ["GamifyCalendar/gamify_calendar.js"],
       "css": ["GamifyCalendar/gamify-calendar-style.css"],
       "run_at": "document_idle"
     }
