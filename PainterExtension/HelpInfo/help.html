@@ -3,42 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help & Info - Project Painter</title>
-    <link rel="stylesheet" href="help.css">
+    <title>Canvas Painter Help</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #D73F09;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Project Painter - Help & Info</h1>
-    <p>This page provides details about each button and setting in the Project Painter Chrome extension.</p>
+    <h1>Canvas Painter Help</h1>
 
-    <h2>📌 Settings Page</h2>
-    <ul>
-        <li><b>Setting 1:</b> (Explanation of what this does.)</li>
-        <li><b>Setting 2:</b> (Explanation of the checkbox feature.)</li>
-        <li><b>Save Settings Button:</b> Click this to save your preferences.</li>
-    </ul>
+    <div class="section">
+        <h2>Dark Mode</h2>
+        <p>Toggle the dark mode switch to instantly apply a dark theme to Canvas.</p>
+    </div>
 
-    <h2>🎨 Canvas Colors</h2>
-    <ul>
-        <li><b>Customize Canvas Theme:</b> Modify Canvas LMS colors to your preference.</li>
-    </ul>
+    <div class="section">
+        <h2>Custom Themes</h2>
+        <ol>
+            <li>Enter a theme name</li>
+            <li>Select colors for backgrounds, text, sidebar, and other elements</li>
+            <li>Click "Save Theme" to store your custom theme</li>
+            <li>Use the dropdown to select and apply saved themes</li>
+        </ol>
+    </div>
 
-    <h2>🏆 Gamified Calendar</h2>
-    <ul>
-        <li><b>Gamification Points:</b> Earn points for completing tasks.</li>
-        <li><b>Gamification Rewards:</b> Unlock rewards based on engagement.</li>
-    </ul>
+    <div class="section">
+        <h2>Managing Themes</h2>
+        <ul>
+            <li><strong>Edit Theme:</strong> Select a theme and modify its colors</li>
+            <li><strong>Delete Theme:</strong> Remove unwanted themes from your saved list</li>
+            <li><strong>Apply Theme:</strong> Toggle the switch to apply/remove the selected theme</li>
+        </ul>
+    </div>
 
-    <h2>📑 Side Menu</h2>
-    <ul>
-        <li><b>Standardized Syllabus:</b> Reformats syllabi for easier reading.</li>
-        <li><b>TA Schedule:</b> Provides a quick view of available TA hours.</li>
-    </ul>
+    <div class="section">
+        <h2>Standard Syllabus</h2>
+        <p>For quick access to a course's syllabus:</p>
+        <ol>
+            <li>Navigate to any page within your Canvas course</li>
+            <li>Look for the "Standard Syllabus" link at the bottom of the sidebar</li>
+            <li>Click the link to view the course syllabus directly</li>
+        </ol>
+        <p><em>Note: This link is automatically added to every course page for easy access.</em></p>
+    </div>
 
-    <h2>🚀 Speed Boost</h2>
-    <ul>
-        <li><b>Speed Enhancement:</b> Optimizes Canvas LMS for faster loading.</li>
-    </ul>
+    <div class="section">
+        <h2>Weird due Date</h2>
+        <p>Nothing special for this one. If an assignment has a due date different then midnight it will appear obvious.</p>
+    </div>
 
-    <p>For more details, visit our <a href="https://github.com/srj0407/Group17-Project">GitHub Repository</a>.</p>
+    <div class="section">
+        <h2>Gradebook Required Grade</h2>
+        <p>The gradebook page will have an additional menu where you can specify a custom assignment</p>
+        <ol>
+            <li>You input the category of the assignment. (If relevant)</li>
+            <li>You input the points the assignment is worth</li>
+            <li>You input the total grade in the class you want</li>
+        </ol>
+        <p>And our software will tell you want you would need to get on the assignment to have that grade</p>
+        <p><em>Note: This does not take into account what-if grades you put in.</em></p>
+    </div>
+
+    <div class="section">
+        <h2>Gamify Canvas Calendar</h2>
+        <p>The Gamify Canvas Calendar integrates fun and motivation into assignment tracking. It is located in the sidebar and includes:</p>
+        <ul>
+            <li>A progress bar that visually tracks assignment completion</li>
+            <li>Icons and colored percentages to indicate progress</li>
+            <li>A **point system** where you earn points for completing assignments early</li>
+            <li>Unlockable **visual rewards** based on completion streaks</li>
+        </ul>
+        <p><em>Note: The Gamify Calendar encourages productivity by rewarding early submissions and tracking progress over time.</em></p>
+    </div>
+    
 </body>
 </html>
+
