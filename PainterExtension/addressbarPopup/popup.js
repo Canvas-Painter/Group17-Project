@@ -348,6 +348,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // open help page
     helpButton.addEventListener('click', function() {
-        chrome.tabs.create({url: 'help.html'});
+        chrome.tabs.create({url: 'HelpInfo/help.html'});
     });
 });
