@@ -1,8 +1,7 @@
 # Installation
 1. Navigate to the the main page of the Repository (https://github.com/Canvas-Painter/Group17-Project)
 2. Select the green button labeled "Code"
-3. Select "Download Zip" at the bottom of the popup
-4. Unzip the downloaded file
+3. Select "Download Zip" at the bottom of the popup and unzip the folder, or copy the repository url locally [GitHub documentation](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 # Setup
 1. Open a chrome browser (can download here if not already installed: https://www.google.com/chrome/)
 2. In the search bar, enter "chrome://extensions", or right click the **puzzle piece** to the right of the search bar and select “Manage Extensions”
