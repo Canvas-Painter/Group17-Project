@@ -1,4 +1,3 @@
-# HOW TO INSTALL & RUN:
 # Installation
 1. Navigate to the the main page of the Repository (https://github.com/Canvas-Painter/Group17-Project)
 2. Select the green button labeled "Code"
