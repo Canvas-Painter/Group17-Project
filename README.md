@@ -29,7 +29,7 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 # Report Bugs?
 If you find an issue/error with the project code, you can simply create a [git issue](https://github.com/Canvas-Painter/Group17-Project/issues). Please leave a descriptive comment that explains what steps should be taken for the error to occur. Images where applicable can also be helpful.
 
-# Use Cases
+# Use Cases:
 ## Make Canvas Look Better
 - Actors: Students and instructors who prefer a customized theme for improved accessibility or visual comfort.
 - Triggers: A student or instructor finds the default Canvas interface visually uncomfortable.
@@ -157,7 +157,7 @@ N/A
 **Exceptions (failure conditions and scenarios):**
 1. The canvas extension is working incorrectly or is not properly installed or syncing with Canvas LMS.
 
-## Links
+## Links:
 - [Project Living Document](https://docs.google.com/document/d/1Sg_moN46KJ2fcR-Hak0WlZDEZvt-L2gO4nh3mJlo9x4)
 - [Developer Documentation](https://docs.google.com/document/d/13YbMxTzsQXYc2uVJYm61ArJ58H_LvJ6tH59HM6h7rzQ)
 - [User Documentation](https://docs.google.com/document/d/1xUaHkDol8P2Ght-Y0p4gwRxqx8HyKfweMmLJVI2JGq8)
