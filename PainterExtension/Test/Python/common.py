@@ -32,6 +32,7 @@ options = webdriver.ChromeOptions()
 options.add_argument(f'--load-extension={extension_path}')
 options.add_argument(f'--window-size={window_size[0]},{window_size[1]}')
 driver = webdriver.Chrome(options=options, service=Service(ChromeDriverManager().install()))
+driver.implicitly_wait(1)
 
 sample_pages = [
     generate_url('Test/Python/samples/grades1.html'),
