@@ -2,13 +2,12 @@
 In modern educational environments, Canvas has become a mainstay in both higher and lower educations. While Canvas offers a robust learning platform, its interface and other functionalities are severely lacking. These shortcomings fail to meet the needs of both students and instructors alike. It only further exacerbates the communication gap between students and instructors. This project aims to develop a Google Chrome extension that will better the user experience and attempt to fill many of Canvas’s shortcomings. This project will improve upon canvas productivity, accessibility, and engagement with its growing student and instructor population. Building an entirely new system for students to interact with would be impractical for students, as the transition from one interface to another requires time and commitment to learning a system when most students are already stretched on time. This extension would aim to solve many of the shortcomings of canvas while not changing the primary interface. It is suitable to fix many issues with a simple upgrade package marketed to simplify students' experiences to allow for greater efficiency. This extension aims to reduce the efficiency problems with Canvas as a learning platform without sacrificing the familiarity it has gained with students and instructors.
 
 # Repository Layout:
-1. /reports : Weekly reports, YYYYMMDD.md
-2. /PainterExtension: Chrome Extension, features in sub-directories
-3. /PainterExtensionSupplementary: Software that supports the Painter extension, but is not part of the extension.
-4. /documents: The location of project documents including Project Proposal, Developer Documentation and User Documentation
-5. /reports: The location of weekly reports written throughout its development
-6. /uml: The location of systems and architecture diagrams for the project
-7. /beta-testing: The location of the feedback received from our in-class beta test
+1. /PainterExtension: Chrome Extension, features in sub-directories
+2. /PainterExtensionSupplementary: Software that supports the Painter extension, but is not part of the extension.
+3. /documents: The location of project documents including Project Proposal, Developer Documentation and User Documentation
+4. /reports: The location of weekly reports written throughout its development
+5. /uml: The location of systems and architecture diagrams for the project
+6. /beta-testing: The location of the feedback received from our in-class beta test
 
 # HOW TO INSTALL & RUN:
 # Installation
