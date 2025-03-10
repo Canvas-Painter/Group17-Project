@@ -4,11 +4,11 @@
 
 **For adding tests please see the [test guide](Test.md)**
 
-This project is a chrome extension written in plain Javascript, CSS, and HTML. Inorder to properly understand this guide and projecet you need to understand how chrome extension function. To learn more please you can do some of the tutorials [here](https://developer.chrome.com/docs/extensions/get-started).
+This project is a chrome extension written in plain Javascript, CSS, and HTML. In order to properly understand this guide and project you need to understand how chrome extensions function. To learn more please you can do some of the tutorials [here](https://developer.chrome.com/docs/extensions/get-started).
 
-The code for this project is located in the [PainterExtension](PainterExtension/) directory and this project is design to be made up of several almost completly independent projects. Each of these seperate projects is given its own folder such as [Gradebook](PainterExtension/Gradebook). There are other folders as well some are "webpages" hosted by the extension such as [HelpInfo](PainterExtension/HelpInfo) and there are also [icons](PainterExtension/icons) and [addressPopup](PainterExtension/addressPopup) which are shared resources. Icons has the icons for the project and addressPopup handles the popup on click of the chrome extension icon so must be shared.
+The code for this project is located in the [PainterExtension](../PainterExtension/) directory. This project is designed to be made up of several almost completly independent parts. Each of these seperate parts is given its own folder such as [GradeBook](../PainterExtension/GradeBook). There are other folders as well some are "webpages" hosted by the extension such as [HelpInfo](../PainterExtension/HelpInfo) and there are also [icons](../PainterExtension/icons) and [addressbarPopup](../PainterExtension/addressbarPopup) which are shared resources. Icons has the icons for the project and addressPopup handles the popup created on click of the chrome extension icon. By their nature these must be shared.
 
-Given this there are two main ways of contributing.
+Given this there are two main ways of contributing. Each of these is relatively simple given the decentralized nature of this code (if you know how to write chrome extensions).
 1. Adding a feature
 2. Modifying a feature
 
