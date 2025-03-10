@@ -18,7 +18,7 @@ def rgb2gray(rgb):
 
 
 def test_darkmmode():
-    driver.get(extension_url + 'addressbarPopup/popup.html')
+    driver.get(extension_url + 'AddressbarPopup/popup.html')
     # Enable dark mode
     driver.find_element(By.XPATH, '/html/body/div/div[1]/label').click()
 
@@ -39,7 +39,7 @@ def check_color(lower_bounds, upper_bounds):
 
 # Makes a new color for the extension and makes it active
 def make_color(name, color):
-    driver.get(extension_url + 'addressbarPopup/popup.html')
+    driver.get(extension_url + 'AddressbarPopup/popup.html')
     # Set all colors
     for elem in driver.find_elements(By.XPATH, '//input[@type=\'color\']'):
         elem.send_keys(color)
@@ -50,7 +50,7 @@ def make_color(name, color):
 
 # Loads a color for the extension and makes it active
 def load_color(name):
-    driver.get(extension_url + 'addressbarPopup/popup.html')
+    driver.get(extension_url + 'AddressbarPopup/popup.html')
 
     elem = driver.find_element(By.XPATH, '/html/body/div/div[4]/select')
     Select(elem).select_by_visible_text(name)

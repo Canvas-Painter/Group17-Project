@@ -49,8 +49,8 @@
     }
   ],
   "action": {
-    "default_popup": "addressbarPopup/popup.html",
-    "default_icon": "icons/icon.png"
+    "default_popup": "AddressbarPopup/popup.html",
+    "default_icon": "Icons/icon.png"
   },
   "options_page": "options.html",
   "key": "test"

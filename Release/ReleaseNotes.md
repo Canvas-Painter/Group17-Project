@@ -23,3 +23,6 @@ We have a Trello board [Project Trello](https://trello.com/b/JSf9TgUc/cs-362-pt-
 
 [Python (Python)](https://peps.python.org/pep-0008/)
 - Why not use the guidelines of the source? We only use Python for our testing, but it’s still good to ensure we follow a respectable guideline such as Python themselves.
+
+## Errors
+The extension throws errors on pages that it is unable to do certain tasks on. These can be safely ignored.
