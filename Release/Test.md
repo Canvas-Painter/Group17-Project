@@ -2,7 +2,7 @@
 
 ## Overview
 
-Testing chrome extensions is very challenging as most of the code relies on the browser enviroment. We currently use two testing frameworks the first is [Jest](https://jestjs.io/) which is used for testing particularly complex bits of code with unit tests on. We also use [Pytest](https://pypi.org/project/pytest/) with [Selenium](https://www.selenium.dev/) to conduct more heavy-duty integration and system tests. Given how much of the code relies on the browser Pytest is where most of the testing is done.
+Testing chrome extensions is exceptionally challenging as most of the code relies on the browser enviroment. We currently use two testing frameworks the first is [Jest](https://jestjs.io/) which is used for testing particularly complex bits of code with unit tests on. We also use [Pytest](https://pypi.org/project/pytest/) with [Selenium](https://www.selenium.dev/) to conduct more heavy-duty integration and system tests. Given how much of the code relies on the browser, Pytest is where most of the testing is done.
 
 ## Running
 
