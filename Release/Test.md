@@ -21,7 +21,7 @@ To run the Pytest tests you must have python3 (specifically 3.10) installed with
 
 **Note:** There may bugs installing Chrome on non Ubuntu systems.
 
-**Note:** The Python tests are preferably run on Ubuntu (specifically version 24) because on Linux [PyVirtualDisplay](https://github.com/ponty/PyVirtualDisplay) is used to hide the Chrome window open. To display this you should set the environment variable VISIBLE to something for example ```export VISIBLE=0```.
+**Note:** The Python tests are preferably run on Ubuntu (specifically version 24) because on Linux [PyVirtualDisplay](https://github.com/ponty/PyVirtualDisplay) is used to hide the Chrome window open. To run with the display you should set the environment variable VISIBLE to something for example ```export VISIBLE=0```.
 
 1. ```pip install -r requirements.txt``` to install the requirements
 2. ```pytest``` to run the tests
