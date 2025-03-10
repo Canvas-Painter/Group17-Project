@@ -3,7 +3,7 @@
 ## Source Code
 This repository holds all the information related to the development of this project. There are a few branches outside of *main* that were used to develop specific features. You may look through the history to become more informed on how features were made and changed throughout. You can additionally check git blame.
 
-Essentially the totality of the source code is in the [PainterExtension](../PainterExtension) directory. Which is split into different features and also contains some other folders such as [Test](../PainterExtension/Test). Each feature functions independently and the file linking everything together is the [Test](../PainterExtension/manifest.json). To learn more read please read the [contribution guide](Contribution.md).
+Essentially the totality of the source code is in the [PainterExtension](../PainterExtension) directory. Which is split into different features and also contains some other folders such as [Test](../PainterExtension/Test). Each feature functions independently and the file linking everything together is the [manifest](../PainterExtension/manifest.json). To learn more read please read the [contribution guide](Contribution.md).
 
 ## How To Test
 See the [test guide](Test.md) to learn how to test and add tests.
