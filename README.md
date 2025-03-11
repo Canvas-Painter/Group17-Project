@@ -6,10 +6,10 @@ In modern educational environments, Canvas has become a mainstay in both higher 
 2. **/Release contains the release notes which contain the most up to date overview of the project**
 3. **/Install contains the INSTALL.md (how to install on your computer) and SETUP.md (admin setup)**
 4. /PainterExtensionSupplementary: Software that supports the Painter extension, but is not part of the extension.
-5. /Documents: The location of project documents including Living Document, Developer Documentation and User Documentation
-6. /Reports: The location of weekly reports written throughout its development
+5. /documents: The location of project documents including Living Document, Developer Documentation and User Documentation
+6. /reports: The location of weekly reports written throughout its development
 7. /uml: The location of systems and architecture diagrams for the project
-8. /Beta-Testing: The location of the feedback received from our in-class beta test
+8. /beta-testing: The location of the feedback received from our in-class beta test
 
 # HOW TO INSTALL & RUN:
 # Installation
