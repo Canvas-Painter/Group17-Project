@@ -34,9 +34,13 @@ options.add_argument(f'--window-size={window_size[0]},{window_size[1]}')
 driver = webdriver.Chrome(options=options, service=Service(ChromeDriverManager().install()))
 driver.implicitly_wait(1)
 
-sample_pages = [
+sample_grades = [
     generate_url('Test/Python/samples/grades1.html'),
     generate_url('Test/Python/samples/grades2.html')
+]
+
+sample_calendars = [
+    generate_url('Test/Python/samples/calendar1.html')
 ]
 
 # Closes the window and display

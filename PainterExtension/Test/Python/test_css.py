@@ -4,7 +4,7 @@ import io
 import numpy as np
 from selenium.webdriver.support.ui import Select
 
-from common import driver, extension_url, extension_path, sample_pages
+from common import driver, extension_url, extension_path, sample_grades
 
 def get_screen(driver):
     # Gets the screenshot as a np array
@@ -23,7 +23,7 @@ def test_darkmmode():
     driver.find_element(By.XPATH, '/html/body/div/div[1]/label').click()
 
     # Check average pixel color
-    for page in sample_pages:
+    for page in sample_grades:
         driver.get(page)
         assert np.median(rgb2gray(get_screen(driver))) < 70
 
@@ -31,7 +31,7 @@ def test_darkmmode():
 # Checks that the active color is valid
 def check_color(lower_bounds, upper_bounds):
     # Check average pixel colors
-    for page in sample_pages:
+    for page in sample_grades:
         driver.get(page)
         for i, (lower, upper) in enumerate(zip(lower_bounds, upper_bounds)):
             assert lower <= np.median(get_screen(driver)[..., i]) <= upper

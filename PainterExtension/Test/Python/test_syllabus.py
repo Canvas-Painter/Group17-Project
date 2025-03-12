@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-from common import driver, sample_pages
+from common import driver, sample_grades
 
 # Gets the first child of an element
 def get_child(ele):
@@ -83,7 +83,7 @@ def check_done_delete(driver, first_path):
 
 def test_edit_syllabus():
     # Loads page
-    driver.get(sample_pages[0])
+    driver.get(sample_grades[0])
 
     driver.find_element(By.CLASS_NAME, 'standard-syllabus').click()
 

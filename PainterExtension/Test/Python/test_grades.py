@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 
-from common import driver, sample_pages
+from common import driver, sample_grades
 from os import path
 from time import sleep
 
@@ -45,7 +45,7 @@ def run_target_grades(driver, tests):
 
 
 def test_grades1():
-    driver.get(sample_pages[0])
+    driver.get(sample_grades[0])
     # Gives time to load
     sleep(2)
 
@@ -61,7 +61,7 @@ def test_grades1():
 
 
 def test_grades2():
-    driver.get(sample_pages[1])
+    driver.get(sample_grades[1])
     # Gives time to load
     sleep(2)
 
