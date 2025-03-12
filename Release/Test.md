@@ -41,6 +41,6 @@ To create a Pytest you must go into the directory [Python](../PainterExtension/T
 1. ```driver``` is a global variable that holds the selenium driver as it is global your test must initialize everything.
 2. ```generate_url``` is a function that will generate a url to any file in [PainterExtension](../PainterExtension) given the path to it. This lets you load sample pages.
 3. ```extension_url``` is the url of the extension so allows you to open up extension webpages by joining their path to it.
-4. ```samples_grades``` and ```sample_calendars`` are urls to pre-downloaded samples for testing
+4. ```samples_grades``` and ```sample_calendars``` are urls to pre-downloaded samples for testing
 
 To create a Pytest test please see their [docs](https://docs.pytest.org/en/stable/) and to use Selenium you can visit their docs [here](https://www.selenium.dev/documentation/).
